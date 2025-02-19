@@ -52,7 +52,16 @@ Sum up your game idea in 2 sentences. A kind of elevator pitch. Keep it simple!
 
 ### **Gameplay**
 
-What should the gameplay be like? What is the goal of the game, and what kind of obstacles are in the way? What tactics should the player use to overcome them?
+Nuestro juego tiene como caracteristica principal la vista desde arriba que se pueda controlar con el mismo teclado, pudiendo mover en las 4 direcciones. 
+Cuenta tambien con combate cuerpo a cuerpo del jugador hacia los diferentes enemigos. 
+En cada nivel tenemos una sala con 3 subsalas y arriba la puerta del jefe. Para que se abra la puerta del jefe se necesita completar algunas misiones de las demás salas. En cada subsala hay bots que te atacan y en caso de que logren golpearte te quitan la vida.
+Asimismo, en cada subsala hay un puzzle que al resolverlo te da un power up para llegar con el jefe. Una vez llegado con el jefe si se derrota al jefe tenemos un puzzle más difícil que cuando se resuelve te da una pista para el puzzle del siguiente nivel. 
+El juego acaba cuando te robas la información de The Core. 
+
+Los elementos aleatorios son las herramientas y power ups que van saliendo. Los desafíos de cada subsala son aleatorios. Las salas se van a regenerar aleatoriamente y los enemigos también. 
+
+En ocasiones las recompensas que puedes obtener por hacer los diferentes retos de las salas en cada nivel pueden ser permanentes (principalmente las mejoras de ataque, defensa y vida). Cuando te mueras conservas dichas mejoras permanentes que recojas a lo largo de las partidas.
+
 
 ### **Mindset**
 
