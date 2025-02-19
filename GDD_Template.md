@@ -1,4 +1,4 @@
-# **Game Name Here**
+# **The FinºÑal Hack**
 
 ## _Game Design Document_
 
@@ -66,6 +66,10 @@ En ocasiones las recompensas que puedes obtener por hacer los diferentes retos d
 ### **Mindset**
 
 What kind of mindset do you want to provoke in the player? Do you want them to feel powerful, or weak? Adventurous, or nervous? Hurried, or calm? How do you intend to provoke those emotions?
+Queremos que el jugador pueda sentir las siguientes cosas: 
+- **Ingenio y Desafío mental:** Como hacker el jugador deberá usar su lógica y habilidad en resolución de problemas para avanzar. Esto se logrará a través de enemigos que lo atacan y puzzles que deberá resolver conforme avanza en el juego. 
+- **Progresión de poder:** El jugador debe poder sentir que a medida que supera obstaculos y niveles, mejora continuamente. Asimismo, con las mejoras permanentes el jugador logrará sentirse cada vez más poderoso y con mejores habilidades. 
+- **Adrenalina:** Con los diferentes enemigos y jefes del nivel queremos que la curva de dificultad aumente, creando así un efecto de adrenalina en el jugador a medida que juega. 
 
 ## _Technical_
 
@@ -75,8 +79,8 @@ What kind of mindset do you want to provoke in the player? Do you want them to f
 
 1. Title Screen
     1. Options
-2. Level Select
-3. Game
+    2. Game Start
+2. Game
     1. Inventory
     2. Assessment / Next Level
 4. End Credits
