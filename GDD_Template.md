@@ -48,7 +48,7 @@
 
 ### **Summary**
 
-Sum up your game idea in 2 sentences. A kind of elevator pitch. Keep it simple!
+Un roughlite de combate cuerpo a cuerpo ambientado en los sistemas de un servidor. Donde encarnas al famoso hacker “Cipher” para poder recuperar la información robada por “The Core” con el fin de evitar una catástrofe mundial.
 
 ### **Gameplay**
 
