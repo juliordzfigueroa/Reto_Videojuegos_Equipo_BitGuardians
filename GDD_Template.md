@@ -4,7 +4,8 @@
 
 ---
 
-##### **Copyright notice / author information / boring legal stuff nobody likes**
+##### Julio Cesar Rodriguez Figueroa A01029680
+##### Aquiba Yudah Benarroch Bittan A01783710
 
 ##
 ## _Index_
