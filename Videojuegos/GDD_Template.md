@@ -89,7 +89,16 @@ _(example)_
 
 ### **Controls**
 
-How will the player interact with the game? Will they be able to choose the controls? What kind of in-game events are they going to be able to trigger, and how? (e.g. pressing buttons, opening doors, etc.)
+El jugador será capaz de interactuar con el juego a través del teclado. Las teclas que se usarán serán las siguientes:
+Teclas WASD para el movimiento
+`W` Adelante
+`S` Atras
+`A` Izquierda
+`D` Derecha
+Las teclas de flechas son para hacer ataques en cualquier dirección. 
+El jugador tendrá la posibilidad de intercambiar las teclas entre sí. Es decir, si al jugador se le hace más fácil moverse con las teclas de flechas y atacar con las teclas WASD, será posible hacer este intercambio. Esto lo podrá realizar en las opciones de juego. 
+Para poder abrir los puzzles se utilizará la tecla f.
+
 
 ### **Mechanics**
 
