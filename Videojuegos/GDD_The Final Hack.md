@@ -3,10 +3,19 @@
 ## _Game Design Document_
 
 ---
+`Profesores`
+> Web y reto **Octavio Navarro Hinojosa**
 
-##### Julio Cesar Rodriguez Figueroa A01029680
-##### Mateo Arminio Castro A01785572
-##### Aquiba Yudah Benarroch Bittan A01783710
+> Bases de datos, Análisis y modelación de sistemas de software **Esteban Castillo Juarez**
+
+> Desarrollo de videojuego **Gilberto Echeverría Furió**
+
+`TC2005B_Equipo6`
+> **Julio Cesar Rodriguez Figueroa A01029680**
+
+> **Mateo Arminio Castro A01785572**
+
+> **Aquiba Yudah Benarroch Bittan A01783710**
 
 ##
 ## _Index_
@@ -65,7 +74,6 @@ En ocasiones las recompensas que puedes obtener por hacer los diferentes retos d
 
 ### **Mindset**
 
-What kind of mindset do you want to provoke in the player? Do you want them to feel powerful, or weak? Adventurous, or nervous? Hurried, or calm? How do you intend to provoke those emotions?
 Queremos que el jugador pueda sentir las siguientes cosas: 
 - **Ingenio y Desafío mental:** Como hacker el jugador deberá usar su lógica y habilidad en resolución de problemas para avanzar. Esto se logrará a través de enemigos que lo atacan y puzzles que deberá resolver conforme avanza en el juego. 
 - **Progresión de poder:** El jugador debe poder sentir que a medida que supera obstáculos y niveles, mejora continuamente. Asimismo, con las mejoras permanentes el jugador logrará sentirse cada vez más poderoso y con mejores habilidades. 
