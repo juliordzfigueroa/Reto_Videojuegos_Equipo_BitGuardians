@@ -10,7 +10,7 @@
 
 > Desarrollo de videojuego **Gilberto Echeverría Furió**
 
-`TC2005B_Equipo6`
+`TC2005B_Equipo BitGuardians`
 > **Julio Cesar Rodriguez Figueroa A01029680**
 
 > **Mateo Arminio Castro A01785572**
@@ -57,7 +57,11 @@
 
 ### **Summary**
 
-Un roughlite de combate cuerpo a cuerpo ambientado en los sistemas de un servidor. Donde encarnas al famoso hacker “Cipher” para poder recuperar la información robada por “The Core” con el fin de evitar una catástrofe mundial.
+¿Qué harías si el destino del mundo dependiera de un solo hacker? 
+The Final Hack, un roughlite de acción, con un combate cuerpo a cuerpo similar al de Dead Cells y una vista desde arriba inspirada en The Binding of Isaac. 
+Es un juego donde encarnas a un hacker de Elite con nombre clave Cipher, el encargado de infiltrarse a una base de seguridad robada por "The Core" para evitar una catástrofe mundial. 
+Cada partida te sumergirá en desafiantes acertijos y un combate intenso. Además de un sistema de progresión consiguiendo objetos que pueden ser permanentes, los cuales serán de ayuda para próximas partidas. 
+¿Estás listo para hackear el sistema y salvar el mundo?
 
 ### **Gameplay**
 
