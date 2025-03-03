@@ -112,15 +112,48 @@ Teclas WASD para el movimiento:
 
 `D` Derecha
 
-Las teclas de flechas son para hacer ataques en cualquier dirección. 
+Las teclas de flechas son para hacer ataques en cualquier dirección ya sea ataques de pistola o ataques cuerpo a cuerpo.
+
 
 El jugador tendrá la posibilidad de intercambiar las teclas entre sí. Es decir, si al jugador se le hace más fácil moverse con las teclas de flechas y atacar con las teclas WASD, será posible hacer este intercambio. Esto lo podrá realizar en las opciones de juego. 
-Para poder abrir los puzzles se utilizará la tecla f.
+
+Además de esto, utilizaremos dos teclas más:
+
+`F` Abrir los puzzles para resolverlos.
+
+`E` Usar los PowerUps que ha recogido el jugador.
 
 
 ### **Mechanics**
 
 Are there any interesting mechanics? If so, how are you going to accomplish them? Physics, algorithms, etc.
+
+El juego contará con una sala principal rodeada de 4 subsalas. En la parte de arriba estará la sala del jefe. Para poder acceder a ella, se tendrá que completar los retos de las 3 subsalas restantes. Estas subsalas se dividen en 3: 
+- Enemigos cuerpo a cuerpo: Esta sala solamente contiene enemigos que atacan cuerpo a cuerpo.
+- Enemigos cuerpo a cuerpo y a distancia: Esta sala contiene enemigos que atacan tanto cuerpo a cuerpo, como también a distancia.
+- Sala de puzzle con enemigos: Una sala que contiene un puzzle a resolver y enemigos en menor cantidad que los demás cuartos. 
+
+Existen dos tipos de enemigos:
+1. Robots: Pueden ser robots que disparan o que atacan cuerpo a cuerpo. 
+2. Drones: Dron que ataca con láser. 
+
+Para poder pelear con los enemigos habrán 3 tipos de armas: 
+- Pistola láser 
+- Tazer
+- Espada láser
+
+Despues de completar una subsala, al jugador se le darán PowerUps que se clasifican de la siguiente manera:
+1. Comunes:
+    - Recuperar vida: Recuperación del 20% de vida.
+    - Escudo: Se le otorga al jugador de 10% de vida.
+2. Raros:
+    - Aumento de vida: Aumento de vida en 20 puntos.
+3. Epico:
+    - Aumento de daño: Aumenta el daño en el 10 puntos.
+4. Legendario: 
+    - Bomba EMP: Una bomba que ature a los enemigos por 2 segundos.
+
+Al pasar de nivel los enemigos aumentarán su vida en un 10% y el ataque en un 15%. Asimismo en las salas de puzzle, estos aumentarán de dificultado conforme se avanzan los niveles. 
 
 ## _Level Design_
 
