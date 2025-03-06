@@ -91,7 +91,7 @@ Queremos que el jugador pueda sentir las siguientes cosas:
 
 1. Pantalla de inicio: En la pantalla de inicio se tendrán las siguientes opciones para el jugador.
     1. Opciones: En donde se encontraran la opción de:
-
+    
            - Revisar controles
        
            - Alternar controles (Cambiar 'WASD' y las flechas del teclado para moverse con las flechas y atacar con 'WASD')
@@ -115,9 +115,11 @@ Queremos que el jugador pueda sentir las siguientes cosas:
                - Opciones de volúmen de los efectos de sonido del juego (Quitar los efectos de sonido o bajar el volúmen de estos)
        
                - Botón para salir de la partida y guardarla.
-       
+       Aqui una foto de el concepto de la primera pantalla del juego:
+![Primer concepto de The Final Hack](/Videojuegos/images/GDD/The_Final_Hack_concepto.jpg)
+
     3. Siguiente Nivel: Tras completar la sala del jefe, estará una terminal que permitrirá pasar al siguiente nivel. 
-3. Tras completar el segundo nivel con una estructura similar al primero (Una sala principal, 3 subsalas adyacentes y la sala del jefe) se mostrarán los creditos.
+4. Tras completar el segundo nivel con una estructura similar al primero (Una sala principal, 3 subsalas adyacentes y la sala del jefe) se mostrarán los creditos.
 
 
 ### **Controls**
