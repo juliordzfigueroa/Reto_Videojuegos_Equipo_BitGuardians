@@ -119,7 +119,6 @@ Queremos que el jugador pueda sentir las siguientes cosas:
     3. Siguiente Nivel: Tras completar la sala del jefe, estará una terminal que permitrirá pasar al siguiente nivel. 
 3. Tras completar el segundo nivel con una estructura similar al primero (Una sala principal, 3 subsalas adyacentes y la sala del jefe) se mostrarán los creditos.
 
-_(example)_
 
 ### **Controls**
 
