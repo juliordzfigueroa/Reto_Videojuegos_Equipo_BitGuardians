@@ -128,19 +128,30 @@ Además de esto, utilizaremos dos teclas más:
 
 Are there any interesting mechanics? If so, how are you going to accomplish them? Physics, algorithms, etc.
 
+El objetivo principal del juego es que el jugador pueda recuperar la información robada por "The Core". Esto lo hace a tráves de completar los diferentes desafíos de los niveles del juego. Una vez que los completa, gana el juego. El juegador siempre tiene la oportunidad de mejorar en términos de estadística. 
+Se quiere que el jugador pueda enfrentarse a niveles que lo pongan a prueba sus habilidades tanto de combate con los diferentes tipos de enemigos, y además sus habilidades intelectuales con los puzzles. 
+
 El juego contará con una sala principal rodeada de 4 subsalas. En la parte de arriba estará la sala del jefe. Para poder acceder a ella, se tendrá que completar los retos de las 3 subsalas restantes. Estas subsalas se dividen en 3: 
 - Enemigos cuerpo a cuerpo: Esta sala solamente contiene enemigos que atacan cuerpo a cuerpo.
 - Enemigos cuerpo a cuerpo y a distancia: Esta sala contiene enemigos que atacan tanto cuerpo a cuerpo, como también a distancia.
 - Sala de puzzle con enemigos: Una sala que contiene un puzzle a resolver y enemigos en menor cantidad que los demás cuartos. 
+Además de esto, el jugador es capaz de interactuar con las el entorno de las salas. Es decir, habrán salas donde hay obstaculos que el jugador también puede usar como pared de escudo. 
 
 Existen dos tipos de enemigos:
 1. Robots: Pueden ser robots que disparan o que atacan cuerpo a cuerpo. 
 2. Drones: Dron que ataca con láser. 
 
+Estos enemigos su único objetivo es derrotar al jugador, por lo que su comportamiento siempre será agresivo contra el jugador. Con los enemigos solo hay dos opciones:
+1. Los derrotas
+2. Te derrotan
+Es crucial que todos los enemigos esten derrotados, debido a que si no los derrotas a todos, entonces la sala del jefe nunca se abre. 
+
 Para poder pelear con los enemigos habrán 3 tipos de armas: 
 - Pistola láser 
 - Tazer
 - Espada láser
+
+Los puzzles serán de tipo lógicos. Uno de ellos sera un slide puzzle, donde el jugador tendrá que ordenar una matriz de imagenes en el orden correcto. 
 
 Despues de completar una subsala, al jugador se le darán PowerUps que se clasifican de la siguiente manera:
 1. Comunes:
@@ -153,7 +164,29 @@ Despues de completar una subsala, al jugador se le darán PowerUps que se clasif
 4. Legendario: 
     - Bomba EMP: Una bomba que ature a los enemigos por 2 segundos.
 
-Al pasar de nivel los enemigos aumentarán su vida en un 10% y el ataque en un 15%. Asimismo en las salas de puzzle, estos aumentarán de dificultado conforme se avanzan los niveles. 
+Al pasar de nivel los enemigos aumentarán su vida en un 10% y el ataque en un 15%. Asimismo en las salas de puzzle, estos aumentarán de dificultado conforme se avanzan los niveles.
+
+En relación a los jefes, estos siempre serán un 20% más fuetes que los enemigos del nivel y tendrán 50% más de vida comparado a los enemigos del nivel en el que se encuentra el jugador. 
+
+
+> Posibles escenarios del jugador en el juego
+Los escenarios a los que el jugador se puede enfrentar en el juego son los siguientes:
+1. Escenario donde el jugador gana: 
+    - El jugador entra al nivel 1. Aparece a la mitad de la sala principal con 3 salas abiertas y una bloqueada alrededor. La sala bloqueada es la del jefe, que se desbloquea una vez completando las otras tres. 
+    - El jugador entra a todas las salas y se enfrenta a los diferentes desafíos, ya sea enemigos que disparan a distancia, cuerpo a cuerpo o una sala con enemigos y un puzzle. Finalmente pasa los retos de las salas. 
+    - Se desbloquea la sala del jefe.
+    - Entra a la sala del jefe y lo derrota. 
+    - Se desbloquea el siguiente nivel. 
+    - Se repite el mismo proceso mencionado arriba, pero el jugador se enfrenta a enemigos más agresivos. 
+    - Si el jugador logra atravesar todas las salas de todos los niveles disponibles, entonces obtiene la información robada de “The Core” y gana el juego.
+    - El jugador puede jugar las veces que quiera para mejorar sus estadísticas. 
+2. Escenario donde el jugador muere en algún punto del juego. 
+    - El jugador entra al nivel 1. Aparece a la mitad de la sala principal con 3 salas abiertas y una bloqueada alrededor. La sala bloqueada es la del jefe, que se desbloquea una vez completando las otras tres. 
+    - El jugador entra a alguna sala y se enfrenta a los diferentes desafíos, ya sea enemigos que disparan a distancia, cuerpo a cuerpo o una sala con enemigos y un puzzle. 
+    - El jugador es derrotado debido a que se le acabó la vida por los ataques de los enemigos. 
+    - El jugador regresa al inicio donde puede volver a empezar el nivel 1 y únicamente conserva aquellas mejoras que obtuvo durante su primer intento. 
+    - El jugador repite este proceso hasta que logre completar todos los niveles y recuperar la información robada por “The Core”. 
+ 
 
 ## _Level Design_
 
