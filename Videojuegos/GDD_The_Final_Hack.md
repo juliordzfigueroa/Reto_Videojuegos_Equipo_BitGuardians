@@ -214,15 +214,17 @@ _(example)_
 
 ### **Game Flow**
 
-1. Player starts in forest
-2. Pond to the left, must move right
-3. To the right is a hill, player jumps to traverse it (&quot;jump&quot; taught)
-4. Player encounters castle - door&#39;s shut and locked
-5. There&#39;s a window within jump height, and a rock on the ground
-6. Player picks up rock and throws at glass (&quot;throw&quot; taught)
-7. … etc.
+1. El jugador empieza en la sala central del nivel
+2. De su lado izquierdo, derecho y abajo hay tres subsalas con desafios.
+3. El jugador entra a una de las salas que tiene a sus lados.
+4. El jugador completa el desafio de la subsala y es recompensado por un power-up
+5. El jugador regresa a la sala principal, e ingresa a una de las salas restantes.
+6. Tras completar las 3 subsalas, la puerta del jefe (encontrada en la parte de arriba de la pantalla) queda desbloqueada.
+7. El jugador entra a la sala del jefe.
+8. Tras derrotarlo el jugador puede pasar al siguiente nivel.
+9. El siguiente nivel se plantea igual, comezando desde el punto 1.
+10. Si el jugador es derrotado, el jugador empezará el juego desde el punto 1.
 
-_(example)_
 
 ## _Development_
 
