@@ -89,13 +89,24 @@ Queremos que el jugador pueda sentir las siguientes cosas:
 
 ### **Screens**
 
-1. Title Screen
-    1. Options
-    2. Game Start
-2. Game
-    1. Inventory
+1. Pantalla de inicio: En la pantalla de inicio se tendrán las siguientes opciones para el jugador.
+    1. Opciones: En donde se encontraran la opción de:
+           - Revisar controles
+           - Alternar controles (Cambiar 'WASD' y las flechas del teclado para moverse con las flechas y atacar con 'WASD')
+           - Opciones de volúmen de la música (Quitar la música o bajar el volúmen)
+           - Opciones de volúmen de los efectos de sonido del juego (Quitar los efectos de sonido o bajar el volúmen de estos)
+    2. Iniciar juego: Donde al dar click en el botón metera al jugador al primer nivel del juego.
+    3. *Continuar Partida: Donde el jugador podrá retomar su partida si es que no ha muerto en alguno de los niveles.
+2. Juego:  Dento de la partida el jugador podrá ver la pantalla de la primera sala, a sus lados estaran las 3 subsalas y la sala del jefe. Dentro de la partida, el jugador tendrá las siguientes subpantallas:
+    1. Pausa: La cual tendra las siguientes opciones para el jugador:
+           - Opciones: Como en la pantalla de inicio se tendrán las mismas opciones en el menú de opciones.
+               - Revisar controles
+               - Alternar controles (Cambiar 'WASD' y las flechas del teclado para moverse con las flechas y atacar con 'WASD')
+               - Opciones de volúmen de la música (Quitar la música o bajar el volúmen)
+               - Opciones de volúmen de los efectos de sonido del juego (Quitar los efectos de sonido o bajar el volúmen de estos)
+               - Botón para salir de la partida y guardarla.
     2. Assessment / Next Level
-4. End Credits
+3. End Credits
 
 _(example)_
 
