@@ -261,8 +261,6 @@ _(example)_
     1. Botón que simule una terminal para abrir un puzzle
     2. Botón para cambiar de nivel.
 
-_(example)_
-
 ## _Graphics_
 
 ---
