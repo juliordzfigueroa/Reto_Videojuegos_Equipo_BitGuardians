@@ -239,6 +239,13 @@ _(example)_
 2. BaseObstacle
 3. BaseInteractable
 
+1. Fisicas Básicas a desarrollar
+    1. Fisicas del personaje (Movimiento, ataque, puntos de vida, interacciones con las paredes y obstaculos, interacción con los puzzles para su solución)
+    2. Fisicas de los enemigos cuerpo a cuerpo (Movimiento hacia el jugador, ataque, puntos de vida, interacciones con las paredes y obstaculos, interacción con el jugador)
+    3. Fisicas de Power-ups ()
+2. BaseObstacle
+3. BaseInteractable
+   
 _(example)_
 
 ### **Derived Classes / Component Compositions**
