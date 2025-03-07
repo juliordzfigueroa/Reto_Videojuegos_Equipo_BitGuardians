@@ -283,8 +283,6 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
 2. Obstaculos del escenario
 3. Obejtos para interactuar
 
-   
-_(example)_
 
 ### **Derived Classes / Component Compositions**
 
