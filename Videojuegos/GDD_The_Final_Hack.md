@@ -224,7 +224,7 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
 
 1. Nivel 1 y 2: Servidor 1: 
     1. Mood
-        1. Lugar con iluminación, donde el jugador debe estar atento a los diferentes desafios del nivel
+        1. Lugar con poca iluminación, donde el jugador debe estar atento a los diferentes desafios del nivel
     2. Objects
         1. _Ambient_
             1. Cables salientes del piso y pared
@@ -310,43 +310,41 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
 
 ### **Style Attributes**
 
-Para la temática de hacking y ciberseguridad que tiene nuestro juego, vamos a utilizar una paleta de colores que emitan una vibra estética digital. Para esto, planeamos utilizar lo siguiente:
+Nuestro juego al estar ambientado en la temática de ciberseguridad en una base secreta tomada por una organización clandestina, queremos usar una paleta de colores que emitan una vibra de estetica digital dentro de esta base secreta. Para lograr esto, planeamos usar lo siguiente:
 
 1. Colores base
     1. Negro
     2. Azul neón
-    3. Gris
+    3. Gris obscuro
+    4. Gris claro
 
 2. Peligro o daño
     1. Rojo
 
 3. Puzzles
     1. Blanco
-    2. Negro
+    2. Gris
+    3. Negro
+    4. Verde
 
 4. Objetos permanentes/power ups
     1. Contorno Verde
     2. Contorno Azul
     3. Contorno Morado
-    4. Contorno Amarillo
+    4. Contorno Naranja claro 
   
-El tipo de estilo gráfico de nuestro juego, será un pixel-art con animaciones. El tamaño de los sprites será coherente, dandoles un tamaño predeterminado. Las animaciones serán movimientos de ataque rápidos y fluidos para dar una sensación de fuerza y satisfacción al usuario, los golpes y daño recibido serán acompañados de un flsah rojo que de la sensación de peligro, y la interacción con objetos será resaltada por un brillo.
+El tipo de estilo gráfico de nuestro juego, será un pixel-art con animaciones. Las animaciones serán movimientos de ataque rápidos y fluidos para dar una sensación satisfactoria al jugador, los golpes y daño recibido serán acompañados de un flsah rojo que de la sensación de peligro, y la interacción con objetos será resaltada por un brillo.
 
-Para que el jugador entienda cuando puede interactuar co un objeto y cuando no, pondremos las siguientes propiedades en los objetos interactivos:
+Para que el jugador pueda saber cuando puede interactuar con un objeto y cuando no, pondremos las siguientes animaciones en los objetos interactivos:
 
-1. Símbolo flotante de la tecla con la que está asignada la acción de interración
-2. Parpadeo brillante del objeto
+1. Parpadeo brillante del objeto
 
 También, es importante dar retroalimentación positiva y negativa al jugador, por lo que desarrollaremos medidas para que pueda entender cuando esta haciendo las cosas bien, y cuando esta haciendo las cosas mal. Lo haremos de la siguiente manera:
 
-1. Subida de nivel
-    1. Brillo azul y blanco temporal rodeando el personaje
-    2. Símbolo flotante que indique mejora
-
-2. Daño recibido y daño infligido
+1. Daño recibido y daño infligido
     1. Tanto como los enemigos como el personaje tendrán un efecto de flash color rojo al ser impactados
     2. Sacudida de pantalla al recibir golpe
-    3. Sonido de impacto diferente
+  
 
 ### **Graphics Needed**
 
@@ -359,22 +357,26 @@ También, es importante dar retroalimentación positiva y negativa al jugador, p
 2. Bloques
     1. Paredes con grietas
     2. Circuitos
-    3. Paredes digitales
+    3. Placas de concreto para el piso
+    4. Placas de concreto ligeramente agrietadas
 3. Ambiente
     1. Drones descompuestos en el piso
     2. Cámaras de seguridad
     3. Cables
     4. Torres de servicio con cables
     5. Chispas eléctricas
-    6. Hologramas con mensajes
-    7. Señales de advertencia
+    6. Señales de advertencia
 4. Otros
     1. Terminales
     2. Puertas
-    3. Power Ups: Chips, Datos encriptados, dispositios hacking
+    3. Power Ups: aumento de vida, recuperación de vida, bomba EMP, distintas armas
     4. Armas
 
-_(example)_
+Aqui algunos de los diseños ya hechos para usar en nuestro juego:
+
+![Cipher](/Videojuegos/images/GDD/cipher_1_1.png)
+
+![Logo_The_Final_Hack](/Videojuegos/images/GDD/the_final_hack.png)
 
 
 ## _Sounds/Music_
