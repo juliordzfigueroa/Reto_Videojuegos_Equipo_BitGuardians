@@ -369,9 +369,10 @@ También, es importante dar retroalimentación positiva y negativa al jugador, p
     4. Armas
 
 Aqui algunos de los diseños ya hechos para usar en nuestro juego:
-
+Primer diseño del protagonista Cipher: 
 ![Cipher](/Videojuegos/images/GDD/cipher_1_1.png)
 
+Logo con el nombre del juego para usarlo en la pantalla del titulo del juego:
 ![Logo_The_Final_Hack](/Videojuegos/images/GDD/the_final_hack_1_1.png)
 
 
