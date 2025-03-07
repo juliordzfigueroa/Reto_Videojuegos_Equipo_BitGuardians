@@ -310,42 +310,69 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
 
 ### **Style Attributes**
 
-What kinds of colors will you be using? Do you have a limited palette to work with? A post-processed HSV map/image? Consistency is key for immersion.
+Para la temática de hacking y ciberseguridad que tiene nuestro juego, vamos a utilizar una paleta de colores que emitan una vibra estética digital. Para esto, planeamos utilizar lo siguiente:
 
-What kind of graphic style are you going for? Cartoony? Pixel-y? Cute? How, specifically? Solid, thick outlines with flat hues? Non-black outlines with limited tints/shades? Emphasize smooth curvatures over sharp angles? Describe a set of general rules depicting your style here.
+1. Colores base
+    1. Negro
+    2. Azul neón
+    3. Gris
 
-Well-designed feedback, both good (e.g. leveling up) and bad (e.g. being hit), are great for teaching the player how to play through trial and error, instead of scripting a lengthy tutorial. What kind of visual feedback are you going to use to let the player know they&#39;re interacting with something? That they \*can\* interact with something?
+2. Peligro o daño
+    1. Rojo
+
+3. Puzzles
+    1. Blanco
+    2. Negro
+
+4. Objetos permanentes/power ups
+    1. Contorno Verde
+    2. Contorno Azul
+    3. Contorno Morado
+    4. Contorno Amarillo
+  
+El tipo de estilo gráfico de nuestro juego, será un pixel-art con animaciones. El tamaño de los sprites será coherente, dandoles un tamaño predeterminado. Las animaciones serán movimientos de ataque rápidos y fluidos para dar una sensación de fuerza y satisfacción al usuario, los golpes y daño recibido serán acompañados de un flsah rojo que de la sensación de peligro, y la interacción con objetos será resaltada por un brillo.
+
+Para que el jugador entienda cuando puede interactuar co un objeto y cuando no, pondremos las siguientes propiedades en los objetos interactivos:
+
+1. Símbolo flotante de la tecla con la que está asignada la acción de interración
+2. Parpadeo brillante del objeto
+
+También, es importante dar retroalimentación positiva y negativa al jugador, por lo que desarrollaremos medidas para que pueda entender cuando esta haciendo las cosas bien, y cuando esta haciendo las cosas mal. Lo haremos de la siguiente manera:
+
+1. Subida de nivel
+    1. Brillo azul y blanco temporal rodeando el personaje
+    2. Símbolo flotante que indique mejora
+
+2. Daño recibido y daño infligido
+    1. Tanto como los enemigos como el personaje tendrán un efecto de flash color rojo al ser impactados
+    2. Sacudida de pantalla al recibir golpe
+    3. Sonido de impacto diferente
 
 ### **Graphics Needed**
 
-1. Characters
-    1. Human-like
-        1. Goblin (idle, walking, throwing)
-        2. Guard (idle, walking, stabbing)
-        3. Prisoner (walking, running)
-    2. Other
-        1. Wolf (idle, walking, running)
-        2. Giant Rat (idle, scurrying)
-2. Blocks
-    1. Dirt
-    2. Dirt/Grass
-    3. Stone Block
-    4. Stone Bricks
-    5. Tiled Floor
-    6. Weathered Stone Block
-    7. Weathered Stone Bricks
-3. Ambient
-    1. Tall Grass
-    2. Rodent (idle, scurrying)
-    3. Torch
-    4. Armored Suit
-    5. Chains (matching Weathered Stone Bricks)
-    6. Blood stains (matching Weathered Stone Bricks)
-4. Other
-    1. Chest
-    2. Door (matching Stone Bricks)
-    3. Gate
-    4. Button (matching Weathered Stone Bricks)
+1. Personajes
+    1. Humanos
+        1. Cipher el hacker 
+    2. Otros
+        1. Robots
+        2. Drones
+2. Bloques
+    1. Paredes con grietas
+    2. Circuitos
+    3. Paredes digitales
+3. Ambiente
+    1. Drones descompuestos en el piso
+    2. Cámaras de seguridad
+    3. Cables
+    4. Torres de servicio con cables
+    5. Chispas eléctricas
+    6. Hologramas con mensajes
+    7. Señales de advertencia
+4. Otros
+    1. Terminales
+    2. Puertas
+    3. Power Ups: Chips, Datos encriptados, dispositios hacking
+    4. Armas
 
 _(example)_
 
