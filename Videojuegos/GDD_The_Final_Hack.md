@@ -82,6 +82,7 @@ Queremos que el jugador pueda sentir las siguientes cosas:
 - **Ingenio y Desafío mental:** Como hacker el jugador deberá usar su lógica y habilidad en resolución de problemas para avanzar. Esto se logrará a través de enemigos que lo atacan y puzzles que deberá resolver conforme avanza en el juego. 
 - **Progresión de poder:** El jugador debe poder sentir que a medida que supera obstáculos y niveles, mejora continuamente. Asimismo, con las mejoras permanentes el jugador logrará sentirse cada vez más poderoso y con mejores habilidades. 
 - **Adrenalina:** Con los diferentes enemigos y jefes del nivel queremos que la curva de dificultad aumente, creando así un efecto de adrenalina en el jugador a medida que juega. 
+- **Presión:** Los puzzles tendrán tiempos limites para resolverlos. Creando así presión sobre el jugador para que los resuelva de la manera más rápida posible. 
 
 ## _Technical_
 
@@ -155,33 +156,40 @@ El juego contará con una sala principal rodeada de 4 subsalas. En la parte de a
 - Enemigos cuerpo a cuerpo: Esta sala solamente contiene enemigos que atacan cuerpo a cuerpo.
 - Enemigos cuerpo a cuerpo y a distancia: Esta sala contiene enemigos que atacan tanto cuerpo a cuerpo, como también a distancia.
 - Sala de puzzle con enemigos: Una sala que contiene un puzzle a resolver y enemigos en menor cantidad que los demás cuartos. 
-Además de esto, el jugador es capaz de interactuar con las el entorno de las salas. Es decir, habrán salas donde hay obstaculos que el jugador también puede usar como pared de escudo. 
+Además de esto, el jugador es capaz de interactuar con las el entorno de las salas. Es decir, habrán salas donde hay obstaculos que el jugador también puede usar como pared de escudo. Los enemigos no pueden pasar por sobre estos obstáculos o paredes. 
 
 Existen dos tipos de enemigos:
-1. Robots: Pueden ser robots que disparan o que atacan cuerpo a cuerpo. 
-2. Drones: Dron que ataca con láser. 
+1. Robots:
+    - Cuerpo a cuerpo: Estos robots que atacan cuerpo a cuerpo tendrán tendrán más vida que los robots a distancia, sin embargo, tendrán menos daño. 
+    - Distancia: Los robots que atacan a distancia tienen más daño que los robots cuerpo a cuerpo, pero menos vida. 
+2. Drones: Dron que ataca con láser. Este dron se encontrará con valores balanceados. Es decir, tendrá más de vida que el robot a distancia, y más de daño que el robot cuerpo a cuerpo.  
 
 Estos enemigos su único objetivo es derrotar al jugador, por lo que su comportamiento siempre será agresivo contra el jugador. Con los enemigos solo hay dos opciones:
 1. Los derrotas
-2. Te derrotan
-Es crucial que todos los enemigos esten derrotados, debido a que si no los derrotas a todos, entonces la sala del jefe nunca se abre. 
+2. Te derrotan. Es crucial que todos los enemigos esten derrotados, debido a que si no los derrotas a todos, entonces la sala del jefe nunca se abre. 
 
 Para poder pelear con los enemigos habrán 3 tipos de armas: 
-- Pistola láser 
-- Tazer
-- Espada láser
+- Pistola láser: pistola que dispara proyectiles con velocidad definida. Esta pistola hará menos daño que el tazer. 
+- Tazer: Arma de corto alcance que aturde a los enemigos por un tiempo breve. El tazer estará en un nivel balanceado con respecto al daño de la pistola láser y la espada. 
+- Espada láser: Para golpes de cuerpo a cuerpo. La espada hará más daño que el tazer. 
 
-Los puzzles serán de tipo lógicos. Uno de ellos sera un slide puzzle, donde el jugador tendrá que ordenar una matriz de imagenes en el orden correcto. 
+El puzzle será de tipo lógicos. Van a funcionar de la siguiente manera:
+- Slide puzzle, donde el jugador tendrá que ordenar una matriz de imagenes en el orden correcto. 
+- Puzzle es dinámico, lo que significa que se genera aleatoriamente y cada nivel sube la dificultad. Esto al poner más imágenes en la matriz. 
+- Tendrán un tiempo limite para resolverlo. 
+- En caso de que el jugador no logre resolver el puzzle, sale del puzzle y tiene que enfrentar más enemigos. 
+- Una vez hecho esto, puede volver a intentar resolver el puzzle. 
+- Cada nivel el tiempo se hace menor para aumentar la dificultad y la presión. 
 
-Despues de completar una subsala, al jugador se le darán PowerUps que se clasifican de la siguiente manera:
-1. Comunes:
+Despues de completar una subsala, al jugador se le darán PowerUps que apareceran según un sistema de probabilidad basado en la rareza y se clasifican de la siguiente manera:
+1. **Comunes** (40% de aparición):
     - Recuperar vida: Recuperación del 20% de vida.
     - Escudo: Se le otorga al jugador de 10% de vida.
-2. Raros:
+2. **Raros** (30% de aparición):
     - Aumento de vida: Aumento de vida en 20 puntos.
-3. Epico:
+3. **Epico** (20% de aparición):
     - Aumento de daño: Aumenta el daño en el 10 puntos.
-4. Legendario: 
+4. **Legendario** (10% de aparición): 
     - Bomba EMP: Una bomba que ature a los enemigos por 2 segundos.
 
 Al pasar de nivel los enemigos aumentarán su vida en un 10% y el ataque en un 15%. Asimismo en las salas de puzzle, estos aumentarán de dificultado conforme se avanzan los niveles.
@@ -189,7 +197,7 @@ Al pasar de nivel los enemigos aumentarán su vida en un 10% y el ataque en un 1
 En relación a los jefes, estos siempre serán un 20% más fuetes que los enemigos del nivel y tendrán 50% más de vida comparado a los enemigos del nivel en el que se encuentra el jugador. 
 
 
-> Posibles escenarios del jugador en el juego
+> **Posibles escenarios del jugador en el juego**
 Los escenarios a los que el jugador se puede enfrentar en el juego son los siguientes:
 1. Escenario donde el jugador gana: 
     - El jugador entra al nivel 1. Aparece a la mitad de la sala principal con 3 salas abiertas y una bloqueada alrededor. La sala bloqueada es la del jefe, que se desbloquea una vez completando las otras tres. 
@@ -232,13 +240,20 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
 1. El jugador empieza en la sala central del nivel
 2. De su lado izquierdo, derecho y abajo hay tres subsalas con desafios.
 3. El jugador entra a una de las salas que tiene a sus lados.
-4. El jugador completa el desafio de la subsala y es recompensado por un power-up
-5. El jugador regresa a la sala principal, e ingresa a una de las salas restantes.
-6. Tras completar las 3 subsalas, la puerta del jefe (encontrada en la parte de arriba de la pantalla) queda desbloqueada.
-7. El jugador entra a la sala del jefe.
-8. Tras derrotarlo el jugador puede pasar al siguiente nivel.
-9. El siguiente nivel se plantea igual, comezando desde el punto 1.
-10. Si el jugador es derrotado, el jugador empezará el juego desde el punto 1.
+4. Una vez dentro, la puerta se cierra automáticamente hasta completar el desafío. 
+5. El jugador completa el desafio de la subsala y es recompensado con un power-up. 
+6. La puerta es desbloqueada para que el jugador salga de la subsala.
+7. El jugador regresa a la sala principal, e ingresa a una de las salas restantes.
+8. En la subsala del puzzle el jugador tiene tiempo limite para resolverlo. 
+9. Si no logra resolver el puzzle en el tiempo, más enemigos aparecen. 
+10. Tras completar las 3 subsalas, la puerta del jefe (encontrada en la parte de arriba de la pantalla) queda desbloqueada.
+11. El jugador entra a la sala del jefe.
+12. La puerta se cierra una vez el jugador entra y empieza el combate. 
+13. Tras derrotarlo el jugador puede pasar al siguiente nivel.
+14. El siguiente nivel se plantea igual, comezando desde el punto 1.
+15. Si el jugador es derrotado, el jugador empezará el juego desde el punto 1.
+16. El jugador conserva los power-ups permanentes para volver a comenzar el juego. 
+17. El jugador gana el juego una vez complete todo los niveles disponibles y cumpla el objetivo mencionado al inicio de las mecanicas.
 
 
 ## _Development_
@@ -248,11 +263,26 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
 ### **Abstract Classes / Components**
 
 1. Fisicas Básicas a desarrollar
-    1. Fisicas del personaje (Movimiento, ataque, puntos de vida, interacciones con las paredes y obstaculos, interacción con los puzzles para su solución)
-    2. Fisicas de los enemigos (Movimiento hacia el jugador, ataque, puntos de vida, interacciones con las paredes y obstaculos, interacción con el jugador)
-    3. Fisicas de Power-ups (probabilidad de aparición, rareza)
+    1. Fisicas del personaje: 
+    - Movimiento
+    - Ataque 
+    - Puntos de vida
+    - Interacciones con las paredes y obstaculos
+    - Interacción con los puzzles para su solución
+    2. Fisicas de los enemigos:
+    - Movimiento hacia el jugador
+    - Ataque
+    - Puntos de vida
+    - Interacciones con las paredes y obstaculos
+    - Interacción con el jugador
+    3. Fisicas de Power-ups:
+    - Probabilidad de aparición
+    - Rareza
+    - Duracion del power-up: Uso único, permanente.
+    - Interacción con el jugador: Se activa automáticamente o requiere de la activación por boton. 
 2. Obstaculos del escenario
-3. Obejtos para interactuar.
+3. Obejtos para interactuar
+
    
 _(example)_
 
