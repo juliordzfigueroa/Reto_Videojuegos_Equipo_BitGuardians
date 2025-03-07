@@ -232,46 +232,34 @@ _(example)_
 
 ### **Abstract Classes / Components**
 
-1. BasePhysics
-    1. BasePlayer
-    2. BaseEnemy
-    3. BaseObject
-2. BaseObstacle
-3. BaseInteractable
-
 1. Fisicas Básicas a desarrollar
     1. Fisicas del personaje (Movimiento, ataque, puntos de vida, interacciones con las paredes y obstaculos, interacción con los puzzles para su solución)
-    2. Fisicas de los enemigos cuerpo a cuerpo (Movimiento hacia el jugador, ataque, puntos de vida, interacciones con las paredes y obstaculos, interacción con el jugador)
-    3. Fisicas de Power-ups ()
-2. BaseObstacle
-3. BaseInteractable
+    2. Fisicas de los enemigos (Movimiento hacia el jugador, ataque, puntos de vida, interacciones con las paredes y obstaculos, interacción con el jugador)
+    3. Fisicas de Power-ups (probabilidad de aparición, rareza)
+2. Obstaculos del escenario
+3. Obejtos para interactuar.
    
 _(example)_
 
 ### **Derived Classes / Component Compositions**
 
-1. BasePlayer
-    1. PlayerMain
-    2. PlayerUnlockable
-2. BaseEnemy
-    1. EnemyWolf
-    2. EnemyGoblin
-    3. EnemyGuard (may drop key)
-    4. EnemyGiantRat
-    5. EnemyPrisoner
-3. BaseObject
-    1. ObjectRock (pick-up-able, throwable)
-    2. ObjectChest (pick-up-able, throwable, spits gold coins with key)
-    3. ObjectGoldCoin (cha-ching!)
-    4. ObjectKey (pick-up-able, throwable)
-4. BaseObstacle
-    1. ObstacleWindow (destroyed with rock)
-    2. ObstacleWall
-    3. ObstacleGate (watches to see if certain buttons are pressed)
-5. BaseInteractable
-    1. InteractableButton
-
-_(example)_
+1. Fisicas del personaje
+    1. Personaje principal
+2. Fisicas de los enemigos 
+    1. Enemigos cuerpo a cuerpo
+    2. Enemigos que disparan a distancia
+    3. Jefe del nivel (Versión más grande del enemigo cuerpo a cuerpo o a distancia)
+3. Fisicas de Power-ups
+    1. Power-Up para recuperar vida
+    2. Power-Up para aumentar la vida
+    3. Power-Up para aumentar el daño
+    4. Power-Up Bomba EMP (Poder guardarlo y usarlo con E)
+4.  Obstaculos del escenario
+    1. Obstaculo de cables saliendo de las paredes
+    2. Obstaculo de cables saliendo del piso
+5.  Objetos para interactuar
+    1. Botón que simule una terminal para abrir un puzzle
+    2. Botón para cambiar de nivel.
 
 ## _Graphics_
 
