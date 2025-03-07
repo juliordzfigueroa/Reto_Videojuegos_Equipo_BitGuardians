@@ -333,7 +333,7 @@ Nuestro juego al estar ambientado en la temática de ciberseguridad en una base 
     3. Contorno Morado
     4. Contorno Naranja claro 
   
-El tipo de estilo gráfico de nuestro juego, será un pixel-art con animaciones. Las animaciones serán movimientos de ataque rápidos y fluidos para dar una sensación satisfactoria al jugador, los golpes y daño recibido serán acompañados de un flsah rojo que de la sensación de peligro, y la interacción con objetos será resaltada por un brillo.
+Nuestro estílo artistico será pixel-art con animaciones. Las animaciones serán movimientos de ataque rápidos y fluidos para dar una sensación satisfactoria al jugador, los golpes y daño recibido serán acompañados de un flsah rojo que de la sensación de peligro, y la interacción con objetos será resaltada por un brillo.
 
 Para que el jugador pueda saber cuando puede interactuar con un objeto y cuando no, pondremos las siguientes animaciones en los objetos interactivos:
 
@@ -360,12 +360,8 @@ También, es importante dar retroalimentación positiva y negativa al jugador, p
     3. Placas de concreto para el piso
     4. Placas de concreto ligeramente agrietadas
 3. Ambiente
-    1. Drones descompuestos en el piso
-    2. Cámaras de seguridad
-    3. Cables
-    4. Torres de servicio con cables
-    5. Chispas eléctricas
-    6. Señales de advertencia
+    1. Cables saliendo del piso
+    2. Cables saliendo de las paredes
 4. Otros
     1. Terminales
     2. Puertas
@@ -376,7 +372,7 @@ Aqui algunos de los diseños ya hechos para usar en nuestro juego:
 
 ![Cipher](/Videojuegos/images/GDD/cipher_1_1.png)
 
-![Logo_The_Final_Hack](/Videojuegos/images/GDD/the_final_hack.png)
+![Logo_The_Final_Hack](/Videojuegos/images/GDD/the_final_hack_1_1.png)
 
 
 ## _Sounds/Music_
