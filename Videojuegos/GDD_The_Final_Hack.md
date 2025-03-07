@@ -148,8 +148,6 @@ Además de esto, utilizaremos dos teclas más:
 
 ### **Mechanics**
 
-Are there any interesting mechanics? If so, how are you going to accomplish them? Physics, algorithms, etc.
-
 El objetivo principal del juego es que el jugador pueda recuperar la información robada por "The Core". Esto lo hace a tráves de completar los diferentes desafíos de los niveles del juego. Una vez que los completa, gana el juego. El juegador siempre tiene la oportunidad de mejorar en términos de estadística. 
 Se quiere que el jugador pueda enfrentarse a niveles que lo pongan a prueba sus habilidades tanto de combate con los diferentes tipos de enemigos, y además sus habilidades intelectuales con los puzzles. 
 
@@ -214,36 +212,20 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
 
 ---
 
-_(Note : These sections can safely be skipped if they&#39;re not relevant, or you&#39;d rather go about it another way. For most games, at least one of them should be useful. But I&#39;ll understand if you don&#39;t want to use them. It&#39;ll only hurt my feelings a little bit.)_
-
 ### **Themes**
 
-1. Forest
+1. Nivel 1 y 2: Servidor 1: 
     1. Mood
-        1. Dark, calm, foreboding
+        1. Lugar con iluminación, donde el jugador debe estar atento a los diferentes desafios del nivel
     2. Objects
         1. _Ambient_
-            1. Fireflies
-            2. Beams of moonlight
-            3. Tall grass
+            1. Cables salientes del piso y pared
         2. _Interactive_
-            1. Wolves
-            2. Goblins
-            3. Rocks
-2. Castle
-    1. Mood
-        1. Dangerous, tense, active
-    2. Objects
-        1. _Ambient_
-            1. Rodents
-            2. Torches
-            3. Suits of armor
-        2. _Interactive_
-            1. Guards
-            2. Giant rats
-            3. Chests
-
-_(example)_
+            1. Robots
+            2. Drones
+            3. Terminal para el puzzle
+            4. Puerta para el cambio de nivel
+            5. Jefe del nivel
 
 ### **Game Flow**
 
