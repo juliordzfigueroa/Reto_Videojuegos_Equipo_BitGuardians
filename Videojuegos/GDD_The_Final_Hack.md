@@ -212,7 +212,7 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
     - El jugador entra al nivel 1. Aparece a la mitad de la sala principal con 3 salas abiertas y una bloqueada alrededor. La sala bloqueada es la del jefe, que se desbloquea una vez completando las otras tres. 
     - El jugador entra a alguna sala y se enfrenta a los diferentes desafíos, ya sea enemigos que disparan a distancia, cuerpo a cuerpo o una sala con enemigos y un puzzle. 
     - El jugador es derrotado debido a que se le acabó la vida por los ataques de los enemigos. 
-    - El jugador regresa al inicio donde puede volver a empezar el nivel 1 y únicamente conserva aquellas mejoras que obtuvo durante su primer intento. 
+    - El jugador regresa al inicio donde puede volver a empezar el nivel 1 y únicamente conserva aquellas mejoras permanentes que obtuvo durante sus intentos anteriores. 
     - El jugador repite este proceso hasta que logre completar todos los niveles y recuperar la información robada por “The Core”. 
  
 
@@ -224,7 +224,7 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
 
 1. Nivel 1 y 2: Servidor 1: 
     1. Mood
-        1. Lugar con iluminación, donde el jugador debe estar atento a los diferentes desafios del nivel
+        1. Lugar con poca iluminación, donde el jugador debe estar atento a los diferentes desafios del nivel
     2. Objects
         1. _Ambient_
             1. Cables salientes del piso y pared
@@ -310,43 +310,40 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
 
 ### **Style Attributes**
 
-Para la temática de hacking y ciberseguridad que tiene nuestro juego, vamos a utilizar una paleta de colores que emitan una vibra estética digital. Para esto, planeamos utilizar lo siguiente:
+Nuestro juego al estar ambientado en la temática de ciberseguridad en una base secreta tomada por una organización clandestina, queremos usar una paleta de colores que emitan una vibra de estetica digital dentro de esta base secreta. Para lograr esto, planeamos usar lo siguiente:
 
 1. Colores base
     1. Negro
     2. Azul neón
-    3. Gris
+    3. Gris obscuro
+    4. Gris claro
 
 2. Peligro o daño
     1. Rojo
 
 3. Puzzles
     1. Blanco
-    2. Negro
+    2. Gris
+    3. Negro
+    4. Verde
 
 4. Objetos permanentes/power ups
     1. Contorno Verde
     2. Contorno Azul
     3. Contorno Morado
-    4. Contorno Amarillo
+    4. Contorno Naranja claro 
   
-El tipo de estilo gráfico de nuestro juego, será un pixel-art con animaciones. El tamaño de los sprites será coherente, dandoles un tamaño predeterminado. Las animaciones serán movimientos de ataque rápidos y fluidos para dar una sensación de fuerza y satisfacción al usuario, los golpes y daño recibido serán acompañados de un flsah rojo que de la sensación de peligro, y la interacción con objetos será resaltada por un brillo.
+Nuestro estílo artistico será pixel-art con animaciones. Las animaciones serán movimientos de ataque rápidos y fluidos para dar una sensación satisfactoria al jugador, los golpes y daño recibido serán acompañados de un flsah rojo que de la sensación de peligro, y la interacción con objetos será resaltada por un brillo.
 
-Para que el jugador entienda cuando puede interactuar co un objeto y cuando no, pondremos las siguientes propiedades en los objetos interactivos:
+Para que el jugador pueda saber cuando puede interactuar con un objeto y cuando no, pondremos las siguientes animaciones en los objetos interactivos:
 
-1. Símbolo flotante de la tecla con la que está asignada la acción de interración
-2. Parpadeo brillante del objeto
+1. Parpadeo brillante del objeto
 
 También, es importante dar retroalimentación positiva y negativa al jugador, por lo que desarrollaremos medidas para que pueda entender cuando esta haciendo las cosas bien, y cuando esta haciendo las cosas mal. Lo haremos de la siguiente manera:
 
-1. Subida de nivel
-    1. Brillo azul y blanco temporal rodeando el personaje
-    2. Símbolo flotante que indique mejora
-
-2. Daño recibido y daño infligido
+1. Daño recibido y daño infligido
     1. Tanto como los enemigos como el personaje tendrán un efecto de flash color rojo al ser impactados
-    2. Sacudida de pantalla al recibir golpe
-    3. Sonido de impacto diferente
+  
 
 ### **Graphics Needed**
 
@@ -359,22 +356,23 @@ También, es importante dar retroalimentación positiva y negativa al jugador, p
 2. Bloques
     1. Paredes con grietas
     2. Circuitos
-    3. Paredes digitales
+    3. Placas de concreto para el piso
+    4. Placas de concreto ligeramente agrietadas
 3. Ambiente
-    1. Drones descompuestos en el piso
-    2. Cámaras de seguridad
-    3. Cables
-    4. Torres de servicio con cables
-    5. Chispas eléctricas
-    6. Hologramas con mensajes
-    7. Señales de advertencia
+    1. Cables saliendo del piso
+    2. Cables saliendo de las paredes
 4. Otros
     1. Terminales
     2. Puertas
-    3. Power Ups: Chips, Datos encriptados, dispositios hacking
+    3. Power Ups: aumento de vida, recuperación de vida, bomba EMP, distintas armas
     4. Armas
 
-_(example)_
+Aqui algunos de los diseños ya hechos para usar en nuestro juego:
+Primer diseño del protagonista Cipher: 
+![Cipher](/Videojuegos/images/GDD/cipher_1_1.png)
+
+Logo con el nombre del juego para usarlo en la pantalla del titulo del juego:
+![Logo_The_Final_Hack](/Videojuegos/images/GDD/the_final_hack_1_1.png)
 
 
 ## _Sounds/Music_
@@ -421,35 +419,40 @@ _(example)_
 ## _Schedule_
 
 ---
+Este será el orden de como desarrollaremos los diferentes aspectos mecionados del videojuego. Este orden esta sujeto a cambios a lo largo del desarrollo
 
-_(define the main activities and the expected dates when they should be finished. This is only a reference, and can change as the project is developed)_
+1. Clases de objetos del juego
+    1. Entidad Base:
+        1. Jugador 
+        2. Clase enemigos
+        3. Power-ups
+        4. Puzzles
+        5. Obstaculos
+  2. Diseño de niveles
+        1. Clase con el layout de los niveles
+        2. Menú pausa
+2. Encontar controles comodos para el usuario
+    1. Opción para alternar los controles
+3. Desarrollo de las interacciones entre el jugador y los power ups 
+    1. Físicas y colisione    
+4. Ajustar las físicas del jugador y de los power-ups
+5. Desarrollo de las clases restantes
+    1. Enemigos
+        1. Robot
+        2. Dron
+        3. Jefe
+    2. Obstaculos
+        1. Posición de los cables que salen del piso
+        2. Posición de los cables que salen de la pared
+    3. Puzzles
+       1. Puzzle de acomodar las fichas en orden dentro de una matríz
+6. Diseño de niveles
+    1. Introducir los power-ups para pruebas
+    2. Probar el botón de interacción con los puzzles y el cambio de nivel
+    3. Detallar el posicionamineto de enemigos en cada tipo de sala
+7. Diseño de animaciones
+8. Diseño de efectos de sonido
+9. Diseño de musica para los niveles
+   1. Música para la sala del jefe
+   2. Música para el resto del nivel
 
-1. develop base classes
-    1. base entity
-        1. base player
-        2. base enemy
-        3. base block
-  2. base app state
-        1. game world
-        2. menu world
-2. develop player and basic block classes
-    1. physics / collisions
-3. find some smooth controls/physics
-4. develop other derived classes
-    1. blocks
-        1. moving
-        2. falling
-        3. breaking
-        4. cloud
-    2. enemies
-        1. soldier
-        2. rat
-        3. etc.
-5. design levels
-    1. introduce motion/jumping
-    2. introduce throwing
-    3. mind the pacing, let the player play between lessons
-6. design sounds
-7. design music
-
-_(example)_
