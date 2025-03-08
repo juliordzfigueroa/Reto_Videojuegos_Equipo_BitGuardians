@@ -212,7 +212,7 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
     - El jugador entra al nivel 1. Aparece a la mitad de la sala principal con 3 salas abiertas y una bloqueada alrededor. La sala bloqueada es la del jefe, que se desbloquea una vez completando las otras tres. 
     - El jugador entra a alguna sala y se enfrenta a los diferentes desafíos, ya sea enemigos que disparan a distancia, cuerpo a cuerpo o una sala con enemigos y un puzzle. 
     - El jugador es derrotado debido a que se le acabó la vida por los ataques de los enemigos. 
-    - El jugador regresa al inicio donde puede volver a empezar el nivel 1 y únicamente conserva aquellas mejoras que obtuvo durante su primer intento. 
+    - El jugador regresa al inicio donde puede volver a empezar el nivel 1 y únicamente conserva aquellas mejoras permanentes que obtuvo durante sus intentos anteriores. 
     - El jugador repite este proceso hasta que logre completar todos los niveles y recuperar la información robada por “The Core”. 
  
 
@@ -343,7 +343,6 @@ También, es importante dar retroalimentación positiva y negativa al jugador, p
 
 1. Daño recibido y daño infligido
     1. Tanto como los enemigos como el personaje tendrán un efecto de flash color rojo al ser impactados
-    2. Sacudida de pantalla al recibir golpe
   
 
 ### **Graphics Needed**
