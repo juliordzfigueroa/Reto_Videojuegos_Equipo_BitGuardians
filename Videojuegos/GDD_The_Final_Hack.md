@@ -381,37 +381,63 @@ Logo con el nombre del juego para usarlo en la pantalla del titulo del juego:
 
 ### **Style Attributes**
 
-Again, consistency is key. Define that consistency here. What kind of instruments do you want to use in your music? Any particular tempo, key? Influences, genre? Mood?
+La música de The Final Hack, tiene como propósito sumergir al jugador en una operación de hackeo de alto riesgo y dificultad. Queremos que el jugador, sienta los elementos electronicos, de tensión y concentración, y batalla. 
 
-Stylistically, what kind of sound effects are you looking for? Do you want to exaggerate actions with lengthy, cartoony sounds (e.g. mario&#39;s jump), or use just enough to let the player know something happened (e.g. mega man&#39;s landing)? Going for realism? You can use the music style as a bit of a reference too.
+1. Género
+    1. Cyberpunk
+    2. Electrónica
+    3. 8-Bit   
+2. Influencias
+    1. Cyberpunk 2077
+    2. Tron Legacy
+3. Mood
+    1. Tenso
+    2. Adrenalina
+    3. Nervio
+4. Instrumentos
+    1. instrumentos electrónicos que creen sonidos con sensación digital
+  
+Los efectos de sonido son elegidos con el propósito de reforzar la temática tecnológica-digital. Para esto, utilizaremos sonidos sintéticos o de estilo glitch, y metálicos-mecánicos, para darle seriedad a la temática, en vez de optar por algo más caricaturesco. Los efectos serán claros y diferenciables, para que no colisionen con la música de fondo y que el jugador tenga una esxperiencia auditiva agradable y satisfactoria. 
 
- Remember, auditory feedback should stand out from the music and other sound effects so the player hears it well. Volume, panning, and frequency/pitch are all important aspects to consider in both music _and_ sounds - so plan accordingly!
+La retroalimentación auditiva será clara y equilibrada, ayudando al jugador entender la situación a la que se enfrenta. Los efectos críticos o de ataque, serán más fuertes que la música y los sonidos de ambiente. Para mantener un equilibrio sonoro, los sonidos se reproduciran de manera uniforme sin variaciones de dirección. Por otra parte, se van a utilizar frecuencias y tempos diferentes para evitar colisiones de sonido con efectos importantes, y para que el jugador pueda percibir la dificultad de los diferentes retos a los que se enfrentará.
+
 
 ### **Sounds Needed**
 
 1. Effects
-    1. Soft Footsteps (dirt floor)
-    2. Sharper Footsteps (stone floor)
-    3. Soft Landing (low vertical velocity)
-    4. Hard Landing (high vertical velocity)
-    5. Glass Breaking
-    6. Chest Opening
-    7. Door Opening
+    1. Pasos en piso de concreto
+    2. Puzzle resuelto
+    3. Ataque lanzado con cada tipo de arma diferente
+    4. Ataque lanzado por enemigo
+    5. Ataque conectado con enemigo
+    6. Ataque recibido
+    7. Sonido de chispas de cable
+    8. Interacciones 
+    9. Apertura de puerta
+    10. Cerradura de puerta
+    11. Sonido corto característico de un jefe
+
 2. Feedback
-    1. Relieved &quot;Ahhhh!&quot; (health)
-    2. Shocked &quot;Ooomph!&quot; (attacked)
-    3. Happy chime (extra life)
-    4. Sad chime (died)
+    1. "Ugh": Daño recibido
+    2. Activación de power up
+    3. "Yuju": Sala completada
+    4. "Error": Puzzle fallado
+    5. Intro del boss
+    6. Sonido de nivel pasado
+    7. Alarma para indicar que el jugador murió
+    8. "Hacked": Puzzle correcto
+    9. Sonido de sistema apagado para indicar que derrotaste a un enemigo
 
 _(example)_
 
 ### **Music Needed**
 
-1. Slow-paced, nerve-racking &quot;forest&quot; track
-2. Exciting &quot;castle&quot; track
-3. Creepy, slow &quot;dungeon&quot; track
-4. Happy ending credits track
-5. Rick Astley&#39;s hit #1 single &quot;Never Gonna Give You Up&quot;
+1. Música electrónica no acelerado pero no muy lenta para las 3 subsalas, por ejemplo: 
+2. Música energizante con tema electrónico para el menú principal, por ejemplo:
+3. Música electrónica acelerada para la batalla contra el jefe, por ejemplo: 
+4. Créditos finales del videojuego. CANCIÓN
+5. Música triste de derrota. CANCION
+6. Música de tensión y concentración para los puzzles. CANCIÓN
 
 _(example)_
 
