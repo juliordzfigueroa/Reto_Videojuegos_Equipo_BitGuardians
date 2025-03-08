@@ -212,7 +212,7 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
     - El jugador entra al nivel 1. Aparece a la mitad de la sala principal con 3 salas abiertas y una bloqueada alrededor. La sala bloqueada es la del jefe, que se desbloquea una vez completando las otras tres. 
     - El jugador entra a alguna sala y se enfrenta a los diferentes desafíos, ya sea enemigos que disparan a distancia, cuerpo a cuerpo o una sala con enemigos y un puzzle. 
     - El jugador es derrotado debido a que se le acabó la vida por los ataques de los enemigos. 
-    - El jugador regresa al inicio donde puede volver a empezar el nivel 1 y únicamente conserva aquellas mejoras que obtuvo durante su primer intento. 
+    - El jugador regresa al inicio donde puede volver a empezar el nivel 1 y únicamente conserva aquellas mejoras permanentes que obtuvo durante sus intentos anteriores. 
     - El jugador repite este proceso hasta que logre completar todos los niveles y recuperar la información robada por “The Core”. 
  
 
@@ -343,7 +343,6 @@ También, es importante dar retroalimentación positiva y negativa al jugador, p
 
 1. Daño recibido y daño infligido
     1. Tanto como los enemigos como el personaje tendrán un efecto de flash color rojo al ser impactados
-    2. Sacudida de pantalla al recibir golpe
   
 
 ### **Graphics Needed**
@@ -420,35 +419,40 @@ _(example)_
 ## _Schedule_
 
 ---
+Este será el orden de como desarrollaremos los diferentes aspectos mecionados del videojuego. Este orden esta sujeto a cambios a lo largo del desarrollo
 
-_(define the main activities and the expected dates when they should be finished. This is only a reference, and can change as the project is developed)_
+1. Clases de objetos del juego
+    1. Entidad Base:
+        1. Jugador 
+        2. Clase enemigos
+        3. Power-ups
+        4. Puzzles
+        5. Obstaculos
+  2. Diseño de niveles
+        1. Clase con el layout de los niveles
+        2. Menú pausa
+2. Encontar controles comodos para el usuario
+    1. Opción para alternar los controles
+3. Desarrollo de las interacciones entre el jugador y los power ups 
+    1. Físicas y colisione    
+4. Ajustar las físicas del jugador y de los power-ups
+5. Desarrollo de las clases restantes
+    1. Enemigos
+        1. Robot
+        2. Dron
+        3. Jefe
+    2. Obstaculos
+        1. Posición de los cables que salen del piso
+        2. Posición de los cables que salen de la pared
+    3. Puzzles
+       1. Puzzle de acomodar las fichas en orden dentro de una matríz
+6. Diseño de niveles
+    1. Introducir los power-ups para pruebas
+    2. Probar el botón de interacción con los puzzles y el cambio de nivel
+    3. Detallar el posicionamineto de enemigos en cada tipo de sala
+7. Diseño de animaciones
+8. Diseño de efectos de sonido
+9. Diseño de musica para los niveles
+   1. Música para la sala del jefe
+   2. Música para el resto del nivel
 
-1. develop base classes
-    1. base entity
-        1. base player
-        2. base enemy
-        3. base block
-  2. base app state
-        1. game world
-        2. menu world
-2. develop player and basic block classes
-    1. physics / collisions
-3. find some smooth controls/physics
-4. develop other derived classes
-    1. blocks
-        1. moving
-        2. falling
-        3. breaking
-        4. cloud
-    2. enemies
-        1. soldier
-        2. rat
-        3. etc.
-5. design levels
-    1. introduce motion/jumping
-    2. introduce throwing
-    3. mind the pacing, let the player play between lessons
-6. design sounds
-7. design music
-
-_(example)_
