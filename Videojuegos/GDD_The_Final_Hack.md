@@ -199,7 +199,7 @@ En relación a los jefes, estos siempre serán un 20% más fuetes que los enemig
 
 > **Posibles escenarios del jugador en el juego**
 Los escenarios a los que el jugador se puede enfrentar en el juego son los siguientes:
-1. Escenario donde el jugador gana: 
+**1. Escenario donde el jugador gana:** 
     - El jugador entra al nivel 1. Aparece a la mitad de la sala principal con 3 salas abiertas y una bloqueada alrededor. La sala bloqueada es la del jefe, que se desbloquea una vez completando las otras tres. 
     - El jugador entra a todas las salas y se enfrenta a los diferentes desafíos, ya sea enemigos que disparan a distancia, cuerpo a cuerpo o una sala con enemigos y un puzzle. Finalmente pasa los retos de las salas. 
     - Se desbloquea la sala del jefe.
@@ -208,7 +208,7 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
     - Se repite el mismo proceso mencionado arriba, pero el jugador se enfrenta a enemigos más agresivos. 
     - Si el jugador logra atravesar todas las salas de todos los niveles disponibles, entonces obtiene la información robada de “The Core” y gana el juego.
     - El jugador puede jugar las veces que quiera para mejorar sus estadísticas. 
-2. Escenario donde el jugador muere en algún punto del juego. 
+**2. Escenario donde el jugador muere en algún punto del juego:** 
     - El jugador entra al nivel 1. Aparece a la mitad de la sala principal con 3 salas abiertas y una bloqueada alrededor. La sala bloqueada es la del jefe, que se desbloquea una vez completando las otras tres. 
     - El jugador entra a alguna sala y se enfrenta a los diferentes desafíos, ya sea enemigos que disparan a distancia, cuerpo a cuerpo o una sala con enemigos y un puzzle. 
     - El jugador es derrotado debido a que se le acabó la vida por los ataques de los enemigos. 
@@ -264,22 +264,22 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
 
 1. Fisicas Básicas a desarrollar
     1. Fisicas del personaje: 
-    - Movimiento
-    - Ataque 
-    - Puntos de vida
-    - Interacciones con las paredes y obstaculos
-    - Interacción con los puzzles para su solución
+        - Movimiento
+        - Ataque 
+        - Puntos de vida
+        - Interacciones con las paredes y obstaculos
+        - Interacción con los puzzles para su solución
     2. Fisicas de los enemigos:
-    - Movimiento hacia el jugador
-    - Ataque
-    - Puntos de vida
-    - Interacciones con las paredes y obstaculos
-    - Interacción con el jugador
+        - Movimiento hacia el jugador
+        - Ataque
+        - Puntos de vida
+        - Interacciones con las paredes y obstaculos
+        - Interacción con el jugador
     3. Fisicas de Power-ups:
-    - Probabilidad de aparición
-    - Rareza
-    - Duracion del power-up: Uso único, permanente.
-    - Interacción con el jugador: Se activa automáticamente o requiere de la activación por boton. 
+        - Probabilidad de aparición
+        - Rareza
+        - Duracion del power-up: Uso único, permanente.
+        - Interacción con el jugador: Se activa automáticamente o requiere de la activación por boton. 
 2. Obstaculos del escenario
 3. Obejtos para interactuar
 
@@ -353,6 +353,7 @@ También, es importante dar retroalimentación positiva y negativa al jugador, p
     2. Otros
         1. Robots
         2. Drones
+        3. Jefes
 2. Bloques
     1. Paredes con grietas
     2. Circuitos
@@ -428,7 +429,6 @@ La retroalimentación auditiva será clara y equilibrada, ayudando al jugador en
     8. "Hacked": Puzzle correcto
     9. Sonido de sistema apagado para indicar que derrotaste a un enemigo
 
-_(example)_
 
 ### **Music Needed**
 
@@ -438,8 +438,6 @@ _(example)_
 4. Créditos finales del videojuego. CANCIÓN
 5. Música triste de derrota. CANCION
 6. Música de tensión y concentración para los puzzles. CANCIÓN
-
-_(example)_
 
 
 ## _Schedule_
