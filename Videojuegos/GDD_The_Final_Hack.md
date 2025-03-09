@@ -397,10 +397,13 @@ La música de The Final Hack, tiene como propósito sumergir al jugador en una o
 4. Instrumentos
     1. instrumentos electrónicos que creen sonidos con sensación digital
   
-Los efectos de sonido son elegidos con el propósito de reforzar la temática tecnológica-digital. Para esto, utilizaremos sonidos sintéticos o de estilo glitch, y metálicos-mecánicos, para darle seriedad a la temática, en vez de optar por algo más caricaturesco. Los efectos serán claros y diferenciables, para que no colisionen con la música de fondo y que el jugador tenga una esxperiencia auditiva agradable y satisfactoria. 
+Los efectos de sonido son elegidos con el propósito de reforzar la temática tecnológica-digital. Para esto, utilizaremos sonidos sintéticos o de estilo glitch, y metálicos-mecánicos, para darle seriedad a la temática, en vez de optar por algo más caricaturesco. Los efectos serán claros y diferenciables, para que no colisionen con la música de fondo y que el jugador tenga una experiencia auditiva agradable y satisfactoria. 
 
-La retroalimentación auditiva será clara y equilibrada, ayudando al jugador entender la situación a la que se enfrenta. Los efectos críticos o de ataque, serán más fuertes que la música y los sonidos de ambiente. Para mantener un equilibrio sonoro, los sonidos se reproduciran de manera uniforme sin variaciones de dirección. Por otra parte, se van a utilizar frecuencias y tempos diferentes para evitar colisiones de sonido con efectos importantes, y para que el jugador pueda percibir la dificultad de los diferentes retos a los que se enfrentará.
+La retroalimentación auditiva será clara y equilibrada, ayudando al jugador entender la situación a la que se enfrenta. Los efectos críticos o de ataque, serán más fuertes que la música y los sonidos de ambiente. Para mantener un equilibrio sonoro, los sonidos se reproduciran de manera uniforme sin variaciones de dirección. 
 
+Por otra parte, se van a utilizar frecuencias y tempos diferentes para evitar colisiones de sonido con efectos importantes, y para que el jugador pueda percibir la dificultad de los diferentes retos a los que se enfrentará.(que)
+
+*Undertale*
 
 ### **Sounds Needed**
 
@@ -428,7 +431,6 @@ La retroalimentación auditiva será clara y equilibrada, ayudando al jugador en
     8. "Hacked": Puzzle correcto
     9. Sonido de sistema apagado para indicar que derrotaste a un enemigo
 
-_(example)_
 
 ### **Music Needed**
 
@@ -439,7 +441,6 @@ _(example)_
 5. Música triste de derrota. CANCION
 6. Música de tensión y concentración para los puzzles. CANCIÓN
 
-_(example)_
 
 
 ## _Schedule_
