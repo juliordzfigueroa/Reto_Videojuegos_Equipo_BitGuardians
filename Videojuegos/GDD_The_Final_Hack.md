@@ -392,27 +392,50 @@ Logo con el nombre del juego para usarlo en la pantalla del titulo del juego:
 
 ### **Style Attributes**
 
-Stylistically, what kind of sound effects are you looking for? Do you want to exaggerate actions with lengthy, cartoony sounds (e.g. mario&#39;s jump), or use just enough to let the player know something happened (e.g. mega man&#39;s landing)? Going for realism? You can use the music style as a bit of a reference too.
+### **Style Attributes**
 
- Remember, auditory feedback should stand out from the music and other sound effects so the player hears it well. Volume, panning, and frequency/pitch are all important aspects to consider in both music _and_ sounds - so plan accordingly!
+Para la música de nuestro juego buscamos un ritmo inspirado en música de juegos de 8 y 16 bits. Estea 
+
+1. Género
+    1. Cyberpunk
+    2. Electrónica
+    3. 8-Bit   
+    4. Techno
+2. Influencias
+    1. Cyberpunk 2077
+    2. Tron Legacy
+    3. Undertale
+3. Mood
+    1. Adrenalina
+4. Instrumentos
+    1. instrumentos electrónicos que creen sonidos con sensación digital
+ 
 
 ### **Sounds Needed**
 
-En cuanto a efectos de sonido que pensamos buscar para el juego, están los siguientes
+Los efectos serán claros y diferenciables, para que no colisionen con la música de fondo y que el jugador tenga una experiencia auditiva agradable y satisfactoria. 
+
+En cuanto a efectos de sonido que pensamos buscar para el juego, están los siguientes: 
 - Al blandir la espada láser, similar al de star wars
 - Al pegar con el taser, con un sonido de electroshock al usar las teclas de ataque 
 - Al disparar la pistola láser, sonido similar al de star wars
-- Al recoger un power up (falta inspiración)
-- Al ser golpeado por un enemigo (sonido como de quejido)
+- Al recoger un power up
+- Al ser golpeado por un enemigo
 - Sonido para el jugador derrotado
 - Sonido de enemigo derrotado, sonido similar al de un robot dejando de funcionar 
 - Sonido de la bomba EMP, inspirado en Rainbow 6 siege Thatcher.
 - Sonido de éxito al completar un puzzle
 - Sonido de fallo al terminarse el tiempo del puzzle.
 
+
+
 ### **Music Needed**
 
-Para la música de nuestro juego buscamos un ritmo inspirado en música de juegos de 16 bits. El género de estas canciones sería principalmente el techno. Inspirado en la música del juego Undertake, en las piezas, “Core”, “Another Medium” para los niveles, para la música de las salas de jefe estará ambientada en la música de combate del mismo juego, “Enemy Approaching”
+1. Música electrónica no acelerado pero no muy lenta para las 3 subsalas, por ejemplo: “Core” o “Another Medium” Undertale
+2. Música energizante con tema electrónico para el menú principal
+3. Música electrónica acelerada para la batalla contra el jefe, por ejemplo: “Enemy Approaching” de Undertale
+4. Créditos finales del videojuego.
+5. Música triste de derrota. 
 
 
 ## _Schedule_
