@@ -153,21 +153,9 @@ Además de esto, el jugador es capaz de interactuar con el entorno de las salas.
 
 Para atravesar estos desafíos, el jugador contará con las siguientes estadísticas: 
 
-
-Vida
-Arma Inicial
-Velocidad
-
-
-
-
-
-
-
-
-
-
-
+|Vida|Arma Inicial|Velocidad|
+|-------|----|-------|
+|100|Aleatoria|5|
 
 Existen dos tipos de enemigos:
 1. Robots:
@@ -179,22 +167,10 @@ Estos enemigos su único objetivo es derrotar al jugador, por lo que su comporta
 2. Te derrotan. Es crucial que todos los enemigos están derrotados, debido a que si no los derrotas a todos, entonces la sala del jefe nunca se abre. 
 Aquí una tabla con las estadísticas de cada enemigo:
 
-Enemigo
-Vida
-Daño
-Alcance
-Robot
-150
-15
-
-
-1
-Dron 
-125
-20
-Infinito
-
-
+|Enemigo|Vida|Daño|Alcance|
+|-------|----|-------|------|
+|Robot|150|15|1|
+|Dron|125|20|Infinito|
 
 Para poder pelear con los enemigos habrá 3 tipos de armas: 
 - Pistola láser: pistola que dispara proyectiles con velocidad definida. Esta pistola hará menos daño que el taser. 
@@ -202,19 +178,11 @@ Para poder pelear con los enemigos habrá 3 tipos de armas:
 - Espada láser: Para golpes de cuerpo a cuerpo. La espada hará más daño que el taser. 
 Aquí una Tabla con las estadísticas de daño de cada arma: 
 
-Arma
-Daño
-Alcance
-Espada Láser
-20 puntos por golpe
-2 
-Taser 
-15 por golpe
-1.5 
-Pistola Láser
-10 por golpe
-Infinito (hasta tocar un muro)
-
+|Arma|Daño|Alcance|
+|----|----|-------|
+|Espada Láser|20 puntos por golpe|2|
+|Taser|15 por golpe|1.5|
+|Pistola Láser|10 por golpe|Infinito (hasta tocar un muro|
 
 El puzzle será de tipo lógicos. Van a funcionar de la siguiente manera:
 - Slide puzzle, donde el jugador tendrá que ordenar una matriz de imágenes en el orden correcto. 
