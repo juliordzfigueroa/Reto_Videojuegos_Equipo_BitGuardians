@@ -61,19 +61,19 @@
 The Final Hack, un roughlite de acción, con un combate cuerpo a cuerpo similar al de Dead Cells y una vista desde arriba inspirada en The Binding of Isaac. 
 Es un juego donde encarnas a un hacker de Elite con nombre clave Cipher, el encargado de infiltrarse a una base de seguridad robada por "The Core" para evitar una catástrofe mundial. 
 Cada partida te sumergirá en desafiantes acertijos y un combate intenso. Además de un sistema de progresión consiguiendo objetos que pueden ser permanentes, los cuales serán de ayuda para próximas partidas. 
-¿Estás listo para hackear el sistema y salvar el mundo?
+¿Estás listo para hackear el sistema y salvar el mundo?
 
 ### **Gameplay**
 
-Nuestro juego tiene como caracteristica principal la vista desde arriba que se pueda controlar con el mismo teclado, pudiendo mover en las 4 direcciones. 
-Cuenta tambien con combate cuerpo a cuerpo del jugador hacia los diferentes enemigos. 
+Nuestro juego tiene como característica principal la vista desde arriba que se pueda controlar con el mismo teclado, pudiendo mover en las 4 direcciones. 
+Cuenta también con combate cuerpo a cuerpo del jugador hacia los diferentes enemigos. 
 En cada nivel tenemos una sala con 3 subsalas y arriba la puerta del jefe. Para que se abra la puerta del jefe se necesita completar algunas misiones de las demás salas. En cada subsala hay bots que te atacan y en caso de que logren golpearte te quitan la vida.
 Asimismo, en cada subsala hay un puzzle que al resolverlo te da un power up para llegar con el jefe. Una vez llegado con el jefe si se derrota al jefe tenemos un puzzle más difícil que cuando se resuelve te da una pista para el puzzle del siguiente nivel. 
 El juego acaba cuando te robas la información de The Core. 
 
 Los elementos aleatorios son las herramientas y power ups que van saliendo. Los desafíos de cada subsala son aleatorios. Las salas se van a regenerar aleatoriamente y los enemigos también. 
 
-En ocasiones las recompensas que puedes obtener por hacer los diferentes retos de las salas en cada nivel pueden ser permanentes (principalmente las mejoras de ataque y vida). Cuando te mueras conservas dichas mejoras permanentes que recojas a lo largo de las partidas.
+En ocasiones las recompensas que puedes obtener por hacer los diferentes retos de las salas en cada nivel pueden ser permanentes (principalmente las mejoras de ataque, defensa y vida). Cuando te mueras conservas dichas mejoras permanentes que recojas a lo largo de las partidas.
 
 
 ### **Mindset**
@@ -82,7 +82,7 @@ Queremos que el jugador pueda sentir las siguientes cosas:
 - **Ingenio y Desafío mental:** Como hacker el jugador deberá usar su lógica y habilidad en resolución de problemas para avanzar. Esto se logrará a través de enemigos que lo atacan y puzzles que deberá resolver conforme avanza en el juego. 
 - **Progresión de poder:** El jugador debe poder sentir que a medida que supera obstáculos y niveles, mejora continuamente. Asimismo, con las mejoras permanentes el jugador logrará sentirse cada vez más poderoso y con mejores habilidades. 
 - **Adrenalina:** Con los diferentes enemigos y jefes del nivel queremos que la curva de dificultad aumente, creando así un efecto de adrenalina en el jugador a medida que juega. 
-- **Presión:** Los puzzles tendrán tiempos limites para resolverlos. Creando así presión sobre el jugador para que los resuelva de la manera más rápida posible. 
+- **Presión:** Los puzzles tendrán tiempos límites para resolverlos. Creando así presión sobre el jugador para que los resuelva de la manera más rápida posible. 
 
 ## _Technical_
 
@@ -91,32 +91,28 @@ Queremos que el jugador pueda sentir las siguientes cosas:
 ### **Screens**
 
 1. Pantalla de inicio: En la pantalla de inicio se tendrán las siguientes opciones para el jugador.
-    1. Opciones: En donde se encontraran la opción de:
+    1. Opciones: En donde se encontrarán la opción de:
+    
         - Revisar controles
         - Alternar controles (Cambiar 'WASD' y las flechas del teclado para moverse con las flechas y atacar con 'WASD')
         - Opciones de volúmen de la música (Quitar la música o bajar el volúmen)
         - Opciones de volúmen de los efectos de sonido del juego (Quitar los efectos de sonido o bajar el volúmen de estos)
        
-    4. Iniciar juego: Donde al dar click en el botón metera al jugador al primer nivel del juego.
-    5. *Continuar Partida: Donde el jugador podrá retomar su partida si es que no ha muerto en alguno de los niveles.
-2. Juego:  Dento de la partida el jugador podrá ver la pantalla de la primera sala, a sus lados estaran las 3 subsalas y la sala del jefe. Dentro de la partida, el jugador tendrá las siguientes subpantallas:
+    2. Iniciar juego: Donde al dar click en el botón meterá al jugador al primer nivel del juego.
+    3. *Continuar Partida: Donde el jugador podrá retomar su partida si es que no ha muerto en alguno de los niveles.
+2. Juego:  Dentro de la partida el jugador podrá ver la pantalla de la primera sala, a sus lados están las 3 subsalas y la sala del jefe. Dentro de la partida, el jugador tendrá las siguientes subpantallas:
      Aqui una foto de el concepto de la primera pantalla del juego:
 ![Primer concepto de The Final Hack](/Videojuegos/images/GDD/The_Final_Hack_concepto.jpg)
-    
-1. Pausa: La cual tendra las siguientes opciones para el jugador:
-   1. Botón para salir de la partida y guardarla.
-   2. Opciones: Como en la pantalla de inicio se tendrán las mismas opciones en el menú de opciones.
+1. Pausa: La cual tendrá las siguientes opciones para el jugador:
+    1. Botón para salir de la partida y guardarla.
+    2. Opciones: Como en la pantalla de inicio se tendrán las mismas opciones en el menú de opciones.
+       - Revisar controles
+       - Alternar controles (Cambiar 'WASD' y las flechas del teclado para moverse con las flechas y atacar con 'WASD')
+       - Opciones de volúmen de la música (Quitar la música o bajar el volúmen)
+       - Opciones de volúmen de los efectos de sonido del juego (Quitar los efectos de sonido o bajar el volúmen de estos)
        
-        - Revisar controles
-       
-        - Alternar controles (Cambiar 'WASD' y las flechas del teclado para moverse con las flechas y atacar con 'WASD')
-       
-        - Opciones de volúmen de la música (Quitar la música o bajar el volúmen)
-       
-        - Opciones de volúmen de los efectos de sonido del juego (Quitar los efectos de sonido o bajar el volúmen de estos)
-       
-    3. Siguiente Nivel: Tras completar la sala del jefe, estará una terminal que permitrirá pasar al siguiente nivel. 
-3. Tras completar el segundo nivel con una estructura similar al primero (Una sala principal, 3 subsalas adyacentes y la sala del jefe) se mostrarán los creditos.
+    4. Siguiente Nivel: Tras completar la sala del jefe, estará una terminal que permitirá pasar al siguiente nivel. 
+3. Tras completar el segundo nivel con una estructura similar al primero (Una sala principal, 3 subsalas adyacentes y la sala del jefe) se mostrarán los créditos.
 
 
 ### **Controls**
@@ -141,81 +137,126 @@ Además de esto, utilizaremos dos teclas más:
 
 `F` Abrir los puzzles para resolverlos.
 
-`E` Usar los PowerUps que ha recogido el jugador.
+`E` Usar los Power Ups que ha recogido el jugador.
 
 
 ### **Mechanics**
 
-El objetivo principal del juego es que el jugador pueda recuperar la información robada por "The Core". Esto lo hace a tráves de completar los diferentes desafíos de los niveles del juego. Una vez que los completa, gana el juego. El juegador siempre tiene la oportunidad de mejorar en términos de estadística. 
-Se quiere que el jugador pueda enfrentarse a niveles que lo pongan a prueba sus habilidades tanto de combate con los diferentes tipos de enemigos, y además sus habilidades intelectuales con los puzzles. 
+El objetivo principal del juego es que el jugador pueda recuperar la información robada por "The Core". Esto lo hace a través de completar los diferentes desafíos de los niveles del juego. Una vez que los completa, gana el juego. El jugador siempre tiene la oportunidad de mejorar en términos de estadística. 
+Se quiere que el jugador pueda enfrentarse a niveles que pongan a prueba sus habilidades tanto de combate con los diferentes tipos de enemigos, y además sus habilidades intelectuales con los puzzles. 
 
 El juego contará con una sala principal rodeada de 4 subsalas. En la parte de arriba estará la sala del jefe. Para poder acceder a ella, se tendrá que completar los retos de las 3 subsalas restantes. Estas subsalas se dividen en 3: 
 - Enemigos cuerpo a cuerpo: Esta sala solamente contiene enemigos que atacan cuerpo a cuerpo.
 - Enemigos cuerpo a cuerpo y a distancia: Esta sala contiene enemigos que atacan tanto cuerpo a cuerpo, como también a distancia.
 - Sala de puzzle con enemigos: Una sala que contiene un puzzle a resolver y enemigos en menor cantidad que los demás cuartos. 
-Además de esto, el jugador es capaz de interactuar con las el entorno de las salas. Es decir, habrán salas donde hay obstaculos que el jugador también puede usar como pared de escudo. Los enemigos no pueden pasar por sobre estos obstáculos o paredes. 
+Además de esto, el jugador es capaz de interactuar con el entorno de las salas. Es decir, habrá salas donde hay obstáculos que el jugador también puede usar como pared de escudo. Los enemigos no pueden pasar por sobre estos obstáculos o paredes. 
+
+Para atravesar estos desafíos, el jugador contará con las siguientes estadísticas: 
+
+
+Vida
+Arma Inicial
+Velocidad
+
+
+
+
+
+
+
+
+
+
+
 
 Existen dos tipos de enemigos:
 1. Robots:
-    - Cuerpo a cuerpo: Estos robots que atacan cuerpo a cuerpo tendrán tendrán más vida que los robots a distancia, sin embargo, tendrán menos daño. 
-    - Distancia: Los robots que atacan a distancia tienen más daño que los robots cuerpo a cuerpo, pero menos vida. 
-2. Drones: Dron que ataca con láser. Este dron se encontrará con valores balanceados. Es decir, tendrá más de vida que el robot a distancia, y más de daño que el robot cuerpo a cuerpo.  
+    - Cuerpo a cuerpo: Estos robots que atacan cuerpo a cuerpo tendrán tendrán más vida que los drones, sin embargo, tendrán menos daño. 
+    - Drones: Dron que ataca con láser a distancia tienen más daño que los robots cuerpo a cuerpo, pero menos vida. 
 
 Estos enemigos su único objetivo es derrotar al jugador, por lo que su comportamiento siempre será agresivo contra el jugador. Con los enemigos solo hay dos opciones:
 1. Los derrotas
-2. Te derrotan. Es crucial que todos los enemigos esten derrotados, debido a que si no los derrotas a todos, entonces la sala del jefe nunca se abre. 
+2. Te derrotan. Es crucial que todos los enemigos están derrotados, debido a que si no los derrotas a todos, entonces la sala del jefe nunca se abre. 
+Aquí una tabla con las estadísticas de cada enemigo:
 
-Para poder pelear con los enemigos habrán 3 tipos de armas: 
-- Pistola láser: pistola que dispara proyectiles con velocidad definida. Esta pistola hará menos daño que el tazer. 
-- Tazer: Arma de corto alcance que aturde a los enemigos por un tiempo breve. El tazer estará en un nivel balanceado con respecto al daño de la pistola láser y la espada. 
-- Espada láser: Para golpes de cuerpo a cuerpo. La espada hará más daño que el tazer. 
+Enemigo
+Vida
+Daño
+Alcance
+Robot
+150
+15
+
+
+1
+Dron 
+125
+20
+Infinito
+
+
+
+Para poder pelear con los enemigos habrá 3 tipos de armas: 
+- Pistola láser: pistola que dispara proyectiles con velocidad definida. Esta pistola hará menos daño que el taser. 
+- Taser: Arma de corto alcance que aturde a los enemigos por un tiempo breve. El tazer estará en un nivel balanceado con respecto al daño de la pistola láser y la espada. 
+- Espada láser: Para golpes de cuerpo a cuerpo. La espada hará más daño que el taser. 
+Aquí una Tabla con las estadísticas de daño de cada arma: 
+
+Arma
+Daño
+Alcance
+Espada Láser
+20 puntos por golpe
+2 
+Taser 
+15 por golpe
+1.5 
+Pistola Láser
+10 por golpe
+Infinito (hasta tocar un muro)
+
 
 El puzzle será de tipo lógicos. Van a funcionar de la siguiente manera:
-- Slide puzzle, donde el jugador tendrá que ordenar una matriz de imagenes en el orden correcto. 
+- Slide puzzle, donde el jugador tendrá que ordenar una matriz de imágenes en el orden correcto. 
 - Puzzle es dinámico, lo que significa que se genera aleatoriamente y cada nivel sube la dificultad. Esto al poner más imágenes en la matriz. 
-- Tendrán un tiempo limite para resolverlo. 
+- Tendrán un tiempo límite para resolverlo. 
 - En caso de que el jugador no logre resolver el puzzle, sale del puzzle y tiene que enfrentar más enemigos. 
 - Una vez hecho esto, puede volver a intentar resolver el puzzle. 
 - Cada nivel el tiempo se hace menor para aumentar la dificultad y la presión. 
-
-Despues de completar una subsala, al jugador se le darán PowerUps que apareceran según un sistema de probabilidad basado en la rareza y se clasifican de la siguiente manera:
+Aqui una imagen relacionada con el concepto del puzzle
+Después de completar una subsala, al jugador se le darán PowerUps que aparecerán según un sistema de probabilidad basado en la rareza y se clasifican de la siguiente manera:
 1. **Comunes** (40% de aparición):
     - Recuperar vida: Recuperación del 20% de vida.
-    - Escudo: Se le otorga al jugador de 10% de vida.
+    - Escudo: Se le otorga al jugador un 10% de vida.
 2. **Raros** (30% de aparición):
-    - Aumento de vida: Aumento de vida en 20 puntos.
-3. **Epico** (20% de aparición):
-    - Aumento de daño: Aumenta el daño en el 10 puntos.
+    - Aumento de vida: Aumentó de vida en 20 puntos.
+3. **Épico** (20% de aparición):
+    - Aumento de daño: Aumenta el daño en 10 puntos.
 4. **Legendario** (10% de aparición): 
-    - Bomba EMP: Una bomba que ature a los enemigos por 2 segundos.
+    - Bomba EMP: Una bomba que aturde a los enemigos por 2 segundos.
 
-Al pasar de nivel los enemigos aumentarán su vida en un 10% y el ataque en un 15%. Asimismo en las salas de puzzle, estos aumentarán de dificultado conforme se avanzan los niveles.
+Al pasar de nivel los enemigos aumentarán su vida en un 10% y el ataque en un 15%. Asimismo en las salas de puzzle, estos aumentarán de dificultad conforme se avancen los niveles.
 
-En relación a los jefes, estos siempre serán un 20% más fuetes que los enemigos del nivel y tendrán 50% más de vida comparado a los enemigos del nivel en el que se encuentra el jugador. 
+En relación a los jefes, estos siempre serán un 20% más fuertes que los enemigos del nivel y tendrán 50% más de vida comparado a los enemigos del nivel en el que se encuentra el jugador. 
 
 
 > **Posibles escenarios del jugador en el juego**
-
 Los escenarios a los que el jugador se puede enfrentar en el juego son los siguientes:
-
- **1. Escenario donde el jugador gana:** 
- 
-- El jugador entra al nivel 1. Aparece a la mitad de la sala principal con 3 salas abiertas y una bloqueada alrededor. La sala bloqueada es la del jefe, que se desbloquea una vez completando las otras tres.
-- El jugador entra a todas las salas y se enfrenta a los diferentes desafíos, ya sea enemigos que disparan a distancia, cuerpo a cuerpo o una sala con enemigos y un puzzle. Finalmente pasa los retos de las salas.
-- Se desbloquea la sala del jefe.
-- Entra a la sala del jefe y lo derrota.
-- Se desbloquea el siguiente nivel.
-- Se repite el mismo proceso mencionado arriba, pero el jugador se enfrenta a enemigos más agresivos.
-- Si el jugador logra atravesar todas las salas de todos los niveles disponibles, entonces obtiene la información robada de “The Core” y gana el juego.
-- El jugador puede jugar las veces que quiera para mejorar sus estadísticas. 
-    
-**2. Escenario donde el jugador muere en algún punto del juego:**
-
-- El jugador entra al nivel 1. Aparece a la mitad de la sala principal con 3 salas abiertas y una bloqueada alrededor. La sala bloqueada es la del jefe, que se desbloquea una vez completando las otras tres.
-- El jugador entra a alguna sala y se enfrenta a los diferentes desafíos, ya sea enemigos que disparan a distancia, cuerpo a cuerpo o una sala con enemigos y un puzzle.
-- El jugador es derrotado debido a que se le acabó la vida por los ataques de los enemigos.
-- El jugador regresa al inicio donde puede volver a empezar el nivel 1 y únicamente conserva aquellas mejoras permanentes que obtuvo durante sus intentos anteriores.
-- El jugador repite este proceso hasta que logre completar todos los niveles y recuperar la información robada por “The Core”. 
+1. Escenario donde el jugador gana: 
+    - El jugador entra al nivel 1. Aparece a la mitad de la sala principal con 3 salas abiertas y una bloqueada alrededor. La sala bloqueada es la del jefe, que se desbloquea una vez completando las otras tres. 
+    - El jugador entra a todas las salas y se enfrenta a los diferentes desafíos, ya sea enemigos que disparan a distancia, cuerpo a cuerpo o una sala con enemigos y un puzzle. Finalmente pasa los retos de las salas. 
+    - Se desbloquea la sala del jefe.
+    - Entra a la sala del jefe y lo derrota. 
+    - Se desbloquea el siguiente nivel. 
+    - Se repite el mismo proceso mencionado arriba, pero el jugador se enfrenta a enemigos más agresivos. 
+    - Si el jugador logra atravesar todas las salas de todos los niveles disponibles, entonces obtiene la información robada de “The Corre” y gana el juego.
+    - El jugador puede jugar las veces que quiera para mejorar sus estadísticas. 
+2. Escenario donde el jugador muere en algún punto del juego. 
+    - El jugador entra al nivel 1. Aparece a la mitad de la sala principal con 3 salas abiertas y una bloqueada alrededor. La sala bloqueada es la del jefe, que se desbloquea una vez completando las otras tres. 
+    - El jugador entra a alguna sala y se enfrenta a los diferentes desafíos, ya sea enemigos que disparan a distancia, cuerpo a cuerpo o una sala con enemigos y un puzzle. 
+    - El jugador es derrotado debido a que se le acabó la vida por los ataques de los enemigos. 
+    - El jugador regresa al inicio donde puede volver a empezar el nivel 1 y únicamente conserva aquellas mejoras permanentes que obtuvo durante sus intentos anteriores. 
+    - El jugador repite este proceso hasta que logre completar todos los niveles y recuperar la información robada por “The Core”. 
  
 
 ## _Level Design_
@@ -226,7 +267,7 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
 
 1. Nivel 1 y 2: Servidor 1: 
     1. Mood
-        1. Lugar con poca iluminación, donde el jugador debe estar atento a los diferentes desafios del nivel
+        1. Lugar con poca iluminación, donde el jugador debe estar atento a los diferentes desafíos del nivel
     2. Objects
         1. _Ambient_
             1. Cables salientes del piso y pared
@@ -240,22 +281,22 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
 ### **Game Flow**
 
 1. El jugador empieza en la sala central del nivel
-2. De su lado izquierdo, derecho y abajo hay tres subsalas con desafios.
+2. De su lado izquierdo, derecho y abajo hay tres subsalas con desafíos.
 3. El jugador entra a una de las salas que tiene a sus lados.
 4. Una vez dentro, la puerta se cierra automáticamente hasta completar el desafío. 
-5. El jugador completa el desafio de la subsala y es recompensado con un power-up. 
+5. El jugador completa el desafío de la subsala y es recompensado con un power-up. 
 6. La puerta es desbloqueada para que el jugador salga de la subsala.
 7. El jugador regresa a la sala principal, e ingresa a una de las salas restantes.
-8. En la subsala del puzzle el jugador tiene tiempo limite para resolverlo. 
+8. En la subsala del puzzle el jugador tiene tiempo límite para resolverlo. 
 9. Si no logra resolver el puzzle en el tiempo, más enemigos aparecen. 
 10. Tras completar las 3 subsalas, la puerta del jefe (encontrada en la parte de arriba de la pantalla) queda desbloqueada.
 11. El jugador entra a la sala del jefe.
 12. La puerta se cierra una vez el jugador entra y empieza el combate. 
 13. Tras derrotarlo el jugador puede pasar al siguiente nivel.
-14. El siguiente nivel se plantea igual, comezando desde el punto 1.
+14. El siguiente nivel se plantea igual, comenzando desde el punto 1.
 15. Si el jugador es derrotado, el jugador empezará el juego desde el punto 1.
 16. El jugador conserva los power-ups permanentes para volver a comenzar el juego. 
-17. El jugador gana el juego una vez complete todo los niveles disponibles y cumpla el objetivo mencionado al inicio de las mecanicas.
+17. El jugador gana el juego una vez complete todos los niveles disponibles y cumpla el objetivo mencionado al inicio de las mecánicas.
 
 
 ## _Development_
@@ -264,26 +305,26 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
 
 ### **Abstract Classes / Components**
 
-1. Fisicas Básicas a desarrollar
-    1. Fisicas del personaje: 
-        - Movimiento
-        - Ataque 
-        - Puntos de vida
-        - Interacciones con las paredes y obstaculos
-        - Interacción con los puzzles para su solución
-    2. Fisicas de los enemigos:
-        - Movimiento hacia el jugador
-        - Ataque
-        - Puntos de vida
-        - Interacciones con las paredes y obstaculos
-        - Interacción con el jugador
-    3. Fisicas de Power-ups:
-        - Probabilidad de aparición
-        - Rareza
-        - Duracion del power-up: Uso único, permanente.
-        - Interacción con el jugador: Se activa automáticamente o requiere de la activación por boton. 
-2. Obstaculos del escenario
-3. Obejtos para interactuar
+1. Físicas Básicas a desarrollar
+    1. Físicas del personaje: 
+    - Movimiento
+    - Ataque 
+    - Puntos de vida
+    - Interacciones con las paredes y obstáculos
+    - Interacción con los puzzles para su solución
+    2. Físicas de los enemigos:
+    - Movimiento hacia el jugador
+    - Ataque
+    - Puntos de vida
+    - Interacciones con las paredes y obstáculos
+    - Interacción con el jugador
+    3. Físicas de Power-ups:
+    - Probabilidad de aparición
+    - Rareza
+    - Duración del power-up: Uso único, permanente.
+    - Interacción con el jugador: Se activa automáticamente o requiere de la activación por botón. 
+2. Obstáculos del escenario
+3. Objetos para interactuar
 
 
 ### **Derived Classes / Component Compositions**
@@ -294,16 +335,16 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
     1. Enemigos cuerpo a cuerpo
     2. Enemigos que disparan a distancia
     3. Jefe del nivel (Versión más grande del enemigo cuerpo a cuerpo o a distancia)
-3. Fisicas de Power-ups
+3. Físicas de Power-ups
     1. Power-Up para recuperar vida
     2. Power-Up para aumentar la vida
     3. Power-Up para aumentar el daño
     4. Power-Up Bomba EMP (Poder guardarlo y usarlo con E)
-4.  Obstaculos del escenario
-    1. Obstaculo de cables saliendo de las paredes
-    2. Obstaculo de cables saliendo del piso
+4.  Obstáculos del escenario
+    1. Obstáculo de cables saliendo de las paredes
+    2. Obstáculo de cables saliendo del piso
 5.  Objetos para interactuar
-    1. Botón que simule una terminal para abrir un puzzle
+    1. Botón que simula una terminal para abrir un puzzle
     2. Botón para cambiar de nivel.
 
 ## _Graphics_
@@ -312,12 +353,12 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
 
 ### **Style Attributes**
 
-Nuestro juego al estar ambientado en la temática de ciberseguridad en una base secreta tomada por una organización clandestina, queremos usar una paleta de colores que emitan una vibra de estetica digital dentro de esta base secreta. Para lograr esto, planeamos usar lo siguiente:
+Nuestro juego al estar ambientado en la temática de ciberseguridad en una base secreta tomada por una organización clandestina, queremos usar una paleta de colores que emitan una vibra de estética digital dentro de esta base secreta. Para lograr esto, planeamos usar lo siguiente:
 
 1. Colores base
     1. Negro
     2. Azul neón
-    3. Gris obscuro
+    3. Gris oscuro
     4. Gris claro
 
 2. Peligro o daño
@@ -335,13 +376,13 @@ Nuestro juego al estar ambientado en la temática de ciberseguridad en una base 
     3. Contorno Morado
     4. Contorno Naranja claro 
   
-Nuestro estílo artistico será pixel-art con animaciones. Las animaciones serán movimientos de ataque rápidos y fluidos para dar una sensación satisfactoria al jugador, los golpes y daño recibido serán acompañados de un flsah rojo que de la sensación de peligro, y la interacción con objetos será resaltada por un brillo.
+Nuestro estilo artístico será pixel-art con animaciones. Las animaciones serán movimientos de ataque rápidos y fluidos para dar una sensación satisfactoria al jugador, los golpes y daño recibido serán acompañados de un flash rojo que da la sensación de peligro, y la interacción con objetos será resaltada por un brillo.
 
 Para que el jugador pueda saber cuando puede interactuar con un objeto y cuando no, pondremos las siguientes animaciones en los objetos interactivos:
 
 1. Parpadeo brillante del objeto
 
-También, es importante dar retroalimentación positiva y negativa al jugador, por lo que desarrollaremos medidas para que pueda entender cuando esta haciendo las cosas bien, y cuando esta haciendo las cosas mal. Lo haremos de la siguiente manera:
+También, es importante dar retroalimentación positiva y negativa al jugador, por lo que desarrollaremos medidas para que pueda entender cuando está haciendo las cosas bien, y cuando está haciendo las cosas mal. Lo haremos de la siguiente manera:
 
 1. Daño recibido y daño infligido
     1. Tanto como los enemigos como el personaje tendrán un efecto de flash color rojo al ser impactados
@@ -355,7 +396,6 @@ También, es importante dar retroalimentación positiva y negativa al jugador, p
     2. Otros
         1. Robots
         2. Drones
-        3. Jefes
 2. Bloques
     1. Paredes con grietas
     2. Circuitos
@@ -370,7 +410,7 @@ También, es importante dar retroalimentación positiva y negativa al jugador, p
     3. Power Ups: aumento de vida, recuperación de vida, bomba EMP, distintas armas
     4. Armas
 
-Aqui algunos de los diseños ya hechos para usar en nuestro juego:
+Aquí algunos de los diseños ya hechos para usar en nuestro juego:
 Primer diseño del protagonista Cipher: 
 ![Cipher](/Videojuegos/images/GDD/cipher_1_1.png)
 
@@ -384,68 +424,33 @@ Logo con el nombre del juego para usarlo en la pantalla del titulo del juego:
 
 ### **Style Attributes**
 
-La música de The Final Hack, tiene como propósito sumergir al jugador en una operación de hackeo de alto riesgo y dificultad. Queremos que el jugador, sienta los elementos electronicos, de tensión y concentración, y batalla. 
+Stylistically, what kind of sound effects are you looking for? Do you want to exaggerate actions with lengthy, cartoony sounds (e.g. mario&#39;s jump), or use just enough to let the player know something happened (e.g. mega man&#39;s landing)? Going for realism? You can use the music style as a bit of a reference too.
 
-1. Género
-    1. Cyberpunk
-    2. Electrónica
-    3. 8-Bit   
-2. Influencias
-    1. Cyberpunk 2077
-    2. Tron Legacy
-3. Mood
-    1. Tenso
-    2. Adrenalina
-    3. Nervio
-4. Instrumentos
-    1. instrumentos electrónicos que creen sonidos con sensación digital
-  
-Los efectos de sonido son elegidos con el propósito de reforzar la temática tecnológica-digital. Para esto, utilizaremos sonidos sintéticos o de estilo glitch, y metálicos-mecánicos, para darle seriedad a la temática, en vez de optar por algo más caricaturesco. Los efectos serán claros y diferenciables, para que no colisionen con la música de fondo y que el jugador tenga una esxperiencia auditiva agradable y satisfactoria. 
-
-La retroalimentación auditiva será clara y equilibrada, ayudando al jugador entender la situación a la que se enfrenta. Los efectos críticos o de ataque, serán más fuertes que la música y los sonidos de ambiente. Para mantener un equilibrio sonoro, los sonidos se reproduciran de manera uniforme sin variaciones de dirección. Por otra parte, se van a utilizar frecuencias y tempos diferentes para evitar colisiones de sonido con efectos importantes, y para que el jugador pueda percibir la dificultad de los diferentes retos a los que se enfrentará.
-
+ Remember, auditory feedback should stand out from the music and other sound effects so the player hears it well. Volume, panning, and frequency/pitch are all important aspects to consider in both music _and_ sounds - so plan accordingly!
 
 ### **Sounds Needed**
 
-1. Effects
-    1. Pasos en piso de concreto
-    2. Puzzle resuelto
-    3. Ataque lanzado con cada tipo de arma diferente
-    4. Ataque lanzado por enemigo
-    5. Ataque conectado con enemigo
-    6. Ataque recibido
-    7. Sonido de chispas de cable
-    8. Interacciones 
-    9. Apertura de puerta
-    10. Cerradura de puerta
-    11. Sonido corto característico de un jefe
-
-2. Feedback
-    1. "Ugh": Daño recibido
-    2. Activación de power up
-    3. "Yuju": Sala completada
-    4. "Error": Puzzle fallado
-    5. Intro del boss
-    6. Sonido de nivel pasado
-    7. Alarma para indicar que el jugador murió
-    8. "Hacked": Puzzle correcto
-    9. Sonido de sistema apagado para indicar que derrotaste a un enemigo
-
+En cuanto a efectos de sonido que pensamos buscar para el juego, están los siguientes
+- Al blandir la espada láser, similar al de star wars
+- Al pegar con el taser, con un sonido de electroshock al usar las teclas de ataque 
+- Al disparar la pistola láser, sonido similar al de star wars
+- Al recoger un power up (falta inspiración)
+- Al ser golpeado por un enemigo (sonido como de quejido)
+- Sonido para el jugador derrotado
+- Sonido de enemigo derrotado, sonido similar al de un robot dejando de funcionar 
+- Sonido de la bomba EMP, inspirado en Rainbow 6 siege Thatcher.
+- Sonido de éxito al completar un puzzle
+- Sonido de fallo al terminarse el tiempo del puzzle.
 
 ### **Music Needed**
 
-1. Música electrónica no acelerado pero no muy lenta para las 3 subsalas, por ejemplo: 
-2. Música energizante con tema electrónico para el menú principal, por ejemplo:
-3. Música electrónica acelerada para la batalla contra el jefe, por ejemplo: 
-4. Créditos finales del videojuego. CANCIÓN
-5. Música triste de derrota. CANCION
-6. Música de tensión y concentración para los puzzles. CANCIÓN
+Para la música de nuestro juego buscamos un ritmo inspirado en música de juegos de 16 bits. El género de estas canciones sería principalmente el techno. Inspirado en la música del juego Undertake, en las piezas, “Core”, “Another Medium” para los niveles, para la música de las salas de jefe estará ambientada en la música de combate del mismo juego, “Enemy Approaching”
 
 
 ## _Schedule_
 
 ---
-Este será el orden de como desarrollaremos los diferentes aspectos mecionados del videojuego. Este orden esta sujeto a cambios a lo largo del desarrollo
+Este será el orden de como desarrollaremos los diferentes aspectos mencionados del videojuego. Este orden está sujeto a cambios a lo largo del desarrollo
 
 1. Clases de objetos del juego
     1. Entidad Base:
@@ -453,11 +458,11 @@ Este será el orden de como desarrollaremos los diferentes aspectos mecionados d
         2. Clase enemigos
         3. Power-ups
         4. Puzzles
-        5. Obstaculos
+        5. Obstáculos
   2. Diseño de niveles
         1. Clase con el layout de los niveles
         2. Menú pausa
-2. Encontar controles comodos para el usuario
+2. Encontrar controles cómodos para el usuario
     1. Opción para alternar los controles
 3. Desarrollo de las interacciones entre el jugador y los power ups 
     1. Físicas y colisione    
@@ -467,18 +472,17 @@ Este será el orden de como desarrollaremos los diferentes aspectos mecionados d
         1. Robot
         2. Dron
         3. Jefe
-    2. Obstaculos
+    2. Obstáculos
         1. Posición de los cables que salen del piso
         2. Posición de los cables que salen de la pared
     3. Puzzles
-       1. Puzzle de acomodar las fichas en orden dentro de una matríz
+       1. Puzzle de acomodar las fichas en orden dentro de una matriz
 6. Diseño de niveles
     1. Introducir los power-ups para pruebas
     2. Probar el botón de interacción con los puzzles y el cambio de nivel
-    3. Detallar el posicionamineto de enemigos en cada tipo de sala
+    3. Detallar el posicionamiento de enemigos en cada tipo de sala
 7. Diseño de animaciones
 8. Diseño de efectos de sonido
-9. Diseño de musica para los niveles
+9. Diseño de música para los niveles
    1. Música para la sala del jefe
    2. Música para el resto del nivel
-
