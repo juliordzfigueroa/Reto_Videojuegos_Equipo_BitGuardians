@@ -92,31 +92,28 @@ Queremos que el jugador pueda sentir las siguientes cosas:
 
 1. Pantalla de inicio: En la pantalla de inicio se tendrán las siguientes opciones para el jugador.
     1. Opciones: En donde se encontraran la opción de:
-    
-           - Revisar controles
+        - Revisar controles
+        - Alternar controles (Cambiar 'WASD' y las flechas del teclado para moverse con las flechas y atacar con 'WASD')
+        - Opciones de volúmen de la música (Quitar la música o bajar el volúmen)
+        - Opciones de volúmen de los efectos de sonido del juego (Quitar los efectos de sonido o bajar el volúmen de estos)
        
-           - Alternar controles (Cambiar 'WASD' y las flechas del teclado para moverse con las flechas y atacar con 'WASD')
-       
-           - Opciones de volúmen de la música (Quitar la música o bajar el volúmen)
-       
-           - Opciones de volúmen de los efectos de sonido del juego (Quitar los efectos de sonido o bajar el volúmen de estos)
-       
-    2. Iniciar juego: Donde al dar click en el botón metera al jugador al primer nivel del juego.
-    3. *Continuar Partida: Donde el jugador podrá retomar su partida si es que no ha muerto en alguno de los niveles.
+    4. Iniciar juego: Donde al dar click en el botón metera al jugador al primer nivel del juego.
+    5. *Continuar Partida: Donde el jugador podrá retomar su partida si es que no ha muerto en alguno de los niveles.
 2. Juego:  Dento de la partida el jugador podrá ver la pantalla de la primera sala, a sus lados estaran las 3 subsalas y la sala del jefe. Dentro de la partida, el jugador tendrá las siguientes subpantallas:
      Aqui una foto de el concepto de la primera pantalla del juego:
 ![Primer concepto de The Final Hack](/Videojuegos/images/GDD/The_Final_Hack_concepto.jpg)
-    1. Pausa: La cual tendra las siguientes opciones para el jugador:
-           1. Botón para salir de la partida y guardarla.
-           2. Opciones: Como en la pantalla de inicio se tendrán las mismas opciones en el menú de opciones.
+    
+1. Pausa: La cual tendra las siguientes opciones para el jugador:
+   1. Botón para salir de la partida y guardarla.
+   2. Opciones: Como en la pantalla de inicio se tendrán las mismas opciones en el menú de opciones.
        
-               - Revisar controles
+        - Revisar controles
        
-               - Alternar controles (Cambiar 'WASD' y las flechas del teclado para moverse con las flechas y atacar con 'WASD')
+        - Alternar controles (Cambiar 'WASD' y las flechas del teclado para moverse con las flechas y atacar con 'WASD')
        
-               - Opciones de volúmen de la música (Quitar la música o bajar el volúmen)
+        - Opciones de volúmen de la música (Quitar la música o bajar el volúmen)
        
-               - Opciones de volúmen de los efectos de sonido del juego (Quitar los efectos de sonido o bajar el volúmen de estos)
+        - Opciones de volúmen de los efectos de sonido del juego (Quitar los efectos de sonido o bajar el volúmen de estos)
        
     3. Siguiente Nivel: Tras completar la sala del jefe, estará una terminal que permitrirá pasar al siguiente nivel. 
 3. Tras completar el segundo nivel con una estructura similar al primero (Una sala principal, 3 subsalas adyacentes y la sala del jefe) se mostrarán los creditos.
@@ -198,22 +195,27 @@ En relación a los jefes, estos siempre serán un 20% más fuetes que los enemig
 
 
 > **Posibles escenarios del jugador en el juego**
+
 Los escenarios a los que el jugador se puede enfrentar en el juego son los siguientes:
-**1. Escenario donde el jugador gana:** 
-    - El jugador entra al nivel 1. Aparece a la mitad de la sala principal con 3 salas abiertas y una bloqueada alrededor. La sala bloqueada es la del jefe, que se desbloquea una vez completando las otras tres. 
-    - El jugador entra a todas las salas y se enfrenta a los diferentes desafíos, ya sea enemigos que disparan a distancia, cuerpo a cuerpo o una sala con enemigos y un puzzle. Finalmente pasa los retos de las salas. 
-    - Se desbloquea la sala del jefe.
-    - Entra a la sala del jefe y lo derrota. 
-    - Se desbloquea el siguiente nivel. 
-    - Se repite el mismo proceso mencionado arriba, pero el jugador se enfrenta a enemigos más agresivos. 
-    - Si el jugador logra atravesar todas las salas de todos los niveles disponibles, entonces obtiene la información robada de “The Core” y gana el juego.
-    - El jugador puede jugar las veces que quiera para mejorar sus estadísticas. 
-**2. Escenario donde el jugador muere en algún punto del juego:** 
-    - El jugador entra al nivel 1. Aparece a la mitad de la sala principal con 3 salas abiertas y una bloqueada alrededor. La sala bloqueada es la del jefe, que se desbloquea una vez completando las otras tres. 
-    - El jugador entra a alguna sala y se enfrenta a los diferentes desafíos, ya sea enemigos que disparan a distancia, cuerpo a cuerpo o una sala con enemigos y un puzzle. 
-    - El jugador es derrotado debido a que se le acabó la vida por los ataques de los enemigos. 
-    - El jugador regresa al inicio donde puede volver a empezar el nivel 1 y únicamente conserva aquellas mejoras permanentes que obtuvo durante sus intentos anteriores. 
-    - El jugador repite este proceso hasta que logre completar todos los niveles y recuperar la información robada por “The Core”. 
+
+ **1. Escenario donde el jugador gana:** 
+ 
+- El jugador entra al nivel 1. Aparece a la mitad de la sala principal con 3 salas abiertas y una bloqueada alrededor. La sala bloqueada es la del jefe, que se desbloquea una vez completando las otras tres.
+- El jugador entra a todas las salas y se enfrenta a los diferentes desafíos, ya sea enemigos que disparan a distancia, cuerpo a cuerpo o una sala con enemigos y un puzzle. Finalmente pasa los retos de las salas.
+- Se desbloquea la sala del jefe.
+- Entra a la sala del jefe y lo derrota.
+- Se desbloquea el siguiente nivel.
+- Se repite el mismo proceso mencionado arriba, pero el jugador se enfrenta a enemigos más agresivos.
+- Si el jugador logra atravesar todas las salas de todos los niveles disponibles, entonces obtiene la información robada de “The Core” y gana el juego.
+- El jugador puede jugar las veces que quiera para mejorar sus estadísticas. 
+    
+**2. Escenario donde el jugador muere en algún punto del juego:**
+
+- El jugador entra al nivel 1. Aparece a la mitad de la sala principal con 3 salas abiertas y una bloqueada alrededor. La sala bloqueada es la del jefe, que se desbloquea una vez completando las otras tres.
+- El jugador entra a alguna sala y se enfrenta a los diferentes desafíos, ya sea enemigos que disparan a distancia, cuerpo a cuerpo o una sala con enemigos y un puzzle.
+- El jugador es derrotado debido a que se le acabó la vida por los ataques de los enemigos.
+- El jugador regresa al inicio donde puede volver a empezar el nivel 1 y únicamente conserva aquellas mejoras permanentes que obtuvo durante sus intentos anteriores.
+- El jugador repite este proceso hasta que logre completar todos los niveles y recuperar la información robada por “The Core”. 
  
 
 ## _Level Design_
