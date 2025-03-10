@@ -73,7 +73,7 @@ El juego acaba cuando te robas la información de The Core.
 
 Los elementos aleatorios son las herramientas y power ups que van saliendo. Los desafíos de cada subsala son aleatorios. Las salas se van a regenerar aleatoriamente y los enemigos también. 
 
-En ocasiones las recompensas que puedes obtener por hacer los diferentes retos de las salas en cada nivel pueden ser permanentes (principalmente las mejoras de ataque, defensa y vida). Cuando te mueras conservas dichas mejoras permanentes que recojas a lo largo de las partidas.
+En ocasiones las recompensas que puedes obtener por hacer los diferentes retos de las salas en cada nivel pueden ser permanentes (principalmente las mejoras de ataque y vida). Cuando te mueras conservas dichas mejoras permanentes que recojas a lo largo de las partidas.
 
 
 ### **Mindset**
