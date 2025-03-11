@@ -8,36 +8,35 @@ assignees: ''
 ---
 
 ---
-## 🚀 New Task / Issue
-about: Structured issue description for GitHub Projects
-title: "[TITLE] Brief description of the problem or task"
-assignees: 
-  - responsible_user
+## 🚀 Nueva tarea/Issue
+"[TITULO] Breve descripción del issue"
+Responables: 
+  - usuario_responsable
 ---
 
-## 📌 Issue Name
-<!-- Brief title describing the problem or task -->
+## 📌 Nombre del Issue
+<!-- Breve, una descripción de la problematica que atenderá-->
 
-## 📖 Technical Description
-<!-- Detailed explanation of the problem, expected implementation, or technical context -->
+## 📖 Descripción Tecnica 
+<!-- Explicación detallada del problema, da el contexto y explica que herramientas serán usadas -->
 
-## 🛠 Associated Software
-<!-- Indicate if the issue is related to a specific module, framework, or tool -->
+## 🛠 Software Asociado
+<!-- Indica si el issue esta relacionado con alguna herramienta de software en especifico-->
 
-## 🎯 Ideal Candidate
-<!-- Profile of the developer or team best suited to handle this issue -->
+## 🎯 Candidato indicado
+<!-- El perfil del candidato ideal para la tarea o el nombre de la persona del equipo más capacitada -->
 
-## ⏳ Time Estimate
-<!-- Estimated time in hours/days/weeks to complete the task -->
+## ⏳ Tiempo Estimado
+<!-- Tiempo estimado en días para completar la tarea  -->
 
-## 🔍 Notes
+## 🔍 Notas
 <!-- Additional comments, blockers, dependencies, risks, or important notes -->
 
 ## 📋 Checklist
-- [ ] Task 1
-- [ ] Task 2
-- [ ] Tests completed
-- [ ] Team review
+- [ ] Tarea 1
+- [ ] Tarea 2
+- [ ] Pruebas completadas
+- [ ] Revisión en equipo
 
-## 📎 Related Resources
-<!-- Links
+## 📎 Recursos relacionados
+<!-- Links --!>
