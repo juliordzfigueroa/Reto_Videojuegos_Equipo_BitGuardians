@@ -166,6 +166,7 @@ Para atravesar estos desafíos, el jugador contará con las siguientes estadíst
 |Vida|Arma Inicial|Velocidad|
 |-------|----|-------|
 |100|Aleatoria|5|
+
 NOTA: Estas estadisticas son una idea de como puede funcionar a la hora de la implementación de estas, serán ajustadas dependiendo de las pruebas del juego.
 
 Existen dos tipos de enemigos:
@@ -182,6 +183,7 @@ Aquí una tabla con las estadísticas de cada enemigo:
 |-------|----|-------|------|------|
 |Robot|150|15|1|2|
 |Dron|125|20|Infinito|2.5|
+
 NOTA: Estas estadisticas son una idea de como puede funcionar a la hora de la implementación de estas, serán ajustadas dependiendo de las pruebas del juego.
 
 Para poder pelear con los enemigos habrá 3 tipos de armas: 
@@ -195,6 +197,7 @@ Aquí una Tabla con las estadísticas de daño de cada arma:
 |Espada Láser|20 puntos por golpe|2|
 |Taser|15 por golpe|1.5|
 |Pistola Láser|10 por golpe|Infinito (hasta tocar un muro)|
+
 NOTA: Estas estadisticas son una idea de como puede funcionar a la hora de la implementación de estas, serán ajustadas dependiendo de las pruebas del juego.
 
 El puzzle será de tipo lógicos. Van a funcionar de la siguiente manera:
