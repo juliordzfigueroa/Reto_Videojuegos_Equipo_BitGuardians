@@ -66,23 +66,31 @@ Cada partida te sumergirá en desafiantes acertijos y un combate intenso. Adema
 ### **Gameplay**
 
 Nuestro juego tiene como característica principal la vista desde arriba que se pueda controlar con el mismo teclado, pudiendo mover en las 4 direcciones. 
-Cuenta también con combate cuerpo a cuerpo del jugador hacia los diferentes enemigos. 
-En cada nivel tenemos una sala con 3 subsalas y arriba la puerta del jefe. Para que se abra la puerta del jefe se necesita completar algunas misiones de las demás salas. En cada subsala hay bots que te atacan y en caso de que logren golpearte te quitan la vida.
-Asimismo, en cada subsala hay un puzzle que al resolverlo te da un power up para llegar con el jefe. Una vez llegado con el jefe si se derrota al jefe tenemos un puzzle más difícil que cuando se resuelve te da una pista para el puzzle del siguiente nivel. 
+Cuenta también con diferentes tipos de combate, ya sea cuerpo a cuerpo o con un arma a distancia, para que el jugador venza a los diferentes enemigos. 
+
+En cada nivel tenemos una sala con 3 subsalas y arriba la puerta del jefe. Para que se abra la puerta del jefe se necesita completar los desafíos de las demás
+salas. En cada subsala hay robots que te atacan y en caso de que logren golpearte te quitan la vida.
+Asimismo, al completar el reto de cada subsala se le dará al jugador un power up para llegar con el jefe. Una vez llegado con el jefe si el jugador derrota al
+jefe podrá avanzar al siguiente nivel. 
 El juego acaba cuando te robas la información de The Core. 
 
-Los elementos aleatorios son las herramientas y power ups que van saliendo. Los desafíos de cada subsala son aleatorios. Las salas se van a regenerar aleatoriamente y los enemigos también. 
+Los elementos aleatorios son las diferentes armas y power ups que van saliendo tras completar los retos. Los desafíos de cada subsala son aleatorios. Las salas se
+van a regenerar aleatoriamente y los enemigos también. 
 
-En ocasiones las recompensas que puedes obtener por hacer los diferentes retos de las salas en cada nivel pueden ser permanentes (principalmente las mejoras de ataque, defensa y vida). Cuando te mueras conservas dichas mejoras permanentes que recojas a lo largo de las partidas.
+En ocasiones las recompensas que puedes obtener por hacer los diferentes retos de las salas en cada nivel pueden ser permanentes (principalmente la mejoras de
+vida). Cuando te mueras conservas dichas mejoras permanentes que recojas a lo largo de las partidas.
 
 
 ### **Mindset**
 
 Queremos que el jugador pueda sentir las siguientes cosas: 
-- **Ingenio y Desafío mental:** Como hacker el jugador deberá usar su lógica y habilidad en resolución de problemas para avanzar. Esto se logrará a través de enemigos que lo atacan y puzzles que deberá resolver conforme avanza en el juego. 
-- **Progresión de poder:** El jugador debe poder sentir que a medida que supera obstáculos y niveles, mejora continuamente. Asimismo, con las mejoras permanentes el jugador logrará sentirse cada vez más poderoso y con mejores habilidades. 
-- **Adrenalina:** Con los diferentes enemigos y jefes del nivel queremos que la curva de dificultad aumente, creando así un efecto de adrenalina en el jugador a medida que juega. 
-- **Presión:** Los puzzles tendrán tiempos límites para resolverlos. Creando así presión sobre el jugador para que los resuelva de la manera más rápida posible. 
+- **Ingenio y Desafío mental:** Como hacker el jugador deberá usar su lógica y habilidad en resolución de problemas para avanzar. Esto se logrará a través de
+enemigos que lo atacan y puzzles que deberá resolver conforme avanza en el juego. 
+- **Progresión de poder:** El jugador debe poder sentir que a medida que supera obstáculos y niveles, mejora continuamente. Asimismo, con las mejoras permanentes
+el jugador logrará sentirse cada vez más poderoso y con mejores habilidades. 
+- **Adrenalina:** Con los diferentes enemigos y jefes del nivel queremos que la curva de dificultad aumente, creando así un efecto de adrenalina en el jugador a
+medida que juega. 
+- **Presión:** Los puzzles tendrán tiempo límite para resolverlos. Creando así presión sobre el jugador para que los resuelva de la manera más rápida posible. 
 
 ## _Technical_
 
@@ -99,10 +107,12 @@ Queremos que el jugador pueda sentir las siguientes cosas:
         - Opciones de volúmen de los efectos de sonido del juego (Quitar los efectos de sonido o bajar el volúmen de estos)
        
     2. Iniciar juego: Donde al dar click en el botón meterá al jugador al primer nivel del juego.
-    3. *Continuar Partida: Donde el jugador podrá retomar su partida si es que no ha muerto en alguno de los niveles.
+    3. Continuar Partida: Donde el jugador podrá retomar su partida si es que no ha muerto en alguno de los niveles.
+
 2. Juego:  Dentro de la partida el jugador podrá ver la pantalla de la primera sala, a sus lados están las 3 subsalas y la sala del jefe. Dentro de la partida, el jugador tendrá las siguientes subpantallas:
      Aqui una foto de el concepto de la primera pantalla del juego:
 ![Primer concepto de The Final Hack](/Videojuegos/images/GDD/The_Final_Hack_concepto.jpg)
+
 1. Pausa: La cual tendrá las siguientes opciones para el jugador:
     1. Botón para salir de la partida y guardarla.
     2. Opciones: Como en la pantalla de inicio se tendrán las mismas opciones en el menú de opciones.
@@ -118,7 +128,7 @@ Queremos que el jugador pueda sentir las siguientes cosas:
 ### **Controls**
 
 El jugador será capaz de interactuar con el juego a través del teclado. Las teclas que se usarán serán las siguientes:
-Teclas WASD para el movimiento:
+Teclas WASD para el movimiento en la pantalla:
 
 `W` Adelante
 
@@ -130,8 +140,8 @@ Teclas WASD para el movimiento:
 
 Las teclas de flechas son para hacer ataques en cualquier dirección ya sea ataques de pistola o ataques cuerpo a cuerpo.
 
-
-El jugador tendrá la posibilidad de intercambiar las teclas entre sí. Es decir, si al jugador se le hace más fácil moverse con las teclas de flechas y atacar con las teclas WASD, será posible hacer este intercambio. Esto lo podrá realizar en las opciones de juego. 
+El jugador tendrá la posibilidad de intercambiar las teclas entre sí. Es decir, si al jugador se le hace más fácil moverse con las teclas de flechas y atacar con
+las teclas WASD, será posible hacer este intercambio. Esto lo podrá realizar en las opciones de juego. 
 
 Además de esto, utilizaremos dos teclas más:
 
@@ -157,6 +167,8 @@ Para atravesar estos desafíos, el jugador contará con las siguientes estadíst
 |-------|----|-------|
 |100|Aleatoria|5|
 
+NOTA: Estas estadisticas son una idea de como puede funcionar a la hora de la implementación de estas, serán ajustadas dependiendo de las pruebas del juego.
+
 Existen dos tipos de enemigos:
 1. Robots:
     - Cuerpo a cuerpo: Estos robots que atacan cuerpo a cuerpo tendrán tendrán más vida que los drones, sin embargo, tendrán menos daño. 
@@ -167,10 +179,12 @@ Estos enemigos su único objetivo es derrotar al jugador, por lo que su comporta
 2. Te derrotan. Es crucial que todos los enemigos están derrotados, debido a que si no los derrotas a todos, entonces la sala del jefe nunca se abre. 
 Aquí una tabla con las estadísticas de cada enemigo:
 
-|Enemigo|Vida|Daño|Alcance|
-|-------|----|-------|------|
-|Robot|150|15|1|
-|Dron|125|20|Infinito|
+|Enemigo|Vida|Daño|Alcance|**Velocidad**|
+|-------|----|-------|------|------|
+|Robot|150|15|1|2|
+|Dron|125|20|Infinito|2.5|
+
+NOTA: Estas estadisticas son una idea de como puede funcionar a la hora de la implementación de estas, serán ajustadas dependiendo de las pruebas del juego.
 
 Para poder pelear con los enemigos habrá 3 tipos de armas: 
 - Pistola láser: pistola que dispara proyectiles con velocidad definida. Esta pistola hará menos daño que el taser. 
@@ -182,7 +196,9 @@ Aquí una Tabla con las estadísticas de daño de cada arma:
 |----|----|-------|
 |Espada Láser|20 puntos por golpe|2|
 |Taser|15 por golpe|1.5|
-|Pistola Láser|10 por golpe|Infinito (hasta tocar un muro|
+|Pistola Láser|10 por golpe|Infinito (hasta tocar un muro)|
+
+NOTA: Estas estadisticas son una idea de como puede funcionar a la hora de la implementación de estas, serán ajustadas dependiendo de las pruebas del juego.
 
 El puzzle será de tipo lógicos. Van a funcionar de la siguiente manera:
 - Slide puzzle, donde el jugador tendrá que ordenar una matriz de imágenes en el orden correcto. 
@@ -199,13 +215,13 @@ Después de completar una subsala, al jugador se le darán PowerUps que aparecer
 2. **Raros** (30% de aparición):
     - Aumento de vida: Aumentó de vida en 20 puntos.
 3. **Épico** (20% de aparición):
-    - Aumento de daño: Aumenta el daño en 10 puntos.
+    - Armas 
 4. **Legendario** (10% de aparición): 
     - Bomba EMP: Una bomba que aturde a los enemigos por 2 segundos.
 
 Al pasar de nivel los enemigos aumentarán su vida en un 10% y el ataque en un 15%. Asimismo en las salas de puzzle, estos aumentarán de dificultad conforme se avancen los niveles.
 
-En relación a los jefes, estos siempre serán un 20% más fuertes que los enemigos del nivel y tendrán 50% más de vida comparado a los enemigos del nivel en el que se encuentra el jugador. 
+En relación a los jefes, estos siempre serán un 20% más fuertes que los enemigos del nivel y tendrán 150% más de vida comparado a los enemigos del nivel en el que se encuentra el jugador. 
 
 
 > **Posibles escenarios del jugador en el juego**
@@ -234,7 +250,7 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
 ### **Themes**
 
 1. Nivel 1 y 2: Servidor 1: 
-    1. Mood
+    1. _Mood_
         1. Lugar con poca iluminación, donde el jugador debe estar atento a los diferentes desafíos del nivel
     2. Objects
         1. _Ambient_
@@ -392,9 +408,7 @@ Logo con el nombre del juego para usarlo en la pantalla del titulo del juego:
 
 ### **Style Attributes**
 
-### **Style Attributes**
-
-Para la música de nuestro juego buscamos un ritmo inspirado en música de juegos de 8 y 16 bits. Estea 
+Para la música de nuestro juego buscamos un ritmo inspirado en música de juegos de 8 y 16 bits. Además queremos implementar música y efectos de sonido con las siguientes características:
 
 1. Género
     1. Cyberpunk
@@ -431,7 +445,7 @@ En cuanto a efectos de sonido que pensamos buscar para el juego, están los sigu
 
 ### **Music Needed**
 
-1. Música electrónica no acelerado pero no muy lenta para las 3 subsalas, por ejemplo: “Core” o “Another Medium” Undertale
+1. Música electrónica no acelerado pero no muy lenta para las 3 subsalas, por ejemplo: “Core” o “Another Medium” de Undertale
 2. Música energizante con tema electrónico para el menú principal
 3. Música electrónica acelerada para la batalla contra el jefe, por ejemplo: “Enemy Approaching” de Undertale
 4. Créditos finales del videojuego.
@@ -441,7 +455,8 @@ En cuanto a efectos de sonido que pensamos buscar para el juego, están los sigu
 ## _Schedule_
 
 ---
-Este será el orden de como desarrollaremos los diferentes aspectos mencionados del videojuego. Este orden está sujeto a cambios a lo largo del desarrollo
+Este es el plan de como tenemos planeado desarrollar los diferentes aspectos mencionados del videojuego. Este orden está sujeto a cambios a lo largo del
+desarrollo del mismo
 
 1. Clases de objetos del juego
     1. Entidad Base:
