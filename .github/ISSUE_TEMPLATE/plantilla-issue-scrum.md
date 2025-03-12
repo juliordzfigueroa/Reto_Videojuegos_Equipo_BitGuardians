@@ -17,7 +17,7 @@ Responables:
 ## 📌 Nombre del Issue
 <!-- Breve, una descripción de la problematica que atenderá-->
 
-## 📖 Descripción Tecnica 
+## 📖 Descripción Técnica 
 <!-- Explicación detallada del problema, da el contexto y explica que herramientas serán usadas -->
 
 ## 🛠 Software Asociado
