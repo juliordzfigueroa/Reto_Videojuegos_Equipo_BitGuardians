@@ -44,8 +44,8 @@ class Player extends AnimatedObject {
                 //idleFrames: [4, 4] },
                 //LINK moveFrames: [70, 79],
                 //LINK idleFrames: [30, 32] },
-                moveFrames: [30, 37],
-                idleFrames: [0, 4]
+                moveFrames: [30, 36],
+                idleFrames: [0, 3]
             },
             left: {
                 status: false,
@@ -57,8 +57,8 @@ class Player extends AnimatedObject {
                 //idleFrames: [10, 10] },
                 //LINK moveFrames: [50, 59],
                 //LINK idleFrames: [10, 12] },
-                moveFrames: [40, 47],
-                idleFrames: [0, 4]
+                moveFrames: [40, 46], // Cipher moves 
+                idleFrames: [0, 3]
             },
             up: {
                 status: false,
@@ -70,8 +70,8 @@ class Player extends AnimatedObject {
                 //idleFrames: [1, 1] },
                 //LINK moveFrames: [60, 69],
                 //LINK idleFrames: [20, 20] },
-                moveFrames: [20, 27],
-                idleFrames: [0, 4]
+                moveFrames: [20, 26],
+                idleFrames: [0, 3]
             },
             down: {
                 status: false,
@@ -83,8 +83,8 @@ class Player extends AnimatedObject {
                 //idleFrames: [7, 7] },
                 //LINK moveFrames: [40, 49],
                 //LINK idleFrames: [0, 2] },
-                moveFrames: [10, 17],
-                idleFrames: [0, 4]
+                moveFrames: [10, 16],
+                idleFrames: [0, 3]
             },
         };
     }
@@ -295,7 +295,7 @@ const levelChars = {
         //sheetCols: 3,
         //startFrame: [7, 7]},
         sprite: '../assets/sprites/cipher_spritesheet.png',
-        rect: new Rect(0, 0, 32, 60),
+        rect: new Rect(0, 0, 32, 56), // Valores para las animaciones de caminar de cipher.
         sheetCols: 10,
         startFrame: [0, 0]
     },
