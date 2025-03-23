@@ -89,15 +89,13 @@ class Player extends AnimatedObject {
             },
             leftattack: {
                 sprite: '../assets/sprites/cipher_atkLeft0.png',
-                rect: new Rect(0, 0, 70, 64),
                 status: false,
                 repeat: false,
                 duration: 100,
-                moveFrames: [0, 4]
+                moveFrames: [1, 4]
             },
             rightattack: {
                 sprite: '../assets/sprites/cipher_atkRight0.png',
-                rect: new Rect(0, 0, 70, 64),
                 status: false,
                 repeat: false,
                 duration: 100,
@@ -105,7 +103,6 @@ class Player extends AnimatedObject {
             },
             upattack: {
                 sprite: '../assets/sprites/cipher_atkUp0.png',
-                rect: new Rect(0, 0, 64, 80),
                 status: false,
                 repeat: false,
                 duration: 100,
@@ -113,11 +110,10 @@ class Player extends AnimatedObject {
             },
             downattack: {
                 sprite: '../assets/sprites/cipher_atkDown0.png',
-                rect: new Rect(0, 0, 64, 80),
                 status: false,
                 repeat: false,
                 duration: 100,
-                moveFrames: [0, 4]
+                moveFrames: [0, 3]
             }
         };
 
