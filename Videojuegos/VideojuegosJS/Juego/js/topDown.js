@@ -31,6 +31,7 @@ class Player extends AnimatedObject {
         super("green", width, height, x, y, "player");
         this.velocity = new Vec(0.0, 0.0);
         this.money = 0;
+        this.attacking = false; // Initialize attacking property
 
         // Movement variables to define directions and animations
         this.movement = {
@@ -86,7 +87,43 @@ class Player extends AnimatedObject {
                 moveFrames: [10, 16],
                 idleFrames: [0, 3]
             },
+            leftattack: {
+                sprite: '../assets/sprites/cipher_atkLeft0.png',
+                rect: new Rect(0, 0, 70, 64),
+                status: false,
+                repeat: false,
+                duration: 100,
+                moveFrames: [0, 4]
+            },
+            rightattack: {
+                sprite: '../assets/sprites/cipher_atkRight0.png',
+                rect: new Rect(0, 0, 70, 64),
+                status: false,
+                repeat: false,
+                duration: 100,
+                moveFrames: [0, 4]
+            },
+            upattack: {
+                sprite: '../assets/sprites/cipher_atkUp0.png',
+                rect: new Rect(0, 0, 64, 80),
+                status: false,
+                repeat: false,
+                duration: 100,
+                moveFrames: [0, 4]
+            },
+            downattack: {
+                sprite: '../assets/sprites/cipher_atkDown0.png',
+                rect: new Rect(0, 0, 64, 80),
+                status: false,
+                repeat: false,
+                duration: 100,
+                moveFrames: [0, 4]
+            }
         };
+
+        this.defaultSprite = '../assets/sprites/cipher_spritesheet.png';
+        this.defaultRect = new Rect(0, 0, 32, 56);
+        this.defaultSheetCols = 10;
     }
 
     update(level, deltaTime) {
@@ -115,6 +152,35 @@ class Player extends AnimatedObject {
         dirData.status = false;
         this.velocity[dirData.axis] = 0;
         this.setAnimation(...dirData.idleFrames, dirData.repeat, dirData.duration);
+    }
+
+    // Para ataque
+    startAttack(direction) {
+        const dirData = this.movement[direction + "attack"];
+        if (!dirData || dirData.status) return;
+
+        // Detener movimiento
+        this.velocity = new Vec(0, 0);
+        dirData.status = true;
+
+        // Cambiar sprite al de ataque
+        this.setSprite(dirData.sprite, dirData.rect);
+        this.sheetCols = 5;
+        this.setAnimation(...dirData.moveFrames, dirData.repeat, dirData.duration);
+    }
+
+    stopAttack(direction) {
+        const dirData = this.movement[direction + "attack"];
+        if (!dirData || !dirData.status) return;
+
+        dirData.status = false;
+
+        // Volver al sprite original e idle
+        this.setSprite(this.defaultSprite, this.defaultRect);
+        this.sheetCols = this.defaultSheetCols;
+
+        const idleData = this.movement[direction];
+        this.setAnimation(...idleData.idleFrames, true, idleData.duration);
     }
 }
 
@@ -297,7 +363,7 @@ const levelChars = {
         sprite: '../assets/sprites/cipher_spritesheet.png',
         rect: new Rect(0, 0, 32, 56), // Valores para las animaciones de caminar de cipher.
         sheetCols: 10,
-        startFrame: [0, 0]
+        startFrame: [0, 0],
     },
     "$": {
         objClass: Coin,
@@ -366,6 +432,37 @@ function setEventListeners() {
             game.player.stopMovement("right");
         }
     });
+    //Para ataque
+    window.addEventListener("keydown", event => {
+        if (event.key === 'ArrowUp') {
+            game.player.startAttack("up");
+        }
+        if (event.key === 'ArrowLeft') {
+            game.player.startAttack("left");
+        }
+        if (event.key === 'ArrowDown') {
+            game.player.startAttack("down");
+        }
+        if (event.key === 'ArrowRight') {
+            game.player.startAttack("right");
+        }
+    });
+
+    window.addEventListener("keyup", event => {
+        if (event.key === 'ArrowUp') {
+            game.player.stopAttack("up");
+        }
+        if (event.key === 'ArrowLeft') {
+            game.player.stopAttack("left");
+        }
+        if (event.key === 'ArrowDown') {
+            game.player.stopAttack("down");
+        }
+        if (event.key === 'ArrowRight') {
+            game.player.stopAttack("right");
+        }
+    });
+
 }
 
 // Function that will be called for the game loop
