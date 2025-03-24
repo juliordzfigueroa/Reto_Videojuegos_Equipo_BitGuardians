@@ -28,7 +28,7 @@ const scale = 29;
 
 class Player extends AnimatedObject {
     constructor(_color, width, height, x, y, _type) {
-        super("green", width, height, x, y, "player");
+        super("green", width*2, height*3, x, y, "player");
         this.velocity = new Vec(0.0, 0.0);
         this.money = 0;
         this.attacking = false; // Initialize attacking property
@@ -155,8 +155,7 @@ class Player extends AnimatedObject {
         const dirData = this.movement[direction + "attack"];
         if (!dirData || dirData.status) return;
 
-        // Detener movimiento
-        this.velocity = new Vec(0, 0);
+        // Detener animacion
         dirData.status = true;
 
         // Cambiar sprite al de ataque
@@ -180,18 +179,6 @@ class Player extends AnimatedObject {
     }
 }
 
-
-class Coin extends AnimatedObject {
-    constructor(_color, width, height, x, y, _type) {
-        super("yellow", width, height, x, y, "coin");
-    }
-
-    update(_level, deltaTime) {
-        this.updateFrame(deltaTime);
-    }
-}
-
-
 class Level {
     constructor(plan) {
         // Split the plan string into a matrix of strings
@@ -201,66 +188,52 @@ class Level {
         this.actors = [];
 
         // Fill the rows array with a label for the type of element in the cell
-        // Most cells are 'empty', except for the 'wall'
         this.rows = rows.map((row, y) => {
             return row.map((ch, x) => {
                 let item = levelChars[ch];
-                let objClass = item.objClass;
-                let cellType = item.label;
-                // Create a new instance of the type specified
-                let actor = new objClass("grey", 1, 1, x, y, item.label);
-                // Configurations for each type of cell
-                // TODO: Simplify this code, sinde most of it is repeated
-                if (actor.type == "player") {
-                    // Also instantiate a floor tile below the player
-                    this.addBackgroundFloor(x, y);
-
-                    actor.setSprite(item.sprite, item.rect);
-                    actor.sheetCols = item.sheetCols;
-                    actor.setAnimation(...item.startFrame, true, 100);
-                    this.player = actor;
-                    cellType = "empty";
-                } else if (actor.type == "coin") {
-                    // Also instantiate a floor tile below the player
-                    this.addBackgroundFloor(x, y);
-
-                    actor.setSprite(item.sprite, item.rect);
-                    actor.sheetCols = item.sheetCols;
-                    actor.setAnimation(...item.startFrame, true, 100);
-                    this.actors.push(actor);
-                    cellType = "empty";
-                } else if (actor.type == "wall") {
-                    // Randomize sprites for each wall tile
-                    item.rect = this.randomTile(31, 10, 17);     // green broken bricks
-                    // item.rect = this.randomTile(2, 3, 19);     // green broken bricks
-                    actor.setSprite(item.sprite, item.rect);
-                    this.actors.push(actor);
-                    cellType = "wall";
-                } else if (actor.type == "floor") {
-                    // Randomize sprites for each wall tile
-                    item.rect = this.randomTile(11, 4, 17);     // beige dirt
-                    actor.setSprite(item.sprite, item.rect);
-                    this.actors.push(actor);
-                    cellType = "floor";
-                }
+                let cellType = this.setupActor(item, x, y);
                 return cellType;
             });
         });
     }
 
+    setupActor(item, x, y) {
+        let objClass = item.objClass;
+        let actor = new objClass("grey", 1, 1, x, y, item.label);
+        let cellType = item.label;
+
+        if (actor.type === "player") {
+            this.addBackgroundFloor(x, y);
+            actor.setSprite(item.sprite, item.rect);
+            actor.sheetCols = item.sheetCols;
+            actor.setAnimation(...item.startFrame, true, 100);
+            this.player = actor;
+            cellType = "empty";
+        } else if (actor.type === "floor") {
+            item.rect = this.randomTile(0, 3, 0, 16, 16);
+            actor.setSprite(item.sprite, item.rect);
+            this.actors.push(actor);
+        } else if (actor.type === "wall") {
+            actor.setSprite(item.sprite, item.rect);
+            this.actors.push(actor);
+        }
+        return cellType;
+    }
+
     addBackgroundFloor(x, y) {
         let floor = levelChars['.'];
         let floorActor = new GameObject("grey", 1, 1, x, y, floor.label);
-        floor.rect = this.randomTile(11, 4, 17);     // beige dirt
+        floor.rect = this.randomTile(0, 3, 0, 16, 16);     //(0, 6, 25, 32, 32) //(0, 25, 10, 32, 32)
         floorActor.setSprite(floor.sprite, floor.rect);
         this.actors.push(floorActor);
     }
 
     // Randomize sprites for each wall tile
-    randomTile(xStart, xRange, y) {
+    randomTile(xStart, xRange, y, xSize, ySize) {
         let tile = Math.floor(Math.random() * xRange + xStart);
-        return new Rect(tile, y, 32, 32);
+        return new Rect(tile, y, xSize, ySize);
     }
+
 
     // Detect when the player touches a wall
     contact(playerPos, playerSize, type) {
@@ -294,8 +267,6 @@ class Game {
         this.player = level.player;
         this.actors = level.actors;
         //console.log(level);
-        this.labelMoney = new TextLabel(20, canvasHeight - 30,
-            "30px Ubuntu Mono", "white");
     }
 
     update(deltaTime) {
@@ -314,9 +285,6 @@ class Game {
                 //console.log(`Collision of ${this.player.type} with ${actor.type}`);
                 if (actor.type == 'wall') {
                     console.log("Hit a wall");
-                } else if (actor.type == 'coin') {
-                    this.player.money += 1;
-                    this.actors = this.actors.filter(item => item !== actor);
                 }
             }
         }
@@ -327,8 +295,6 @@ class Game {
             actor.draw(ctx, scale);
         }
         this.player.draw(ctx, scale);
-
-        this.labelMoney.draw(ctx, `Money: ${this.player.money}`);
     }
 }
 
@@ -340,14 +306,46 @@ const levelChars = {
     ".": {
         objClass: GameObject,
         label: "floor",
-        sprite: '../assets/sprites/ProjectUtumno_full.png',
-        rect: new Rect(12, 17, 32, 32)
+        // sprite: '../assets/sprites/ProjectUtumno_full.png',
+        // rect: new Rect(12, 17, 32, 32)
+        sprite: '../assets/sprites/floor_tiles.png',
+        rect: new Rect(0, 0, 16, 16)
     },
-    "#": {
+    "*": { //Upper left corner wall 
         objClass: GameObject,
         label: "wall",
-        sprite: '../assets/sprites/ProjectUtumno_full.png',
-        rect: new Rect(2, 19, 32, 32)
+        sprite: '../assets/sprites/wall_tileset.png',
+        rect: new Rect(0, 0, 16, 16)
+    },
+    ":": { //Upper right corner wall
+        objClass: GameObject,
+        label: "wall",
+        sprite: '../assets/sprites/wall_tileset.png',
+        rect: new Rect(1, 0, 16, 16),
+    },
+    "#": { //Vertical wall
+        objClass: GameObject,
+        label: "wall",
+        sprite: '../assets/sprites/wall_tileset.png',
+        rect: new Rect(2, 0, 16, 16)
+    },
+    "/": { //Lower left corner wall
+        objClass: GameObject,
+        label: "wall",
+        sprite: '../assets/sprites/wall_tileset.png',
+        rect: new Rect(3, 0, 16, 16)
+    },
+    "$": { //Lower right corner wall
+        objClass: GameObject,
+        label: "wall",
+        sprite: '../assets/sprites/wall_tileset.png',
+        rect: new Rect(4, 0, 16, 16)
+    },
+    "&": { //Horizontal wall
+        objClass: GameObject,
+        label: "wall",
+        sprite: '../assets/sprites/wall_tileset.png',
+        rect: new Rect(5, 0, 16, 16)
     },
     "@": {
         objClass: Player,
@@ -360,14 +358,6 @@ const levelChars = {
         rect: new Rect(0, 0, 32, 56), // Valores para las animaciones de caminar de cipher.
         sheetCols: 10,
         startFrame: [0, 0],
-    },
-    "$": {
-        objClass: Coin,
-        label: "collectible",
-        sprite: '../assets/sprites/coin_gold.png',
-        rect: new Rect(0, 0, 32, 32),
-        sheetCols: 8,
-        startFrame: [0, 7]
     },
 };
 
@@ -412,24 +402,6 @@ function setEventListeners() {
         if (event.key == 'd') {
             game.player.startMovement("right");
         }
-    });
-
-    window.addEventListener("keyup", event => {
-        if (event.key == 'w') {
-            game.player.stopMovement("up");
-        }
-        if (event.key == 'a') {
-            game.player.stopMovement("left");
-        }
-        if (event.key == 's') {
-            game.player.stopMovement("down");
-        }
-        if (event.key == 'd') {
-            game.player.stopMovement("right");
-        }
-    });
-    //Para ataque
-    window.addEventListener("keydown", event => {
         if (event.key === 'ArrowUp') {
             game.player.startAttack("up");
         }
@@ -445,6 +417,18 @@ function setEventListeners() {
     });
 
     window.addEventListener("keyup", event => {
+        if (event.key == 'w') {
+            game.player.stopMovement("up");
+        }
+        if (event.key == 'a') {
+            game.player.stopMovement("left");
+        }
+        if (event.key == 's') {
+            game.player.stopMovement("down");
+        }
+        if (event.key == 'd') {
+            game.player.stopMovement("right");
+        }
         if (event.key === 'ArrowUp') {
             game.player.stopAttack("up");
         }
