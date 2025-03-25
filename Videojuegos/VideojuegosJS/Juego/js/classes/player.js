@@ -1,18 +1,18 @@
 /*
 
-    BitGuardians
-    Object Class forthe object Player
+    Equipo BitGuardians
+    Clase del objeto Jugador 
 
 */
 
-let playerspeed = 0.005; // Speed atribute for all players
+let playerspeed = 0.005; // Atributo de velocidad del jugador
 
 class Player extends AnimatedObject {
     constructor(color, width, height, x, y, type) {
         super("green", width*2, height*3, x, y, "player");
         this.velocity = new Vec(0.0, 0.0);
 
-        // Movement variables to define directions and animations
+        // Movimientos del jugador
         this.movement = {
             right: {
                 status: false,
@@ -92,10 +92,10 @@ class Player extends AnimatedObject {
     }
 
     update(level, deltaTime) {
-        // Find out where the player should end if it moves
+        // Determinar donde termina el jugador después de que se mueve
         let newPosition = this.position.plus(this.velocity.times(deltaTime));
 
-        // Move only if the player does not move inside a wall
+        // Moverse si el jugador no toca una pared
         if (!level.contact(newPosition, this.size, 'wall')) {
             this.position = newPosition;
         }
