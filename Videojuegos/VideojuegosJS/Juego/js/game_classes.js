@@ -25,7 +25,7 @@ class Vec {
         return new Vec(this.x * factor, this.y * factor);
     }
 
-    get length() {
+    get_length() {
         return Math.sqrt(this.x ** 2 + this.y ** 2);
     }
 }
