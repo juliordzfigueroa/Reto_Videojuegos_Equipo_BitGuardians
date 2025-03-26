@@ -25,8 +25,6 @@ let playerSpeed = 0.005;
 // Each unit in the level file will be drawn as these many square pixels
 const scale = 29;
 
-
-
 class Level {
     constructor(plan) {
         // Split the plan string into a matrix of strings
