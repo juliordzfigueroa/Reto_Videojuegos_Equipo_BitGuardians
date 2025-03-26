@@ -5,26 +5,19 @@
 
 */
 
+"use strict";
+
 let playerspeed = 0.005; // Atributo de velocidad del jugador
 
 class Player extends AnimatedObject {
-    constructor(color, width, height, x, y, type) {
+    constructor(color, width, height, x, y, type, hp, weapon, max_hp, shield, max_shield) {
         super("green", width*2, height*3, x, y, "player");
         this.velocity = new Vec(0.0, 0.0);
         this.hp = 100; // Atributo de vida del jugador
-        let startweapon = (Math.random() * 2); // Atributo de arma del jugador entre 0 y 2  (0 = Espada láser, 1 = Táser, 2 = Pistola laser)
-        if (startweapon == 0)
-        {
-            this.weapon = new Weapon("black", 30, 32, x, y, "weapon", 0, 20, 2, 0.1, "Epic", "Laser Sword"); // Espada láser
-        }
-        else if (startweapon == 1)
-        {
-            this.weapon = new Weapon("black", 30, 32, x, y, "weapon", 1, 15, 2, 0.1, "Rare", "Taser"); // Táser
-        }
-        else if (startweapon)
-        {
-            this.weapon = new Weapon("black", 30, 32, x, y, "weapon", 2, 10, canvasWidth, 0.1, "Legendary", "Laser gun"); // Pistola láser
-        }
+        this.max_hp = hp; // Atributo de vida máxima del jugador, la cual podrá ser incrementada con powerups.
+        this.shield = 0; // Atributo de escudo del jugador
+        this.max_shield = shield; // Atributo de escudo máximo del jugador, el cual podrá ser incrementado con powerups.
+        
 
         // Movimientos del jugador
         this.movement = {
