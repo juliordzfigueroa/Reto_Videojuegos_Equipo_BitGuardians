@@ -51,23 +51,23 @@ class Player extends AnimatedObject {
                 idleFrames: [10, 10]
             },
             leftattack: {
-                sprite: '../assets/sprites/cipher_atkLeft2.png',
+                //sprite: '../assets/sprites/cipher_atkLeft2.png',
                 status: false,
                 repeat: false,
                 duration: 100,
-                moveFrames: [0, 3],
-                idleFrames: [0, 0]
+                moveFrames: [81, 84],
+                idleFrames: [80, 80]
             },
             rightattack: {
-                sprite: '../assets/sprites/cipher_atkRight2.png',
+                //sprite: '../assets/sprites/cipher_atkRight2.png',
                 status: false,
                 repeat: false,
                 duration: 100,
-                moveFrames: [0, 3],
-                idleFrames: [0, 0]
+                moveFrames: [91, 94],
+                idleFrames: [90, 90]
             },
             upattack: {
-                sprite: '../assets/sprites/cipher_atkUp2.png',
+                //sprite: '../assets/sprites/cipher_atkUp2.png',
                 status: false,
                 repeat: false,
                 duration: 100,
@@ -75,19 +75,14 @@ class Player extends AnimatedObject {
                 idleFrames: [0, 0]
             },
             downattack: {
-                sprite: '../assets/sprites/cipher_atkDown2.png',
+                //sprite: '../assets/sprites/cipher_atkDown2.png',
                 status: false,
                 repeat: false,
                 duration: 100,
-                moveFrames: [0, 2],
-                idleFrames: [0, 0]
+                moveFrames: [71, 74],
+                idleFrames: [70, 70]
             }
         };
-
-        this.defaultSprite = '../assets/sprites/cipher_spritesheet.png';
-        this.defaultRect = new Rect(0, 0, 32, 56);
-        this.defaultSheetCols = 10;
-
         
     }
 
@@ -123,29 +118,16 @@ class Player extends AnimatedObject {
     startAttack(direction) {
         const dirData = this.movement[direction + "attack"];
         if (!dirData || dirData.status) return;
-
-        // Detener animacion
-        dirData.status = true;
-
-        // Cambiar sprite al de ataque
-        this.setSprite(dirData.sprite, dirData.rect);
-        this.sheetCols = 10;
+        dirData.status = true;        
         this.setAnimation(...dirData.moveFrames, dirData.repeat, dirData.duration);
     }
-
-
 
     stopAttack(direction) {
         const dirData = this.movement[direction + "attack"];
         if (!dirData || !dirData.status) return;
-
         dirData.status = false;
-
-        // Volver al sprite original e idle
-        this.setSprite(this.defaultSprite, this.defaultRect);
-        this.sheetCols = this.defaultSheetCols;
-
         const idleData = this.movement[direction];
         this.setAnimation(...idleData.idleFrames, true, idleData.duration);
     }
+
 }

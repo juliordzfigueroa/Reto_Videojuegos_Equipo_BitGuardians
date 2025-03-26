@@ -146,6 +146,16 @@ class Game {
     }
 }
 
+function createWallTile(x) {
+    //Function to create a wall tile with the specified sprite
+    return {
+        objClass: GameObject,
+        label: "wall",
+        sprite: '../assets/sprites/escenarios/wall_tileset.png',
+        rect: new Rect(x, 0, 16, 16)
+    };
+}
+
 
 // Object with the characters that appear in the level description strings
 // and their corresponding objects
@@ -156,45 +166,16 @@ const levelChars = {
         label: "floor",
         // sprite: '../assets/sprites/ProjectUtumno_full.png',
         // rect: new Rect(12, 17, 32, 32)
-        sprite: '../assets/sprites/floor_tiles.png',
+        sprite: '../assets/sprites/escenarios/floor_tiles.png',
         rect: new Rect(0, 0, 16, 16)
     },
-    "*": { //Upper left corner wall 
-        objClass: GameObject,
-        label: "wall",
-        sprite: '../assets/sprites/wall_tileset.png',
-        rect: new Rect(0, 0, 16, 16)
-    },
-    ":": { //Upper right corner wall
-        objClass: GameObject,
-        label: "wall",
-        sprite: '../assets/sprites/wall_tileset.png',
-        rect: new Rect(1, 0, 16, 16),
-    },
-    "#": { //Vertical wall
-        objClass: GameObject,
-        label: "wall",
-        sprite: '../assets/sprites/wall_tileset.png',
-        rect: new Rect(2, 0, 16, 16)
-    },
-    "/": { //Lower left corner wall
-        objClass: GameObject,
-        label: "wall",
-        sprite: '../assets/sprites/wall_tileset.png',
-        rect: new Rect(3, 0, 16, 16)
-    },
-    "$": { //Lower right corner wall
-        objClass: GameObject,
-        label: "wall",
-        sprite: '../assets/sprites/wall_tileset.png',
-        rect: new Rect(4, 0, 16, 16)
-    },
-    "&": { //Horizontal wall
-        objClass: GameObject,
-        label: "wall",
-        sprite: '../assets/sprites/wall_tileset.png',
-        rect: new Rect(5, 0, 16, 16)
-    },
+    //WALLS
+    "*": createWallTile(0), // Upper left corner wall
+    ":": createWallTile(1), // Upper right
+    "#": createWallTile(2), // Vertical
+    "/": createWallTile(3), // Lower left
+    "$": createWallTile(4), // Lower right
+    "&": createWallTile(5), // Horizontal
     "@": {
         objClass: Player,
         label: "player",
@@ -202,8 +183,8 @@ const levelChars = {
         //rect: new Rect(0, 0, 48, 64),
         //sheetCols: 3,
         //startFrame: [7, 7]},
-        sprite: '../assets/sprites/cipher_spritesheet.png',
-        rect: new Rect(0, 0, 32, 56), // Valores para las animaciones de caminar de cipher.
+        sprite: '../assets/sprites/cipher/cipher_spritesheet1.png',
+        rect: new Rect(0, 0, 32, 57), // Valores para las animaciones de caminar de cipher.
         sheetCols: 10,
         startFrame: [0, 0],
     },
