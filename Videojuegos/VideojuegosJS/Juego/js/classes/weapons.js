@@ -15,7 +15,7 @@ class PowerUp extends GameObject {
         this.spawrate = spawrate; // Variable para saber la probabilidad de aparición de cada powerup.
     }
 
-    update(deltaTime) {
+    update() {
         // Método incluido para poder actualizar el estado de cada powerup en las salas tras ser completadas.
     }
 

@@ -5,14 +5,20 @@
 
 */
 
-let playerspeed = 0.005; // Atributo de velocidad del enemigo
+let enemyMspeed = 0.003; // Atributo de velocidad del enemigo cuerpo a cuerpo
+let enemyRspeed = 0.01; // Atributo de velocidad del enemigo a distancia
+let stunduration = 2000; // Atributo de duración del aturdimiento del enemigo 2 segundos
 
-class Player extends AnimatedObject {
+
+class Enemy extends AnimatedObject {
     constructor(color, width, height, x, y, type) {
         super("green", width * 2, height * 3, x, y, "enemy");
         this.velocity = new Vec(0.0, 0.0);
+        this.attackTimmer = 0; // Tiempo de ataque del enemigo</p>
+        this.nextAttack = 0; // Siguiente ataque del enemigo
+        this.status = "idle"; // Estado del enemigo
 
-        // Movimientos del jugador
+        // Movimientos del enemigo
         this.movement = {
             right: {
                 status: false,
@@ -87,7 +93,18 @@ class Player extends AnimatedObject {
     }
 
     update(level, deltaTime) {
-        // Determinar donde termina el jugador después de que se mueve
+        const distance = this.position.distanceTo(game.player.position);
+        //Verificar el estado del enemigo
+        if (distance > 10) {
+            this.state = "idle";
+        }
+        else if (distance < 1) {
+            this.state = "attack";
+        }
+        else{
+            this.state = "chase";
+        }
+
         let newPosition = this.position.plus(this.velocity.times(deltaTime));
 
         // Moverse si el jugador no toca una pared
@@ -129,5 +146,6 @@ class Player extends AnimatedObject {
         const idleData = this.movement[direction];
         this.setAnimation(...idleData.idleFrames, true, idleData.duration);
     }
+
 
 }
