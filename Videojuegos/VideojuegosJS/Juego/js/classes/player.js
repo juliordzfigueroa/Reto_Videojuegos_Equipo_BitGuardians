@@ -5,12 +5,19 @@
 
 */
 
+"use strict";
+
 let playerspeed = 0.005; // Atributo de velocidad del jugador
 
 class Player extends AnimatedObject {
-    constructor(color, width, height, x, y, type) {
+    constructor(color, width, height, x, y, type, hp, weapon, max_hp, shield, max_shield) {
         super("green", width*2, height*3, x, y, "player");
         this.velocity = new Vec(0.0, 0.0);
+        this.hp = 100; // Atributo de vida del jugador
+        this.max_hp = hp; // Atributo de vida máxima del jugador, la cual podrá ser incrementada con powerups.
+        this.shield = 0; // Atributo de escudo del jugador
+        this.max_shield = shield; // Atributo de escudo máximo del jugador, el cual podrá ser incrementado con powerups.
+        
 
         // Movimientos del jugador
         this.movement = {
