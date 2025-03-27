@@ -5,18 +5,16 @@
 
 */
 
-let enemyMspeed = 0.003; // Atributo de velocidad del enemigo cuerpo a cuerpo
-let enemyRspeed = 0.01; // Atributo de velocidad del enemigo a distancia
-let stunduration = 2000; // Atributo de duración del aturdimiento del enemigo 2 segundos
-
+let stunDuration = 2000; // Atributo de duración del aturdimiento del enemigo 2 segundos
 
 class Enemy extends AnimatedObject {
-    constructor(color, width, height, x, y, type) {
+    constructor(color, width, height, x, y, type, hp, damage, range, speed, stunTime) {
         super("green", width * 2, height * 3, x, y, "enemy");
         this.velocity = new Vec(0.0, 0.0);
         this.attackTimmer = 0; // Tiempo de ataque del enemigo</p>
         this.nextAttack = 0; // Siguiente ataque del enemigo
-        this.status = "idle"; // Estado del enemigo
+        this.state = "idle"; // Estado del enemigo
+        this.stunTime = 0; // Tiempo de aturdimiento del enemigo por defecto
 
         // Movimientos del enemigo
         this.movement = {
@@ -101,15 +99,39 @@ class Enemy extends AnimatedObject {
         else if (distance < 1) {
             this.state = "attack";
         }
+        else if (this.state == "stunned") {
+            // Aturdimiento del enemigo (Faltante)
+        }
         else{
             this.state = "chase";
         }
 
         let newPosition = this.position.plus(this.velocity.times(deltaTime));
 
-        // Moverse si el jugador no toca una pared
-        if (!level.contact(newPosition, this.size, 'wall')) {
-            this.position = newPosition;
+        if (this.state == "chase") {
+            // Moverse hacia el jugador
+            let direction = game.player.position.minus(this.position).unit_V();
+            this.velocity = direction.times(this.speed * deltaTime);
+
+            // Moverse si el enemigo no toca una pared
+            if (!level.contact(newPosition, this.size, 'wall')) {
+                this.position = newPosition;
+            }
+        }
+
+        if (this.state == "attack") {
+            // Atacar al jugador
+            if (this.attackTimmer < this.nextAttack) {
+                this.attackTimmer = 0;
+                game.player.takeDamage(this.damage);
+            }
+            else {
+                this.attackTimmer += deltaTime;
+            }
+        }
+
+        if (this.state == "idle") {
+            this.velocity = new Vec(0.0, 0.0);
         }
 
         this.updateFrame(deltaTime);
@@ -147,5 +169,16 @@ class Enemy extends AnimatedObject {
         this.setAnimation(...idleData.idleFrames, true, idleData.duration);
     }
 
+    takeDamage(damage) { // pendiente por revisar
+        this.hp -= damage;
+        if (this.hp <= 0) {
+            this.hp = 0;
+            this.die();
+        }
+    }
 
+    die() { // Pendiente por revisar
+        // Eliminar el enemigo
+        game.enemies.splice(game.enemies.indexOf(this), 1);
+    }
 }

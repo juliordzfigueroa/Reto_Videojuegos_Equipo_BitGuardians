@@ -154,4 +154,10 @@ class Player extends AnimatedObject {
         }
     }
 
+    // Método para que el jugador pueda hacer daño (temporal aquí hasta definir la clase donde corresponde)
+    doDamage(enemy){
+        enemy.takeDamage(this.weapon.damage);
+    }
+
 }
+

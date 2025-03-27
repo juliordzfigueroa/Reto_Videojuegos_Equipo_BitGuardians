@@ -70,6 +70,10 @@ class EMPBomb extends PowerUp {
     constructor(color, width, height, x, y, type, empBomb, spawrate, rarity) {
         super("yellow", x, y, "empbomb", empBomb, spawrate, "Legendary"); 
     }
+    
+    effect(enemy){
+        game.enemy.status = "stunned"; // El enemigo queda aturdido por un tiempo.
+    }
 }
 
 class Weapon extends PowerUp {
