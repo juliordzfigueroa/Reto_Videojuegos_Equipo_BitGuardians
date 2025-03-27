@@ -173,12 +173,6 @@ class Enemy extends AnimatedObject {
         this.hp -= damage;
         if (this.hp <= 0) {
             this.hp = 0;
-            this.die();
         }
-    }
-
-    die() { // Pendiente por revisar
-        // Eliminar el enemigo
-        game.enemies.splice(game.enemies.indexOf(this), 1);
     }
 }
