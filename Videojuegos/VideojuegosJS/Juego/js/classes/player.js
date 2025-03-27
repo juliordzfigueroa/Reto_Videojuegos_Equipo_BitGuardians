@@ -11,16 +11,33 @@ let playerspeed = 0.005; // Atributo de velocidad del jugador
 
 class Player extends AnimatedObject {
     constructor(color, width, height, x, y, type, hp, weapon, max_hp, shield, max_shield) {
-        super("green", width*2, height*3, x, y, "player");
+        super("green", width*2, height*2.4, x, y, "player");
         this.velocity = new Vec(0.0, 0.0);
         this.hp = 100; // Atributo de vida del jugador
         this.max_hp = hp; // Atributo de vida máxima del jugador, la cual podrá ser incrementada con powerups.
         this.shield = 0; // Atributo de escudo del jugador
         this.max_shield = shield; // Atributo de escudo máximo del jugador, el cual podrá ser incrementado con powerups.
-        
 
         // Movimientos del jugador
         this.movement = {
+            down: {
+                status: false,
+                axis: "y",
+                sign: 1,
+                repeat: true,
+                duration: 100,
+                moveFrames: [10, 16],
+                idleFrames: [10, 10]
+            },
+            up: {
+                status: false,
+                axis: "y",
+                sign: -1,
+                repeat: true,
+                duration: 100,
+                moveFrames: [20, 26],
+                idleFrames: [20, 20]
+            },
             right: {
                 status: false,
                 axis: "x",
@@ -39,55 +56,33 @@ class Player extends AnimatedObject {
                 moveFrames: [40, 46], 
                 idleFrames: [40, 40]
             },
-            up: {
-                status: false,
-                axis: "y",
-                sign: -1,
-                repeat: true,
-                duration: 100,
-                moveFrames: [20, 26],
-                idleFrames: [20, 20]
-            },
-            down: {
-                status: false,
-                axis: "y",
-                sign: 1,
-                repeat: true,
-                duration: 100,
-                moveFrames: [10, 16],
-                idleFrames: [10, 10]
-            },
-            leftattack: {
-                //sprite: '../assets/sprites/cipher_atkLeft2.png',
+            downattack: {
                 status: false,
                 repeat: false,
                 duration: 100,
-                moveFrames: [81, 84],
-                idleFrames: [80, 80]
+                moveFrames: [60, 63],
+                idleFrames: [60, 60]
+            },
+            leftattack: {
+                status: false,
+                repeat: false,
+                duration: 100,
+                moveFrames: [70, 74],
+                idleFrames: [70, 70]
             },
             rightattack: {
-                //sprite: '../assets/sprites/cipher_atkRight2.png',
+                status: false,
+                repeat: false,
+                duration: 100,
+                moveFrames: [80, 84],
+                idleFrames: [80, 80]
+            },
+            upattack: {
                 status: false,
                 repeat: false,
                 duration: 100,
                 moveFrames: [91, 94],
                 idleFrames: [90, 90]
-            },
-            upattack: {
-                //sprite: '../assets/sprites/cipher_atkUp2.png',
-                status: false,
-                repeat: false,
-                duration: 100,
-                moveFrames: [0, 3],
-                idleFrames: [0, 0]
-            },
-            downattack: {
-                //sprite: '../assets/sprites/cipher_atkDown2.png',
-                status: false,
-                repeat: false,
-                duration: 100,
-                moveFrames: [71, 74],
-                idleFrames: [70, 70]
             }
         };
         
@@ -100,6 +95,11 @@ class Player extends AnimatedObject {
         // Moverse si el jugador no toca una pared
         if (!level.contact(newPosition, this.size, 'wall')) {
             this.position = newPosition;
+        }
+
+        // Si el jugador toca una puerta, pasa a la siguiente sala
+        if (!level.contact(newPosition, this.size, 'door')) {
+            level.nextRoom();
         }
 
         this.updateFrame(deltaTime);

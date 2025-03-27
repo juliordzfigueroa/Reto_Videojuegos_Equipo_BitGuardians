@@ -5,14 +5,18 @@
 
 */
 
-let playerspeed = 0.005; // Atributo de velocidad del enemigo
+let stunDuration = 2000; // Atributo de duración del aturdimiento del enemigo 2 segundos
 
-class Player extends AnimatedObject {
-    constructor(color, width, height, x, y, type) {
+class Enemy extends AnimatedObject {
+    constructor(color, width, height, x, y, type, hp, damage, range, speed, stunTime) {
         super("green", width * 2, height * 3, x, y, "enemy");
         this.velocity = new Vec(0.0, 0.0);
+        this.attackTimmer = 0; // Tiempo de ataque del enemigo</p>
+        this.nextAttack = 0; // Siguiente ataque del enemigo
+        this.state = "idle"; // Estado del enemigo
+        this.stunTime = 0; // Tiempo de aturdimiento del enemigo por defecto
 
-        // Movimientos del jugador
+        // Movimientos del enemigo
         this.movement = {
             right: {
                 status: false,
@@ -51,48 +55,79 @@ class Player extends AnimatedObject {
                 idleFrames: [10, 10]
             },
             leftattack: {
-                //sprite: '../assets/sprites/cipher_atkLeft2.png',
                 status: false,
                 repeat: false,
                 duration: 100,
-                moveFrames: [80, 84],
-                idleFrames: [80, 80]
+                moveFrames: [50, 56],
+                idleFrames: [50, 50]
             },
             rightattack: {
-                //sprite: '../assets/sprites/cipher_atkRight2.png',
                 status: false,
                 repeat: false,
                 duration: 100,
-                moveFrames: [90, 94],
-                idleFrames: [90, 90]
+                moveFrames: [40, 46],
+                idleFrames: [40, 40]
             },
             upattack: {
-                //sprite: '../assets/sprites/cipher_atkUp2.png',
                 status: false,
                 repeat: false,
                 duration: 100,
-                moveFrames: [0, 3],
-                idleFrames: [0, 0]
+                moveFrames: [60, 65],
+                idleFrames: [60, 60]
             },
             downattack: {
-                //sprite: '../assets/sprites/cipher_atkDown2.png',
                 status: false,
                 repeat: false,
                 duration: 100,
-                moveFrames: [70, 74],
-                idleFrames: [70, 70]
+                moveFrames: [60, 65],
+                idleFrames: [60, 60]
             }
         };
 
     }
 
     update(level, deltaTime) {
-        // Determinar donde termina el jugador después de que se mueve
+        const distance = this.position.distanceTo(game.player.position);
+        //Verificar el estado del enemigo
+        if (distance > 10) {
+            this.state = "idle";
+        }
+        else if (distance < 1) {
+            this.state = "attack";
+        }
+        else if (this.state == "stunned") {
+            // Aturdimiento del enemigo (Faltante)
+        }
+        else {
+            this.state = "chase";
+        }
+
         let newPosition = this.position.plus(this.velocity.times(deltaTime));
 
-        // Moverse si el jugador no toca una pared
-        if (!level.contact(newPosition, this.size, 'wall')) {
-            this.position = newPosition;
+        if (this.state == "chase") {
+            // Moverse hacia el jugador
+            let direction = game.player.position.minus(this.position).unit_V();
+            this.velocity = direction.times(this.speed * deltaTime);
+
+            // Moverse si el enemigo no toca una pared
+            if (!level.contact(newPosition, this.size, 'wall')) {
+                this.position = newPosition;
+            }
+        }
+
+        if (this.state == "attack") {
+            // Atacar al jugador
+            if (this.attackTimmer < this.nextAttack) {
+                this.attackTimmer = 0;
+                game.player.takeDamage(this.damage);
+            }
+            else {
+                this.attackTimmer += deltaTime;
+            }
+        }
+
+        if (this.state == "idle") {
+            this.velocity = new Vec(0.0, 0.0);
         }
 
         this.updateFrame(deltaTime);
@@ -130,4 +165,16 @@ class Player extends AnimatedObject {
         this.setAnimation(...idleData.idleFrames, true, idleData.duration);
     }
 
+    takeDamage(damage) { // pendiente por revisar
+        this.hp -= damage;
+        if (this.hp <= 0) {
+            this.hp = 0;
+            this.die();
+        }
+    }
+
+    die() { // Pendiente por revisar
+        // Eliminar el enemigo
+        game.enemies.splice(game.enemies.indexOf(this), 1);
+    }
 }

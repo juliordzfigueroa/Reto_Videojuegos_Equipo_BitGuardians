@@ -26,6 +26,7 @@ class Level {
     setupActor(item, x, y) {
         let objClass = item.objClass;
         let actor = new objClass("grey", 1, 1, x, y, item.label);
+        let enemy = new objClass("red", 1, 1, x, y, item.label);
         let cellType = item.label;
 
         if (actor.type === "player") {
@@ -35,11 +36,21 @@ class Level {
             actor.setAnimation(...item.startFrame, true, 100);
             this.player = actor;
             cellType = "empty";
+        } else if (actor.type === "enemy") {
+            this.addBackgroundFloor(x, y);
+            actor.setSprite(item.sprite, item.rect);
+            actor.sheetCols = item.sheetCols;
+            actor.setAnimation(...item.startFrame, true, 100);
+            this.enemy = actor; 
+            cellType = "empty";
         } else if (actor.type === "floor") {
             item.rect = this.randomTile(0, 3, 0, 16, 16);
             actor.setSprite(item.sprite, item.rect);
             this.actors.push(actor);
         } else if (actor.type === "wall") {
+            actor.setSprite(item.sprite, item.rect);
+            this.actors.push(actor);
+        } else if (actor.type === "door") {
             actor.setSprite(item.sprite, item.rect);
             this.actors.push(actor);
         }
@@ -82,5 +93,15 @@ class Level {
             }
         }
         return false;
+    }
+
+    nextRoom() {
+        // Check if the player is touching a door and return the next room
+        let nextRoom = this.contact(this.player.position, this.player.size, "door");
+        if (nextRoom) {
+            return nextRoom;
+        } else {
+            return false;
+        }
     }
 }
