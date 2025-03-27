@@ -13,20 +13,24 @@ class Vec {
         this.y = y;
     }
 
-    plus(other) {
+    plus(other) { // Método para sumar dos vectores.
         return new Vec(this.x + other.x, this.y + other.y);
     }
 
-    minus(other) {
+    minus(other) { // Método para restar dos vectores.
         return new Vec(this.x - other.x, this.y - other.y);
     }
 
-    times(factor) {
+    times(factor) { // Método para multiplicar un vector por un escalar.
         return new Vec(this.x * factor, this.y * factor);
     }
 
-    get_length() {
+    get_length() { // Método para obtener la magnitud de un vector.
         return Math.sqrt(this.x ** 2 + this.y ** 2);
+    }
+
+    unit_V(){ // Método para obtener el vector unitario de un vector.
+        return new Vec(this.x / this.get_length(), this.y / this.get_length());
     }
 }
 
