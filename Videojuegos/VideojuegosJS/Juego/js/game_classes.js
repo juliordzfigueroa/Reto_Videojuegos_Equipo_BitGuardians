@@ -32,6 +32,10 @@ class Vec {
     unit_V(){ // Método para obtener el vector unitario de un vector.
         return new Vec(this.x / this.get_length(), this.y / this.get_length());
     }
+
+    distanceTo(other){ // Método para obtener la distancia entre dos vectores.
+        return Math.sqrt((this.x - other.x)**2 + (this.y - other.y)**2);
+    }
 }
 
 

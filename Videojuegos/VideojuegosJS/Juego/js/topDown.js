@@ -25,87 +25,6 @@ let playerSpeed = 0.005;
 // Each unit in the level file will be drawn as these many square pixels
 const scale = 29;
 
-class Level {
-    constructor(plan) {
-        // Split the plan string into a matrix of strings
-        let rows = plan.trim().split('\n').map(l => [...l]);
-        this.height = rows.length;
-        this.width = rows[0].length;
-        this.actors = [];
-
-        // Fill the rows array with a label for the type of element in the cell
-        this.rows = rows.map((row, y) => {
-            return row.map((ch, x) => {
-                let item = levelChars[ch];
-                let cellType = this.setupActor(item, x, y);
-                return cellType;
-            });
-        });
-    }
-
-    setupActor(item, x, y) {
-        let objClass = item.objClass;
-        let actor = new objClass("grey", 1, 1, x, y, item.label);
-        let cellType = item.label;
-
-        if (actor.type === "player") {
-            this.addBackgroundFloor(x, y);
-            actor.setSprite(item.sprite, item.rect);
-            actor.sheetCols = item.sheetCols;
-            actor.setAnimation(...item.startFrame, true, 100);
-            this.player = actor;
-            cellType = "empty";
-        } else if (actor.type === "floor") {
-            item.rect = this.randomTile(0, 3, 0, 16, 16);
-            actor.setSprite(item.sprite, item.rect);
-            this.actors.push(actor);
-        } else if (actor.type === "wall") {
-            actor.setSprite(item.sprite, item.rect);
-            this.actors.push(actor);
-        }
-        return cellType;
-    }
-
-    addBackgroundFloor(x, y) {
-        let floor = levelChars['.'];
-        let floorActor = new GameObject("grey", 1, 1, x, y, floor.label);
-        floor.rect = this.randomTile(0, 3, 0, 16, 16);     //(0, 6, 25, 32, 32) //(0, 25, 10, 32, 32)
-        floorActor.setSprite(floor.sprite, floor.rect);
-        this.actors.push(floorActor);
-    }
-
-    // Randomize sprites for each wall tile
-    randomTile(xStart, xRange, y, xSize, ySize) {
-        let tile = Math.floor(Math.random() * xRange + xStart);
-        return new Rect(tile, y, xSize, ySize);
-    }
-
-
-    // Detect when the player touches a wall
-    contact(playerPos, playerSize, type) {
-        // Determine which cells the player is occupying
-        let xStart = Math.floor(playerPos.x);
-        let xEnd = Math.ceil(playerPos.x + playerSize.x);
-        let yStart = Math.floor(playerPos.y);
-        let yEnd = Math.ceil(playerPos.y + playerSize.y);
-
-        // Check each of those cells
-        for (let y = yStart; y < yEnd; y++) {
-            for (let x = xStart; x < xEnd; x++) {
-                // Anything outside of the bounds of the canvas is considered
-                // to be a wall, so it blocks the player's movement
-                let isOutside = x < 0 || x >= this.width ||
-                    y < 0 || y >= this.height;
-                let here = isOutside ? 'wall' : this.rows[y][x];
-                // Detect if an object of type specified is being touched
-                if (here == type) return true;
-            }
-        }
-        return false;
-    }
-}
-
-
 class Game {
     constructor(state, level) {
         this.state = state;
@@ -144,6 +63,16 @@ class Game {
     }
 }
 
+function createWallTile(x) {
+    //Function to create a wall tile with the specified sprite
+    return {
+        objClass: GameObject,
+        label: "wall",
+        sprite: '../assets/sprites/escenarios/wall_tileset.png',
+        rect: new Rect(x, 0, 16, 16)
+    };
+}
+
 
 // Object with the characters that appear in the level description strings
 // and their corresponding objects
@@ -154,45 +83,16 @@ const levelChars = {
         label: "floor",
         // sprite: '../assets/sprites/ProjectUtumno_full.png',
         // rect: new Rect(12, 17, 32, 32)
-        sprite: '../assets/sprites/floor_tiles.png',
+        sprite: '../assets/sprites/escenarios/floor_tiles.png',
         rect: new Rect(0, 0, 16, 16)
     },
-    "*": { //Upper left corner wall 
-        objClass: GameObject,
-        label: "wall",
-        sprite: '../assets/sprites/wall_tileset.png',
-        rect: new Rect(0, 0, 16, 16)
-    },
-    ":": { //Upper right corner wall
-        objClass: GameObject,
-        label: "wall",
-        sprite: '../assets/sprites/wall_tileset.png',
-        rect: new Rect(1, 0, 16, 16),
-    },
-    "#": { //Vertical wall
-        objClass: GameObject,
-        label: "wall",
-        sprite: '../assets/sprites/wall_tileset.png',
-        rect: new Rect(2, 0, 16, 16)
-    },
-    "/": { //Lower left corner wall
-        objClass: GameObject,
-        label: "wall",
-        sprite: '../assets/sprites/wall_tileset.png',
-        rect: new Rect(3, 0, 16, 16)
-    },
-    "$": { //Lower right corner wall
-        objClass: GameObject,
-        label: "wall",
-        sprite: '../assets/sprites/wall_tileset.png',
-        rect: new Rect(4, 0, 16, 16)
-    },
-    "&": { //Horizontal wall
-        objClass: GameObject,
-        label: "wall",
-        sprite: '../assets/sprites/wall_tileset.png',
-        rect: new Rect(5, 0, 16, 16)
-    },
+    //WALLS
+    "*": createWallTile(0), // Upper left corner wall
+    ":": createWallTile(1), // Upper right
+    "#": createWallTile(2), // Vertical
+    "/": createWallTile(3), // Lower left
+    "$": createWallTile(4), // Lower right
+    "&": createWallTile(5), // Horizontal
     "@": {
         objClass: Player,
         label: "player",
@@ -200,8 +100,8 @@ const levelChars = {
         //rect: new Rect(0, 0, 48, 64),
         //sheetCols: 3,
         //startFrame: [7, 7]},
-        sprite: '../assets/sprites/cipher_spritesheet.png',
-        rect: new Rect(0, 0, 32, 56), // Valores para las animaciones de caminar de cipher.
+        sprite: '../assets/sprites/cipher/cipher_spritesheet1.png',
+        rect: new Rect(0, 0, 32, 57), // Valores para las animaciones de caminar de cipher.
         sheetCols: 10,
         startFrame: [0, 0],
     },

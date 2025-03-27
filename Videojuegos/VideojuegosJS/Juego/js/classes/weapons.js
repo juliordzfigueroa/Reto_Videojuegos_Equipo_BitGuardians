@@ -15,7 +15,7 @@ class PowerUp extends GameObject {
         this.spawrate = spawrate; // Variable para saber la probabilidad de aparición de cada powerup.
     }
 
-    update(deltaTime) {
+    update() {
         // Método incluido para poder actualizar el estado de cada powerup en las salas tras ser completadas.
     }
 
@@ -69,6 +69,10 @@ class HealthIncrease extends PowerUp {
 class EMPBomb extends PowerUp {
     constructor(color, width, height, x, y, type, empBomb, spawrate, rarity) {
         super("yellow", x, y, "empbomb", empBomb, spawrate, "Legendary"); 
+    }
+    
+    effect(enemy){
+        game.enemy.status = "stunned"; // El enemigo queda aturdido por un tiempo.
     }
 }
 

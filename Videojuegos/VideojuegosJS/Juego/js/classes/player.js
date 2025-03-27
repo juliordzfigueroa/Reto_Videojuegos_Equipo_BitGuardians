@@ -16,7 +16,7 @@ class Player extends AnimatedObject {
         this.hp = 100; // Atributo de vida del jugador
         this.max_hp = hp; // Atributo de vida máxima del jugador, la cual podrá ser incrementada con powerups.
         this.shield = 0; // Atributo de escudo del jugador
-        this.max_shield = shield; // Atributo de escudo máximo del jugador, el cual podrá ser incrementado con powerups.
+        this.max_shield = max_hp*0.1; // Atributo de escudo máximo del jugador, el cual podrá ser incrementado con powerups, el escudo será del 10% de la vida del jugador
         
 
         // Movimientos del jugador
@@ -58,23 +58,23 @@ class Player extends AnimatedObject {
                 idleFrames: [10, 10]
             },
             leftattack: {
-                sprite: '../assets/sprites/cipher_atkLeft2.png',
+                //sprite: '../assets/sprites/cipher_atkLeft2.png',
                 status: false,
                 repeat: false,
                 duration: 100,
-                moveFrames: [0, 3],
-                idleFrames: [0, 0]
+                moveFrames: [81, 84],
+                idleFrames: [80, 80]
             },
             rightattack: {
-                sprite: '../assets/sprites/cipher_atkRight2.png',
+                //sprite: '../assets/sprites/cipher_atkRight2.png',
                 status: false,
                 repeat: false,
                 duration: 100,
-                moveFrames: [0, 3],
-                idleFrames: [0, 0]
+                moveFrames: [91, 94],
+                idleFrames: [90, 90]
             },
             upattack: {
-                sprite: '../assets/sprites/cipher_atkUp2.png',
+                //sprite: '../assets/sprites/cipher_atkUp2.png',
                 status: false,
                 repeat: false,
                 duration: 100,
@@ -82,19 +82,14 @@ class Player extends AnimatedObject {
                 idleFrames: [0, 0]
             },
             downattack: {
-                sprite: '../assets/sprites/cipher_atkDown2.png',
+                //sprite: '../assets/sprites/cipher_atkDown2.png',
                 status: false,
                 repeat: false,
                 duration: 100,
-                moveFrames: [0, 2],
-                idleFrames: [0, 0]
+                moveFrames: [70, 73],
+                idleFrames: [70, 70]
             }
         };
-
-        this.defaultSprite = '../assets/sprites/cipher_spritesheet.png';
-        this.defaultRect = new Rect(0, 0, 32, 56);
-        this.defaultSheetCols = 10;
-
         
     }
 
@@ -130,29 +125,39 @@ class Player extends AnimatedObject {
     startAttack(direction) {
         const dirData = this.movement[direction + "attack"];
         if (!dirData || dirData.status) return;
-
-        // Detener animacion
-        dirData.status = true;
-
-        // Cambiar sprite al de ataque
-        this.setSprite(dirData.sprite, dirData.rect);
-        this.sheetCols = 10;
+        dirData.status = true;        
         this.setAnimation(...dirData.moveFrames, dirData.repeat, dirData.duration);
     }
-
-
 
     stopAttack(direction) {
         const dirData = this.movement[direction + "attack"];
         if (!dirData || !dirData.status) return;
-
         dirData.status = false;
-
-        // Volver al sprite original e idle
-        this.setSprite(this.defaultSprite, this.defaultRect);
-        this.sheetCols = this.defaultSheetCols;
-
         const idleData = this.movement[direction];
         this.setAnimation(...idleData.idleFrames, true, idleData.duration);
     }
+
+    // Método para que el jugador reciba daño
+    takeDamage(damage){
+        if (this.shield > 0) // Si el jugador tiene escudo, este recibe el daño.
+        {
+            this.shield -= damage;
+            if (this.shield < 0) // Si el daño supera la cantidad de escudo, el daño restante se le aplica a la vida del jugador.
+            {
+                this.hp += this.shield;
+                this.shield = 0;
+            }
+        }
+        else // Si el jugador no tiene escudo, el daño se le aplica directamente a la vida.
+        {
+            this.hp -= damage;
+        }
+    }
+
+    // Método para que el jugador pueda hacer daño (temporal aquí hasta definir la clase donde corresponde)
+    doDamage(enemy){
+        enemy.takeDamage(this.weapon.damage);
+    }
+
 }
+
