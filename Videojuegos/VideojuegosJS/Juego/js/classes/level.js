@@ -12,6 +12,7 @@ class Level {
         this.height = rows.length;
         this.width = rows[0].length;
         this.actors = [];
+        this.enemies = [];
 
         // Fill the rows array with a label for the type of element in the cell
         this.rows = rows.map((row, y) => {
@@ -40,8 +41,7 @@ class Level {
             this.addBackgroundFloor(x, y);
             actor.setSprite(item.sprite, item.rect);
             actor.sheetCols = item.sheetCols;
-            actor.setAnimation(...item.startFrame, true, 100);
-            this.enemy = actor; 
+            this.enemies.push(actor);
             cellType = "empty";
         } else if (actor.type === "floor") {
             item.rect = this.randomTile(0, 3, 0, 16, 16);
@@ -95,13 +95,4 @@ class Level {
         return false;
     }
 
-    nextRoom() {
-        // Check if the player is touching a door and return the next room
-        let nextRoom = this.contact(this.player.position, this.player.size, "door");
-        if (nextRoom) {
-            return nextRoom;
-        } else {
-            return false;
-        }
-    }
 }

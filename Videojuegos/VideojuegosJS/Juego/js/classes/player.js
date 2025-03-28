@@ -98,11 +98,6 @@ class Player extends AnimatedObject {
             this.position = newPosition;
         }
 
-        // Si el jugador toca una puerta, pasa a la siguiente sala
-        if (!level.contact(newPosition, this.size, 'door')) {
-            level.nextRoom();
-        }
-
         this.updateFrame(deltaTime);
     }
 
