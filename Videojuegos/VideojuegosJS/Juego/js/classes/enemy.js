@@ -55,36 +55,32 @@ class Enemy extends AnimatedObject {
                 idleFrames: [10, 10]
             },
             leftattack: {
-                //sprite: '../assets/sprites/cipher_atkLeft2.png',
                 status: false,
                 repeat: false,
                 duration: 100,
-                moveFrames: [80, 84],
-                idleFrames: [80, 80]
+                moveFrames: [50, 56],
+                idleFrames: [50, 50]
             },
             rightattack: {
-                //sprite: '../assets/sprites/cipher_atkRight2.png',
                 status: false,
                 repeat: false,
                 duration: 100,
-                moveFrames: [90, 94],
-                idleFrames: [90, 90]
+                moveFrames: [40, 46],
+                idleFrames: [40, 40]
             },
             upattack: {
-                //sprite: '../assets/sprites/cipher_atkUp2.png',
                 status: false,
                 repeat: false,
                 duration: 100,
-                moveFrames: [0, 3],
-                idleFrames: [0, 0]
+                moveFrames: [60, 65],
+                idleFrames: [60, 60]
             },
             downattack: {
-                //sprite: '../assets/sprites/cipher_atkDown2.png',
                 status: false,
                 repeat: false,
                 duration: 100,
-                moveFrames: [70, 74],
-                idleFrames: [70, 70]
+                moveFrames: [60, 65],
+                idleFrames: [60, 60]
             }
         };
 
@@ -102,7 +98,7 @@ class Enemy extends AnimatedObject {
         else if (this.state == "stunned") {
             // Aturdimiento del enemigo (Faltante)
         }
-        else{
+        else {
             this.state = "chase";
         }
 
@@ -173,6 +169,12 @@ class Enemy extends AnimatedObject {
         this.hp -= damage;
         if (this.hp <= 0) {
             this.hp = 0;
+            this.die();
         }
+    }
+
+    die() { // Pendiente por revisar
+        // Eliminar el enemigo
+        game.enemies.splice(game.enemies.indexOf(this), 1);
     }
 }
