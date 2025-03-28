@@ -1,14 +1,13 @@
 /*
- * Simple top down adventure game
- *
- * Gilberto Echeverria
- * 2025-02-05
+    topDown.js
+    Main file for the top-down game
+    BitGuardians
  */
 
 "use strict";
 
 // Global variables
-const canvasWidth = 800;
+const canvasWidth = 810;
 const canvasHeight = 600;
 
 let ctx;
@@ -18,24 +17,28 @@ let frameStart;
 let game;
 let player;
 let level;
+let enemy;
 
 let playerSpeed = 0.005;
 
 // Scale of the whole world, to be applied to all objects
 // Each unit in the level file will be drawn as these many square pixels
-const scale = 29;
+const scale = 30;
+
 
 class Game {
     constructor(state, level) {
         this.state = state;
         this.level = level;
         this.player = level.player;
+        this.enemy = level.enemy;
         this.actors = level.actors;
         //console.log(level);
     }
 
     update(deltaTime) {
         this.player.update(this.level, deltaTime);
+        this.enemy.update(this.level, deltaTime);
 
         for (let actor of this.actors) {
             actor.update(this.level, deltaTime);
@@ -60,6 +63,7 @@ class Game {
             actor.draw(ctx, scale);
         }
         this.player.draw(ctx, scale);
+        this.enemy.draw(ctx, scale);
     }
 }
 
@@ -73,6 +77,16 @@ function createWallTile(x) {
     };
 }
 
+function createDoorTile(x, y) {
+    //Function to create a wall tile with the specified sprite
+    return {
+        objClass: GameObject,
+        label: "door",
+        sprite: '../assets/sprites/escenarios/door_tileset.png',
+        rect: new Rect(x, y, 16, 16)
+    };
+}
+
 
 // Object with the characters that appear in the level description strings
 // and their corresponding objects
@@ -81,11 +95,10 @@ const levelChars = {
     ".": {
         objClass: GameObject,
         label: "floor",
-        // sprite: '../assets/sprites/ProjectUtumno_full.png',
-        // rect: new Rect(12, 17, 32, 32)
         sprite: '../assets/sprites/escenarios/floor_tiles.png',
         rect: new Rect(0, 0, 16, 16)
     },
+
     //WALLS
     "*": createWallTile(0), // Upper left corner wall
     ":": createWallTile(1), // Upper right
@@ -93,17 +106,41 @@ const levelChars = {
     "/": createWallTile(3), // Lower left
     "$": createWallTile(4), // Lower right
     "&": createWallTile(5), // Horizontal
+
+    //DOORS
+    //Upper
+    "1": createDoorTile(0, 0),
+    "2": createDoorTile(1, 0), 
+    "3": createDoorTile(2, 0), 
+    //Down
+    "4": createDoorTile(0, 5),
+    "5": createDoorTile(1, 5),
+    "6": createDoorTile(2, 5),
+    //Right
+    "7": createDoorTile(0, 6),
+    "8": createDoorTile(1, 6),
+    "9": createDoorTile(2, 6),
+    //Left
+    ">": createDoorTile(0, 7),
+    "=": createDoorTile(1, 7), 
+    "<": createDoorTile(2, 7),
+
+    //PLAYER
     "@": {
         objClass: Player,
         label: "player",
-        //sprite: '../assets/sprites/blordrough_quartermaster-NESW.png',
-        //rect: new Rect(0, 0, 48, 64),
-        //sheetCols: 3,
-        //startFrame: [7, 7]},
-        sprite: '../assets/sprites/cipher/cipher_spritesheet1.png',
+        sprite: '../assets/sprites/cipher/cipher_spritesheet2.png',
         rect: new Rect(0, 0, 32, 57), // Valores para las animaciones de caminar de cipher.
         sheetCols: 10,
-        startFrame: [0, 0],
+        startFrame: [0, 0]
+    },
+    "E": {
+        objClass: Enemy,
+        label: "enemy",
+        sprite: '../assets/sprites/enemigos/robot_assets.png',
+        rect: new Rect(0, 0, 41, 61), // Valores para las animaciones de caminar de cipher.
+        sheetCols: 10,
+        startFrame: [0, 0]
     },
 };
 
@@ -124,71 +161,35 @@ function init() {
     gameStart();
 }
 
+let currentRoom = "main";
 function gameStart() {
-    // Register the game object, which creates all other objects
-    game = new Game('playing', new Level(GAME_LEVELS[1]));
-
+    game = new Game('playing', new Level(GAME_LEVELS[currentRoom]));
     setEventListeners();
-
-    // Call the first frame with the current time
     updateCanvas(document.timeline.currentTime);
 }
 
 function setEventListeners() {
     window.addEventListener("keydown", event => {
-        if (event.key == 'w') {
-            game.player.startMovement("up");
-        }
-        if (event.key == 'a') {
-            game.player.startMovement("left");
-        }
-        if (event.key == 's') {
-            game.player.startMovement("down");
-        }
-        if (event.key == 'd') {
-            game.player.startMovement("right");
-        }
-        if (event.key === 'ArrowUp') {
-            game.player.startAttack("up");
-        }
-        if (event.key === 'ArrowLeft') {
-            game.player.startAttack("left");
-        }
-        if (event.key === 'ArrowDown') {
-            game.player.startAttack("down");
-        }
-        if (event.key === 'ArrowRight') {
-            game.player.startAttack("right");
-        }
+        if (event.key == 'w') game.player.startMovement("up");
+        if (event.key == 'a') game.player.startMovement("left");
+        if (event.key == 's') game.player.startMovement("down");
+        if (event.key == 'd') game.player.startMovement("right");
+        if (event.key === 'ArrowUp') game.player.startAttack("up");
+        if (event.key === 'ArrowLeft') game.player.startAttack("left");
+        if (event.key === 'ArrowDown') game.player.startAttack("down");
+        if (event.key === 'ArrowRight') game.player.startAttack("right");
     });
 
     window.addEventListener("keyup", event => {
-        if (event.key == 'w') {
-            game.player.stopMovement("up");
-        }
-        if (event.key == 'a') {
-            game.player.stopMovement("left");
-        }
-        if (event.key == 's') {
-            game.player.stopMovement("down");
-        }
-        if (event.key == 'd') {
-            game.player.stopMovement("right");
-        }
-        if (event.key === 'ArrowUp') {
-            game.player.stopAttack("up");
-        }
-        if (event.key === 'ArrowLeft') {
-            game.player.stopAttack("left");
-        }
-        if (event.key === 'ArrowDown') {
-            game.player.stopAttack("down");
-        }
-        if (event.key === 'ArrowRight') {
-            game.player.stopAttack("right");
-        }
+        if (event.key == 'w') game.player.stopMovement("up");
+        if (event.key == 'a') game.player.stopMovement("left");
+        if (event.key == 's') game.player.stopMovement("down");
+        if (event.key == 'd') game.player.stopMovement("right");
+        if (event.key === 'ArrowUp') game.player.stopAttack("up");
+        if (event.key === 'ArrowLeft') game.player.stopAttack("left");
+        if (event.key === 'ArrowDown') game.player.stopAttack("down");
+        if (event.key === 'ArrowRight') game.player.stopAttack("right");
     });
-
 }
 
 // Function that will be called for the game loop
@@ -209,4 +210,21 @@ function updateCanvas(frameTime) {
 }
 
 // Call the start function to initiate the game
+main();
+
+
+function updateCanvas(frameTime) {
+    if (frameStart === undefined) {
+        frameStart = frameTime;
+    }
+    let deltaTime = frameTime - frameStart;
+
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    game.update(deltaTime);
+    game.draw(ctx, scale);
+
+    frameStart = frameTime;
+    requestAnimationFrame(updateCanvas);
+}
+
 main();
