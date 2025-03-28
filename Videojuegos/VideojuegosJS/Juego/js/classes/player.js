@@ -16,7 +16,7 @@ class Player extends AnimatedObject {
         this.hp = 100; // Atributo de vida del jugador
         this.max_hp = hp; // Atributo de vida máxima del jugador, la cual podrá ser incrementada con powerups.
         this.shield = 0; // Atributo de escudo del jugador
-        this.max_shield = shield; // Atributo de escudo máximo del jugador, el cual podrá ser incrementado con powerups.
+        this.max_shield = max_hp * 0.1; // Atributo de escudo máximo del jugador, el cual podrá ser incrementado con powerups, el escudo será del 10% de la vida del jugador
 
         // Movimientos del jugador
         this.movement = {
@@ -135,6 +135,28 @@ class Player extends AnimatedObject {
         dirData.status = false;
         const idleData = this.movement[direction];
         this.setAnimation(...idleData.idleFrames, true, idleData.duration);
+    }
+
+    // Método para que el jugador reciba daño
+    takeDamage(damage) {
+        if (this.shield > 0) // Si el jugador tiene escudo, este recibe el daño.
+        {
+            this.shield -= damage;
+            if (this.shield < 0) // Si el daño supera la cantidad de escudo, el daño restante se le aplica a la vida del jugador.
+            {
+                this.hp += this.shield;
+                this.shield = 0;
+            }
+        }
+        else // Si el jugador no tiene escudo, el daño se le aplica directamente a la vida.
+        {
+            this.hp -= damage;
+        }
+    }
+
+    // Método para que el jugador pueda hacer daño (temporal aquí hasta definir la clase donde corresponde)
+    doDamage(enemy) {
+        enemy.takeDamage(this.weapon.damage);
     }
 
 }
