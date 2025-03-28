@@ -18,6 +18,7 @@ let game;
 let player;
 let level;
 let enemy;
+let currentRoom = "main";
 
 let playerSpeed = 0.005;
 
@@ -31,15 +32,16 @@ class Game {
         this.state = state;
         this.level = level;
         this.player = level.player;
-        this.enemy = level.enemy;
+        this.enemies = level.enemies;
         this.actors = level.actors;
         //console.log(level);
     }
 
     update(deltaTime) {
         this.player.update(this.level, deltaTime);
-        this.enemy.update(this.level, deltaTime);
-
+        for (let enemy of this.enemies) {
+            enemy.update(this.level, deltaTime);
+        }        
         for (let actor of this.actors) {
             actor.update(this.level, deltaTime);
         }
@@ -54,6 +56,11 @@ class Game {
                 if (actor.type == 'wall') {
                     console.log("Hit a wall");
                 }
+                if (actor.type == 'door') {
+                    console.log("Hit a door");
+                    currentRoom = "robotRoom";
+                    gameStart();
+                }
             }
         }
     }
@@ -62,8 +69,10 @@ class Game {
         for (let actor of this.actors) {
             actor.draw(ctx, scale);
         }
+        for (let enemy of this.enemies) {
+            enemy.draw(ctx, scale);
+        }
         this.player.draw(ctx, scale);
-        this.enemy.draw(ctx, scale);
     }
 }
 
@@ -161,11 +170,11 @@ function init() {
     gameStart();
 }
 
-let currentRoom = "main";
 function gameStart() {
     game = new Game('playing', new Level(GAME_LEVELS[currentRoom]));
     setEventListeners();
     updateCanvas(document.timeline.currentTime);
+
 }
 
 function setEventListeners() {
@@ -210,21 +219,4 @@ function updateCanvas(frameTime) {
 }
 
 // Call the start function to initiate the game
-main();
-
-
-function updateCanvas(frameTime) {
-    if (frameStart === undefined) {
-        frameStart = frameTime;
-    }
-    let deltaTime = frameTime - frameStart;
-
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    game.update(deltaTime);
-    game.draw(ctx, scale);
-
-    frameStart = frameTime;
-    requestAnimationFrame(updateCanvas);
-}
-
 main();
