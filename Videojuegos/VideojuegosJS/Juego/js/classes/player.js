@@ -14,9 +14,9 @@ class Player extends AnimatedObject {
         super("green", width*2, height*2.4, x, y, "player");
         this.velocity = new Vec(0.0, 0.0);
         this.hp = 100; // Atributo de vida del jugador
-        this.max_hp = hp; // Atributo de vida máxima del jugador, la cual podrá ser incrementada con powerups.
+        this.max_hp = this.hp; // Atributo de vida máxima del jugador, la cual podrá ser incrementada con powerups.
         this.shield = 0; // Atributo de escudo del jugador
-        this.max_shield = max_hp*0.1; // Atributo de escudo máximo del jugador, el cual podrá ser incrementado con powerups, el escudo será del 10% de la vida del jugador
+        this.max_shield = this.max_hp*0.1; // Atributo de escudo máximo del jugador, el cual podrá ser incrementado con powerups, el escudo será del 10% de la vida del jugador
         
 
         // Movimientos del jugador
@@ -135,18 +135,25 @@ class Player extends AnimatedObject {
 
     // Método para que el jugador reciba daño
     takeDamage(damage){
-        if (this.shield > 0) // Si el jugador tiene escudo, este recibe el daño.
-        {
-            this.shield -= damage;
-            if (this.shield < 0) // Si el daño supera la cantidad de escudo, el daño restante se le aplica a la vida del jugador.
+        if (overlapRectangles(this, enemy)) // Si el jugador colisiona con un enemigo, este recibe daño.
+        { 
+            console.log("Player hit by enemy!");
+            if (this.shield > 0) // Si el jugador tiene escudo, este recibe el daño.
             {
-                this.hp += this.shield;
-                this.shield = 0;
+                this.shield -= damage;
+                if (this.shield < 0) // Si el daño supera la cantidad de escudo, el daño restante se le aplica a la vida del jugador.
+                {
+                    this.hp += this.shield;
+                    this.shield = 0;
+                }
+            }
+            else // Si el jugador no tiene escudo, el daño se le aplica directamente a la vida.
+            {
+                this.hp -= damage;
             }
         }
-        else // Si el jugador no tiene escudo, el daño se le aplica directamente a la vida.
-        {
-            this.hp -= damage;
+        else{
+            console.log("Player not hit by enemy!");
         }
     }
 

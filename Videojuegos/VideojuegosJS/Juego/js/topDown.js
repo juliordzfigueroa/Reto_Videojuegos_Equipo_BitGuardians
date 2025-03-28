@@ -46,8 +46,6 @@ class Game {
             actor.update(this.level, deltaTime);
         }
 
-        // A copy of the full list to iterate over all of them
-        // DOES THIS WORK?
         let currentActors = this.actors;
         // Detect collisions
         for (let actor of currentActors) {
@@ -71,8 +69,10 @@ class Game {
         }
         for (let enemy of this.enemies) {
             enemy.draw(ctx, scale);
+            enemy.drawHitBox(ctx, scale); // Draw hitbox for debugging
         }
         this.player.draw(ctx, scale);
+        this.player.drawHitBox(ctx, scale);
     }
 }
 
@@ -201,6 +201,38 @@ function setEventListeners() {
     });
 }
 
+function drawHB() {
+    
+    const barX = 40;
+    const barY = 480 ; // Si tu canvas mide 600 px de alto, esto la coloca cerca del borde
+    const barWidth = 200;
+    const barHeight = 20;
+  
+    // Calcula el porcentaje de vida del jugador
+    let ratio = game.player.hp / game.player.max_hp;
+  
+    // Dibuja el fondo de la barra (zona de vida "perdida")
+    ctx.fillStyle = "red";
+    ctx.fillRect(barX, barY, barWidth, barHeight);
+  
+    // Dibuja la parte que representa la vida actual
+    ctx.fillStyle = "green";
+    ctx.fillRect(barX, barY, barWidth * ratio, barHeight);
+  
+    // Dibuja el borde de la barra
+    ctx.strokeStyle = "black";
+    ctx.strokeRect(barX, barY, barWidth, barHeight);
+
+    // Pinta el texto de vida
+    ctx.font = "16px Arial";       // Ajusta el tipo y tamaño de letra
+    ctx.fillStyle = "white";       // Color del texto
+    ctx.textAlign = "center";      // Centrado horizontal
+    ctx.textBaseline = "middle";   // Centrado vertical
+    const textX = barX + barWidth / 2;      // Mitad de la barra
+    const textY = barY + barHeight / 2;     // Mitad de la altura de la barra
+    ctx.fillText(`${game.player.hp} / ${game.player.max_hp}`, textX, textY);
+}
+
 // Function that will be called for the game loop
 function updateCanvas(frameTime) {
     if (frameStart === undefined) {
@@ -212,6 +244,8 @@ function updateCanvas(frameTime) {
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     game.update(deltaTime);
     game.draw(ctx, scale);
+
+    drawHB(); // Draw the health bar of the player in the canvas
 
     // Update time for the next frame
     frameStart = frameTime;

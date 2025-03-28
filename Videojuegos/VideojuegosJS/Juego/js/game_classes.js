@@ -92,6 +92,12 @@ class GameObject {
         }
     }
 
+    drawHitBox(ctx, scale) { // Function to draw the hitbox of an actor
+        ctx.strokeStyle = "red";
+        ctx.strokeRect(this.position.x * scale, this.position.y * scale,
+                       this.size.x * scale, this.size.y * scale);
+    }
+
     update() {
 
     }
@@ -151,7 +157,6 @@ class TextLabel {
         ctx.fillText(text, this.x, this.y);
     }
 }
-
 
 // Simple collision detection between rectangles
 function overlapRectangles(actor1, actor2) {
