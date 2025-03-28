@@ -165,4 +165,3 @@ class Player extends AnimatedObject {
     }
 
 }
-
