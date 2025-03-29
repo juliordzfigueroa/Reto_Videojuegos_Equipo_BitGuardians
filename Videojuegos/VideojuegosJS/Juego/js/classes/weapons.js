@@ -29,7 +29,7 @@ class PowerUp extends GameObject {
 
 class Heal extends PowerUp {
     constructor(color, width, height, x, y, type, heal, spawrate, rarity) {
-        super("red", x, y, "heal", heal, spawrate, "Uncommon"); 
+        super("red", x, y, heal, spawrate, "Uncommon"); 
     }
 
     effect(player) {
@@ -43,7 +43,7 @@ class Heal extends PowerUp {
 
 class Shield extends PowerUp {
     constructor(color, width, height, x, y, type, shield, spawrate, rarity) {
-        super("blue", x, y, "shield", shield, spawrate, "Uncommon"); 
+        super("blue", x, y, shield, spawrate, "Uncommon"); 
     }
 
     effect(player) {
@@ -57,7 +57,7 @@ class Shield extends PowerUp {
 
 class HealthIncrease extends PowerUp {
     constructor(color, width, height, x, y, type, hpIncrease, spawrate, rarity) {
-        super("green", x, y, "healthincrease", hpIncrease, spawrate, "Rare"); 
+        super("green", x, y, hpIncrease, spawrate, "Rare"); 
     }
 
     effect(player) {
@@ -68,11 +68,14 @@ class HealthIncrease extends PowerUp {
 
 class EMPBomb extends PowerUp {
     constructor(color, width, height, x, y, type, empBomb, spawrate, rarity) {
-        super("yellow", x, y, "empbomb", empBomb, spawrate, "Legendary"); 
     }
     
-    effect(enemy){
-        game.enemy.status = "stunned"; // El enemigo queda aturdido por un tiempo.
+    effect() {
+        for (let enemy of game.enemies) {
+            enemy.state = "stunned";
+            enemy.stunTime = stunDuration;
+        }
+        console.log("EMPBomb activated: Enemies stunned");
     }
 }
 

@@ -8,7 +8,6 @@
 
 "use strict";
 
-
 let GAME_LEVELS = {
 main: `
 *&&&&&&&&&&&123&&&&&&&&&&&:
@@ -44,7 +43,6 @@ robotRoom: `
 #.........................#
 /&&&&&&&&&&&&&&&&&&&&&&&&&$
 `
-
 };
 
 if (typeof module != "undefined" && module.exports && (typeof window == "undefined" || window.exports != exports))

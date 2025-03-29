@@ -53,6 +53,10 @@ class Level {
         } else if (actor.type === "door") {
             actor.setSprite(item.sprite, item.rect);
             this.actors.push(actor);
+        } else if (actor.type === "powerup") {
+            actor.setSprite(item.sprite, item.rect);
+            this.actors.push(actor);
+            cellType = "empty";
         }
         return cellType;
     }
