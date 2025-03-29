@@ -135,10 +135,7 @@ class Player extends AnimatedObject {
 
     // Método para que el jugador reciba daño
     takeDamage(damage){
-        if (overlapRectangles(this, enemy)) // Si el jugador colisiona con un enemigo, este recibe daño.
-        { 
-            console.log("Player hit by enemy!");
-            if (this.shield > 0) // Si el jugador tiene escudo, este recibe el daño.
+        if (this.shield > 0) // Si el jugador tiene escudo, este recibe el daño.
             {
                 this.shield -= damage;
                 if (this.shield < 0) // Si el daño supera la cantidad de escudo, el daño restante se le aplica a la vida del jugador.
@@ -147,13 +144,9 @@ class Player extends AnimatedObject {
                     this.shield = 0;
                 }
             }
-            else // Si el jugador no tiene escudo, el daño se le aplica directamente a la vida.
-            {
-                this.hp -= damage;
-            }
-        }
-        else{
-            console.log("Player not hit by enemy!");
+        else // Si el jugador no tiene escudo, el daño se le aplica directamente a la vida.
+        {
+            this.hp -= damage;
         }
     }
 

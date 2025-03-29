@@ -92,16 +92,22 @@ class GameObject {
         }
     }
 
-    drawHitBox(ctx, scale) { // Function to draw the hitbox of an actor
-        ctx.strokeStyle = "red";
-        ctx.strokeRect(this.position.x * scale, this.position.y * scale,
-                       this.size.x * scale, this.size.y * scale);
-    }
-
     update() {
 
     }
 }
+
+class HitBox extends GameObject { // Clase para crear las hitbox de cada ojeto
+    constructor(x, y, width, height) {
+        super(null , width, height, x, y, "hitbox"); // Indicamos que el color que posea el objeto sea nulo por defecto
+    }
+    
+    drawHitBox(ctx, scale) { // Método para dibujar el hitbox del objeto
+        ctx.strokeStyle = "red";
+        ctx.strokeRect(this.position.x * scale, this.position.y * scale, this.size.x * scale, this.size.y * scale); // Usamos las propiedades del objeto para formar el marco de la hitbox 
+    }
+}
+
 
 class AnimatedObject extends GameObject {
     constructor(color, width, height, x, y, type) {

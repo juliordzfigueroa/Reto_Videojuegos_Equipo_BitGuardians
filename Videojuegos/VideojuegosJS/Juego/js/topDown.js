@@ -61,6 +61,14 @@ class Game {
                 }
             }
         }
+        // Actualizar las barras de las estadisticas de jugador
+        drawBar(game.player.hp, game.player.max_hp, 'green', 40, 480); // Draw the health bar of the player in the canvas
+        drawBar(game.player.shield, game.player.max_shield, 'blue', 40, 510) // Draw the sheild bar of the player in the canvas 
+        if (game.player.hp <= 0)
+        {
+            console.log("Game Over");
+            gameStart();
+        }
     }
 
     draw(ctx, scale) {
@@ -69,10 +77,12 @@ class Game {
         }
         for (let enemy of this.enemies) {
             enemy.draw(ctx, scale);
-            enemy.drawHitBox(ctx, scale); // Draw hitbox for debugging
+            let enemyHitBox = new HitBox(enemy.position.x, enemy.position.y, enemy.size.x, enemy.size.y);
+            enemyHitBox.drawHitBox(ctx, scale);
         }
         this.player.draw(ctx, scale);
-        this.player.drawHitBox(ctx, scale);
+        let playerHitBox = new HitBox(this.player.position.x, this.player.position.y, this.player.size.x, this.player.size.y);
+        playerHitBox.drawHitBox(ctx, scale);
     }
 }
 
@@ -143,14 +153,15 @@ const levelChars = {
         sheetCols: 10,
         startFrame: [0, 0]
     },
+    //ENEMY
     "E": {
         objClass: Enemy,
         label: "enemy",
-        sprite: '../assets/sprites/enemigos/robot_assets.png',
-        rect: new Rect(0, 0, 41, 61), // Valores para las animaciones de caminar de cipher.
+        sprite: '../assets/sprites/enemigos/robot_assets1.png',
+        rect: new Rect(0, 0, 41, 36), // Valores para las animaciones del enemigo cuerpo a cuerpo
         sheetCols: 10,
         startFrame: [0, 0]
-    },
+    }
 };
 
 
@@ -166,27 +177,26 @@ function init() {
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
     ctx = canvas.getContext('2d');
-
+    setEventListeners();
     gameStart();
 }
 
 function gameStart() {
     game = new Game('playing', new Level(GAME_LEVELS[currentRoom]));
-    setEventListeners();
     updateCanvas(document.timeline.currentTime);
-
 }
 
 function setEventListeners() {
     window.addEventListener("keydown", event => {
-        if (event.key == 'w') game.player.startMovement("up");
-        if (event.key == 'a') game.player.startMovement("left");
-        if (event.key == 's') game.player.startMovement("down");
-        if (event.key == 'd') game.player.startMovement("right");
+        if (event.key === 'w') game.player.startMovement("up");
+        if (event.key === 'a') game.player.startMovement("left");
+        if (event.key === 's') game.player.startMovement("down");
+        if (event.key === 'd') game.player.startMovement("right");
         if (event.key === 'ArrowUp') game.player.startAttack("up");
         if (event.key === 'ArrowLeft') game.player.startAttack("left");
         if (event.key === 'ArrowDown') game.player.startAttack("down");
         if (event.key === 'ArrowRight') game.player.startAttack("right");
+        if (event.key === 'f') game.player.takeDamage(20); // Usado para las pruebas de daño
     });
 
     window.addEventListener("keyup", event => {
@@ -201,36 +211,40 @@ function setEventListeners() {
     });
 }
 
-function drawHB() {
+function drawBar(stat, max_stat, color, barX, barY){ // Función para dibujar las barras de vida y escudo del jugador.
     
-    const barX = 40;
-    const barY = 480 ; // Si tu canvas mide 600 px de alto, esto la coloca cerca del borde
     const barWidth = 200;
     const barHeight = 20;
+
+    if (stat > max_stat)  stat = max_stat;
   
-    // Calcula el porcentaje de vida del jugador
-    let ratio = game.player.hp / game.player.max_hp;
+    // Calcula el porcentaje de vida del jugador, usado para saber hasta donde se tiene que llegar la barra de vida.
+    let ratio = stat / max_stat;
   
     // Dibuja el fondo de la barra (zona de vida "perdida")
     ctx.fillStyle = "red";
     ctx.fillRect(barX, barY, barWidth, barHeight);
-  
-    // Dibuja la parte que representa la vida actual
-    ctx.fillStyle = "green";
-    ctx.fillRect(barX, barY, barWidth * ratio, barHeight);
-  
+
     // Dibuja el borde de la barra
     ctx.strokeStyle = "black";
     ctx.strokeRect(barX, barY, barWidth, barHeight);
-
-    // Pinta el texto de vida
-    ctx.font = "16px Arial";       // Ajusta el tipo y tamaño de letra
-    ctx.fillStyle = "white";       // Color del texto
-    ctx.textAlign = "center";      // Centrado horizontal
-    ctx.textBaseline = "middle";   // Centrado vertical
-    const textX = barX + barWidth / 2;      // Mitad de la barra
-    const textY = barY + barHeight / 2;     // Mitad de la altura de la barra
-    ctx.fillText(`${game.player.hp} / ${game.player.max_hp}`, textX, textY);
+  
+    // Dibuja la parte que representa la vida actual
+    if (stat >= 0 && stat <= max_stat)
+    {
+        ctx.fillStyle = color;
+        ctx.fillRect(barX, barY, barWidth * ratio, barHeight);
+        // Pinta el texto de la estadistica
+        ctx.font = "16px Arial";       // Ajusta el tipo y tamaño de letra
+        ctx.fillStyle = "white";     
+        ctx.textAlign = "center";      // Centrado horizontal
+        ctx.textBaseline = "middle";   // Centrado vertical
+        // Coordenadas X y Y de los números de la barra que se quiera dibujar
+        const textX = barX + barWidth / 2;     
+        const textY = barY + barHeight / 2;     
+        ctx.fillText(`${stat} / ${max_stat}`, textX, textY);
+    }
+    
 }
 
 // Function that will be called for the game loop
@@ -244,8 +258,6 @@ function updateCanvas(frameTime) {
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     game.update(deltaTime);
     game.draw(ctx, scale);
-
-    drawHB(); // Draw the health bar of the player in the canvas
 
     // Update time for the next frame
     frameStart = frameTime;

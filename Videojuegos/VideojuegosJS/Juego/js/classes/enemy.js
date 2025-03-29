@@ -9,7 +9,7 @@ let stunDuration = 2000; // Atributo de duración del aturdimiento del enemigo 2
 
 class Enemy extends AnimatedObject {
     constructor(color, width, height, x, y, type, hp, damage, range, speed, stunTime) {
-        super("green", width * 2, height * 3, x, y, "enemy");
+        super("green", width * 2.5, height * 2.5, x, y, "enemy");
         this.velocity = new Vec(0.0, 0.0);
         this.attackTimmer = 0; // Tiempo de ataque del enemigo</p>
         this.nextAttack = 0; // Siguiente ataque del enemigo
