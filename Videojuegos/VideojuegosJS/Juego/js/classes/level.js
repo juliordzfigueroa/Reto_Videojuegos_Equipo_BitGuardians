@@ -37,7 +37,7 @@ class Level {
             actor.setAnimation(...item.startFrame, true, 100);
             this.player = actor;
             cellType = "empty";
-        } else if (actor.type === "enemy") {
+        } else if (actor.type === "robot" || actor.type === "dron") {
             this.addBackgroundFloor(x, y);
             actor.setSprite(item.sprite, item.rect);
             actor.sheetCols = item.sheetCols;

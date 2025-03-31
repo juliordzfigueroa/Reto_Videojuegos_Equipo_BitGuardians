@@ -19,6 +19,7 @@ let player;
 let level;
 let enemy;
 let currentRoom = "main";
+let lastRoom = null;
 
 let playerSpeed = 0.005;
 
@@ -35,6 +36,12 @@ class Game {
         this.enemies = level.enemies;
         this.actors = level.actors;
         //console.log(level);
+    }
+    
+    moveToLevel(newRoom) {
+        lastRoom = currentRoom;
+        currentRoom = newRoom;
+        gameStart();
     }
 
     update(deltaTime) {
@@ -56,8 +63,11 @@ class Game {
                 }
                 if (actor.type == 'door') {
                     console.log("Hit a door");
-                    currentRoom = "robotRoom";
-                    gameStart();
+                    if (currentRoom === "main") {
+                        this.moveToLevel("robotRoom");
+                    } else {
+                        this.moveToLevel(lastRoom);  // Regresa al anterior
+                    }
                 }
             }
         }
@@ -83,6 +93,7 @@ class Game {
         this.player.draw(ctx, scale);
         let playerHitBox = new HitBox(this.player.position.x, this.player.position.y, this.player.size.x, this.player.size.y);
         playerHitBox.drawHitBox(ctx, scale);
+
     }
 }
 
@@ -153,12 +164,20 @@ const levelChars = {
         sheetCols: 10,
         startFrame: [0, 0]
     },
-    //ENEMY
+    //ENEMIES
     "E": {
-        objClass: Enemy,
-        label: "enemy",
+        objClass: Robot,
+        label: "robot",
         sprite: '../assets/sprites/enemigos/robot_assets1.png',
-        rect: new Rect(0, 0, 41, 36), // Valores para las animaciones del enemigo cuerpo a cuerpo
+        rect: new Rect(0, 0, 39.6, 42), // Valores para las animaciones del enemigo cuerpo a cuerpo
+        sheetCols: 10,
+        startFrame: [0, 0]
+    },
+    "D": {
+        objClass: Dron,
+        label: "dron",
+        sprite: '../assets/sprites/enemigos/dron_assets1.png',
+        rect: new Rect(0, 0, 19, 19), // Valores para las animaciones del enemigo cuerpo a cuerpo
         sheetCols: 10,
         startFrame: [0, 0]
     }
