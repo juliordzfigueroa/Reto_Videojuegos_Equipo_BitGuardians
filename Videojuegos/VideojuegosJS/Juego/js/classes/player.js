@@ -17,7 +17,8 @@ class Player extends AnimatedObject {
         this.max_hp = this.hp; // Atributo de vida máxima del jugador, la cual podrá ser incrementada con powerups.
         this.shield = 0; // Atributo de escudo del jugador
         this.max_shield = this.max_hp*0.1; // Atributo de escudo máximo del jugador, el cual podrá ser incrementado con powerups, el escudo será del 10% de la vida del jugador
-        
+        this.exitPosition = undefined;
+        this.enterPosition = undefined;
 
         // Movimientos del jugador
         this.movement = {
@@ -89,6 +90,12 @@ class Player extends AnimatedObject {
         
     }
 
+    setExitPosition() {
+        this.exitPosition = new Vec(this.position.x, this.position.y);
+    }
+
+    
+
     update(level, deltaTime) {
         // Determinar donde termina el jugador después de que se mueve
         let newPosition = this.position.plus(this.velocity.times(deltaTime));
@@ -156,3 +163,4 @@ class Player extends AnimatedObject {
     }
 
 }
+
