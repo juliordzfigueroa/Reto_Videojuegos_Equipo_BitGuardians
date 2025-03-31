@@ -12,6 +12,7 @@ class Level {
         this.height = rows.length;
         this.width = rows[0].length;
         this.actors = [];
+        this.enemies = [];
 
         // Fill the rows array with a label for the type of element in the cell
         this.rows = rows.map((row, y) => {
@@ -26,6 +27,7 @@ class Level {
     setupActor(item, x, y) {
         let objClass = item.objClass;
         let actor = new objClass("grey", 1, 1, x, y, item.label);
+        let enemy = new objClass("red", 1, 1, x, y, item.label);
         let cellType = item.label;
 
         if (actor.type === "player") {
@@ -35,6 +37,12 @@ class Level {
             actor.setAnimation(...item.startFrame, true, 100);
             this.player = actor;
             cellType = "empty";
+        } else if (actor.type === "robot" || actor.type === "dron") {
+            this.addBackgroundFloor(x, y);
+            actor.setSprite(item.sprite, item.rect);
+            actor.sheetCols = item.sheetCols;
+            this.enemies.push(actor);
+            cellType = "empty";
         } else if (actor.type === "floor") {
             item.rect = this.randomTile(0, 3, 0, 16, 16);
             actor.setSprite(item.sprite, item.rect);
@@ -42,6 +50,13 @@ class Level {
         } else if (actor.type === "wall") {
             actor.setSprite(item.sprite, item.rect);
             this.actors.push(actor);
+        } else if (actor.type === "door") {
+            actor.setSprite(item.sprite, item.rect);
+            this.actors.push(actor);
+        } else if (actor.type === "powerup") {
+            actor.setSprite(item.sprite, item.rect);
+            this.actors.push(actor);
+            cellType = "empty";
         }
         return cellType;
     }
@@ -83,4 +98,5 @@ class Level {
         }
         return false;
     }
+
 }

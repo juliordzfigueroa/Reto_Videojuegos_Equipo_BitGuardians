@@ -32,6 +32,10 @@ class Vec {
     unit_V(){ // Método para obtener el vector unitario de un vector.
         return new Vec(this.x / this.get_length(), this.y / this.get_length());
     }
+
+    distanceTo(other) { // Método para obtener la distancia entre dos vectores.
+        return Math.sqrt((this.x - other.x) ** 2 + (this.y - other.y) ** 2);
+    }
 }
 
 
@@ -93,6 +97,18 @@ class GameObject {
     }
 }
 
+class HitBox extends GameObject { // Clase para crear las hitbox de cada ojeto
+    constructor(x, y, width, height) {
+        super(null , width, height, x, y, "hitbox"); // Indicamos que el color que posea el objeto sea nulo por defecto
+    }
+    
+    drawHitBox(ctx, scale) { // Método para dibujar el hitbox del objeto
+        ctx.strokeStyle = "red";
+        ctx.strokeRect(this.position.x * scale, this.position.y * scale, this.size.x * scale, this.size.y * scale); // Usamos las propiedades del objeto para formar el marco de la hitbox 
+    }
+}
+
+
 class AnimatedObject extends GameObject {
     constructor(color, width, height, x, y, type) {
         super(color, width, height, x, y, type);
@@ -147,7 +163,6 @@ class TextLabel {
         ctx.fillText(text, this.x, this.y);
     }
 }
-
 
 // Simple collision detection between rectangles
 function overlapRectangles(actor1, actor2) {
