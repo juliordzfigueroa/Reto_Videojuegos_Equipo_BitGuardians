@@ -49,6 +49,10 @@ class Level {
         } else if (actor.type === "wall") {
             actor.setSprite(item.sprite, item.rect);
             this.actors.push(actor);
+        } else if (actor.type === "cable") {
+            this.addBackgroundFloor(x, y);
+            actor.setSprite(item.sprite, item.rect);
+            this.actors.push(actor); 
         } else if (actor.type === "door") {
             actor.setSprite(item.sprite, item.rect);
             if (item.char !== undefined) actor.char = item.char;

@@ -53,16 +53,64 @@ class Game {
         this.player.update(this.level, deltaTime);
         for (let enemy of this.enemies) {
             enemy.update(this.level, deltaTime);
-        }        
+        }
         for (let actor of this.actors) {
             actor.update(this.level, deltaTime);
         }
 
         let currentActors = this.actors;
+
+        // Recorremos todos los enemigos del juego
+        for (let i = 0; i < this.enemies.length; i++) {
+            const enemyA = this.enemies[i]; // Enemigo actual
+
+            // Comparamos enemyA contra los demas enemigos
+            for (let j = i + 1; j < this.enemies.length; j++) {
+                const enemyB = this.enemies[j];
+
+                // Si enemyA y enemyB se colisionan
+                if (overlapRectangles(enemyA, enemyB)) {
+
+                    //Calculamos la distancia entre los enemigos en X y Y
+                    const distanciaX= enemyA.position.x - enemyB.position.x;
+                    const distaanciaY = enemyA.position.y - enemyB.position.y;
+
+                    //Calculamos la colision en X y Y
+                    const overlapX = (enemyA.size.x + enemyB.size.x) / 2 - Math.abs(distanciaX);
+                    const overlapY = (enemyA.size.y + enemyB.size.y) / 2 - Math.abs(distaanciaY);
+
+                    //Decidimos en qué eje separarlos. Dependiendo cual overlap sea menor
+                    if (overlapX < overlapY) {
+                        const separation = overlapX / 2; //Para repartir la colision entre dos
+
+                        //Si enemyA está a la izquierda de enemyB
+                        if (distanciaX < 0) {
+                            enemyA.position.x -= separation;
+                            enemyB.position.x += separation;
+                        } else {
+                            enemyA.position.x += separation;
+                            enemyB.position.x -= separation;
+                        }
+
+                    } else {
+                        const separation = overlapY / 2; 
+                        // Si enemyA está arriba de enemyB
+                        if (distanciaY < 0) {
+                            enemyA.position.y -= separation;
+                            enemyB.position.y += separation;
+                        } else {
+                            enemyA.position.y += separation;
+                            enemyB.position.y -= separation;
+                        }
+                    }
+                }
+            }
+        }
+
+
         // Detect collisions
         for (let actor of currentActors) {
             if (actor.type != 'floor' && overlapRectangles(this.player, actor)) {
-                //console.log(`Collision of ${this.player.type} with ${actor.type}`);
                 if (actor.type == 'wall') {
                     console.log("Hit a wall");
                 }
@@ -85,11 +133,12 @@ class Game {
                 }
             }
         }
-        // Actualizar las barras de las estadisticas de jugador
-        drawBar(game.player.hp, game.player.max_hp, 'green', 40, 480); // Draw the health bar of the player in the canvas
-        drawBar(game.player.shield, game.player.max_shield, 'blue', 40, 510) // Draw the sheild bar of the player in the canvas 
-        if (game.player.hp <= 0)
-        {
+
+        // Update player stats bars
+        drawBar(game.player.hp, game.player.max_hp, 'green', 40, 480);
+        drawBar(game.player.shield, game.player.max_shield, 'blue', 40, 510);
+
+        if (game.player.hp <= 0) {
             console.log("Game Over");
             gameStart();
         }
@@ -169,6 +218,13 @@ const levelChars = {
     ">": createDoorTile(0, 7, ">"),
     "=": createDoorTile(1, 7, "="), 
     "<": createDoorTile(2, 7, "<"),
+    //Cables
+    "C": {
+        objClass: AnimatedObject,
+        label: "cable",
+        sprite: '../assets/sprites/escenarios/cable_suelo.png',
+        rect: new Rect(0, 0, 16, 32)
+    },
 
     //PLAYER
     "@": {
