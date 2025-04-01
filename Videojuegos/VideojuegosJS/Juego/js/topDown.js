@@ -19,6 +19,8 @@ let player;
 let level;
 let enemy;
 let currentRoom = "main";
+let lastRoom = null;
+let lastDoorChar = null;
 
 let playerSpeed = 0.005;
 
@@ -36,36 +38,107 @@ class Game {
         this.actors = level.actors;
         //console.log(level);
     }
+    
+    moveToLevel(newRoom) {
+        lastRoom = currentRoom;
+        currentRoom = newRoom;
+        this.level = new Level(GAME_LEVELS[currentRoom]);
+        this.level.player = this.player;
+        this.level.enemies = this.enemies;
+        this.actors = this.actors;
+        gameStart();
+    }
 
     update(deltaTime) {
         this.player.update(this.level, deltaTime);
         for (let enemy of this.enemies) {
             enemy.update(this.level, deltaTime);
-        }        
+        }
         for (let actor of this.actors) {
             actor.update(this.level, deltaTime);
         }
 
         let currentActors = this.actors;
+
+        // Recorremos todos los enemigos del juego
+        for (let i = 0; i < this.enemies.length; i++) {
+            const enemyA = this.enemies[i]; // Enemigo actual
+
+            // Comparamos enemyA contra los demas enemigos
+            for (let j = i + 1; j < this.enemies.length; j++) {
+                const enemyB = this.enemies[j];
+
+                // Si enemyA y enemyB se colisionan
+                if (overlapRectangles(enemyA, enemyB)) {
+
+                    //Calculamos la distancia entre los enemigos en X y Y
+                    const distanciaX= enemyA.position.x - enemyB.position.x;
+                    const distaanciaY = enemyA.position.y - enemyB.position.y;
+
+                    //Calculamos la colision en X y Y
+                    const overlapX = (enemyA.size.x + enemyB.size.x) / 2 - Math.abs(distanciaX);
+                    const overlapY = (enemyA.size.y + enemyB.size.y) / 2 - Math.abs(distaanciaY);
+
+                    //Decidimos en qué eje separarlos. Dependiendo cual overlap sea menor
+                    if (overlapX < overlapY) {
+                        const separation = overlapX / 2; //Para repartir la colision entre dos
+
+                        //Si enemyA está a la izquierda de enemyB
+                        if (distanciaX < 0) {
+                            enemyA.position.x -= separation;
+                            enemyB.position.x += separation;
+                        } else {
+                            enemyA.position.x += separation;
+                            enemyB.position.x -= separation;
+                        }
+
+                    } else {
+                        const separation = overlapY / 2; 
+                        // Si enemyA está arriba de enemyB
+                        if (distanciaY < 0) {
+                            enemyA.position.y -= separation;
+                            enemyB.position.y += separation;
+                        } else {
+                            enemyA.position.y += separation;
+                            enemyB.position.y -= separation;
+                        }
+                    }
+                }
+            }
+        }
+
+
         // Detect collisions
         for (let actor of currentActors) {
             if (actor.type != 'floor' && overlapRectangles(this.player, actor)) {
-                //console.log(`Collision of ${this.player.type} with ${actor.type}`);
                 if (actor.type == 'wall') {
                     console.log("Hit a wall");
                 }
                 if (actor.type == 'door') {
-                    console.log("Hit a door");
-                    currentRoom = "robotRoom";
-                    gameStart();
+                    const doorChar = actor.char;
+
+                    if (currentRoom === "main") {
+                        if (["<", "=", ">"].includes(doorChar)) {
+                            lastDoorChar = doorChar;
+                            this.moveToLevel("robotRoom");
+                        } else if (["4", "5", "6"].includes(doorChar)) {
+                            lastDoorChar = doorChar;
+                            this.moveToLevel("dronRoom");
+                        }
+                    } else {
+                        this.player.setExitPosition();
+                        lastDoorChar = doorChar;
+                        this.moveToLevel("main");
+                    }
                 }
             }
         }
-        // Actualizar las barras de las estadisticas de jugador
-        drawBar(game.player.hp, game.player.max_hp, 'green', 40, 480); // Draw the health bar of the player in the canvas
-        drawBar(game.player.shield, game.player.max_shield, 'blue', 40, 510) // Draw the sheild bar of the player in the canvas 
-        if (game.player.hp <= 0)
-        {
+
+        // Update player stats bars
+        drawBar(game.player.hp, game.player.max_hp, 'green', 40, 480);
+        drawBar(game.player.shield, game.player.max_shield, 'blue', 40, 510);
+
+        if (game.player.hp <= 0) {
             console.log("Game Over");
             gameStart();
         }
@@ -83,6 +156,7 @@ class Game {
         this.player.draw(ctx, scale);
         let playerHitBox = new HitBox(this.player.position.x, this.player.position.y, this.player.size.x, this.player.size.y);
         playerHitBox.drawHitBox(ctx, scale);
+
     }
 }
 
@@ -96,13 +170,14 @@ function createWallTile(x) {
     };
 }
 
-function createDoorTile(x, y) {
+function createDoorTile(x, y, char) {
     //Function to create a wall tile with the specified sprite
     return {
         objClass: GameObject,
         label: "door",
         sprite: '../assets/sprites/escenarios/door_tileset.png',
-        rect: new Rect(x, y, 16, 16)
+        rect: new Rect(x, y, 16, 16),
+        char: char
     };
 }
 
@@ -128,21 +203,28 @@ const levelChars = {
 
     //DOORS
     //Upper
-    "1": createDoorTile(0, 0),
-    "2": createDoorTile(1, 0), 
-    "3": createDoorTile(2, 0), 
+    "1": createDoorTile(0, 0, "1"),
+    "2": createDoorTile(1, 0, "2"),
+    "3": createDoorTile(2, 0, "3"),
     //Down
-    "4": createDoorTile(0, 5),
-    "5": createDoorTile(1, 5),
-    "6": createDoorTile(2, 5),
+    "4": createDoorTile(0, 5, "4"),
+    "5": createDoorTile(1, 5, "5"),
+    "6": createDoorTile(2, 5, "6"),
     //Right
-    "7": createDoorTile(0, 6),
-    "8": createDoorTile(1, 6),
-    "9": createDoorTile(2, 6),
+    "7": createDoorTile(0, 6, "7"),
+    "8": createDoorTile(1, 6, "8"),
+    "9": createDoorTile(2, 6, "9"),
     //Left
-    ">": createDoorTile(0, 7),
-    "=": createDoorTile(1, 7), 
-    "<": createDoorTile(2, 7),
+    ">": createDoorTile(0, 7, ">"),
+    "=": createDoorTile(1, 7, "="), 
+    "<": createDoorTile(2, 7, "<"),
+    //Cables
+    "C": {
+        objClass: AnimatedObject,
+        label: "cable",
+        sprite: '../assets/sprites/escenarios/cable_suelo.png',
+        rect: new Rect(0, 0, 16, 32)
+    },
 
     //PLAYER
     "@": {
@@ -153,12 +235,20 @@ const levelChars = {
         sheetCols: 10,
         startFrame: [0, 0]
     },
-    //ENEMY
-    "E": {
-        objClass: Enemy,
-        label: "enemy",
+    //ENEMIES
+    "R": {
+        objClass: Robot,
+        label: "robot",
         sprite: '../assets/sprites/enemigos/robot_assets1.png',
-        rect: new Rect(0, 0, 41, 36), // Valores para las animaciones del enemigo cuerpo a cuerpo
+        rect: new Rect(0, 0, 39.6, 42), // Valores para las animaciones del enemigo cuerpo a cuerpo
+        sheetCols: 10,
+        startFrame: [0, 0]
+    },
+    "D": {
+        objClass: Dron,
+        label: "dron",
+        sprite: '../assets/sprites/enemigos/dron_assets1.png',
+        rect: new Rect(0, 0, 17.6, 19), // Valores para las animaciones del enemigo cuerpo a cuerpo
         sheetCols: 10,
         startFrame: [0, 0]
     }
