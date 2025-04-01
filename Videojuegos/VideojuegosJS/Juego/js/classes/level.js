@@ -17,7 +17,7 @@ class Level {
         // Fill the rows array with a label for the type of element in the cell
         this.rows = rows.map((row, y) => {
             return row.map((ch, x) => {
-                let item = levelChars[ch];
+                let item = levelChars[ch] || {};
                 let cellType = this.setupActor(item, x, y);
                 return cellType;
             });
@@ -27,7 +27,6 @@ class Level {
     setupActor(item, x, y) {
         let objClass = item.objClass;
         let actor = new objClass("grey", 1, 1, x, y, item.label);
-        let enemy = new objClass("red", 1, 1, x, y, item.label);
         let cellType = item.label;
 
         if (actor.type === "player") {
@@ -52,6 +51,7 @@ class Level {
             this.actors.push(actor);
         } else if (actor.type === "door") {
             actor.setSprite(item.sprite, item.rect);
+            if (item.char !== undefined) actor.char = item.char;
             this.actors.push(actor);
         } else if (actor.type === "powerup") {
             actor.setSprite(item.sprite, item.rect);

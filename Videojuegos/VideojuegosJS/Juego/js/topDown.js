@@ -20,6 +20,7 @@ let level;
 let enemy;
 let currentRoom = "main";
 let lastRoom = null;
+let lastDoorChar = null;
 
 let playerSpeed = 0.005;
 
@@ -41,6 +42,10 @@ class Game {
     moveToLevel(newRoom) {
         lastRoom = currentRoom;
         currentRoom = newRoom;
+        this.level = new Level(GAME_LEVELS[currentRoom]);
+        this.level.player = this.player;
+        this.level.enemies = this.enemies;
+        this.actors = this.actors;
         gameStart();
     }
 
@@ -62,11 +67,20 @@ class Game {
                     console.log("Hit a wall");
                 }
                 if (actor.type == 'door') {
-                    console.log("Hit a door");
+                    const doorChar = actor.char;
+
                     if (currentRoom === "main") {
-                        this.moveToLevel("robotRoom");
+                        if (["<", "=", ">"].includes(doorChar)) {
+                            lastDoorChar = doorChar;
+                            this.moveToLevel("robotRoom");
+                        } else if (["4", "5", "6"].includes(doorChar)) {
+                            lastDoorChar = doorChar;
+                            this.moveToLevel("dronRoom");
+                        }
                     } else {
-                        this.moveToLevel(lastRoom);  // Regresa al anterior
+                        this.player.setExitPosition();
+                        lastDoorChar = doorChar;
+                        this.moveToLevel("main");
                     }
                 }
             }
@@ -107,13 +121,14 @@ function createWallTile(x) {
     };
 }
 
-function createDoorTile(x, y) {
+function createDoorTile(x, y, char) {
     //Function to create a wall tile with the specified sprite
     return {
         objClass: GameObject,
         label: "door",
         sprite: '../assets/sprites/escenarios/door_tileset.png',
-        rect: new Rect(x, y, 16, 16)
+        rect: new Rect(x, y, 16, 16),
+        char: char
     };
 }
 
@@ -139,21 +154,21 @@ const levelChars = {
 
     //DOORS
     //Upper
-    "1": createDoorTile(0, 0),
-    "2": createDoorTile(1, 0), 
-    "3": createDoorTile(2, 0), 
+    "1": createDoorTile(0, 0, "1"),
+    "2": createDoorTile(1, 0, "2"),
+    "3": createDoorTile(2, 0, "3"),
     //Down
-    "4": createDoorTile(0, 5),
-    "5": createDoorTile(1, 5),
-    "6": createDoorTile(2, 5),
+    "4": createDoorTile(0, 5, "4"),
+    "5": createDoorTile(1, 5, "5"),
+    "6": createDoorTile(2, 5, "6"),
     //Right
-    "7": createDoorTile(0, 6),
-    "8": createDoorTile(1, 6),
-    "9": createDoorTile(2, 6),
+    "7": createDoorTile(0, 6, "7"),
+    "8": createDoorTile(1, 6, "8"),
+    "9": createDoorTile(2, 6, "9"),
     //Left
-    ">": createDoorTile(0, 7),
-    "=": createDoorTile(1, 7), 
-    "<": createDoorTile(2, 7),
+    ">": createDoorTile(0, 7, ">"),
+    "=": createDoorTile(1, 7, "="), 
+    "<": createDoorTile(2, 7, "<"),
 
     //PLAYER
     "@": {
@@ -165,7 +180,7 @@ const levelChars = {
         startFrame: [0, 0]
     },
     //ENEMIES
-    "E": {
+    "R": {
         objClass: Robot,
         label: "robot",
         sprite: '../assets/sprites/enemigos/robot_assets1.png',
@@ -177,7 +192,7 @@ const levelChars = {
         objClass: Dron,
         label: "dron",
         sprite: '../assets/sprites/enemigos/dron_assets1.png',
-        rect: new Rect(0, 0, 19, 19), // Valores para las animaciones del enemigo cuerpo a cuerpo
+        rect: new Rect(0, 0, 17.6, 19), // Valores para las animaciones del enemigo cuerpo a cuerpo
         sheetCols: 10,
         startFrame: [0, 0]
     }
