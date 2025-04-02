@@ -1,6 +1,7 @@
 class Dron extends Enemy {
     constructor(color, width, height, x, y, type) {
         super("blue", width * 2, height * 2, x, y, "dron", 50, 5, 3, 0.004, 1500);
+        this.hitBox = new HitBox(this.position.x, this.position.y, this.size.x*0.6, this.size.y*0.8); // Hitbox del enemigo robot
         // Movimientos del enemigo
         this.movement = {
             right: {
@@ -88,7 +89,8 @@ class Dron extends Enemy {
             this.velocity = new Vec(0.0, 0.0);
         }
 
-        this.hitBox.position = this.position; // Actualizar la posición del hitbox del enemigo
+        this.hitBox.position.x = this.position.x + 0.4; // Actualizar la posición del hitbox del enemigo
+        this.hitBox.position.y = this.position.y + 0.2; // Actualizar la posición del hitbox del enemigo
         this.hitBox.update(); // Actualizar el hitbox del enemigo
         this.updateFrame(deltaTime);
     }
