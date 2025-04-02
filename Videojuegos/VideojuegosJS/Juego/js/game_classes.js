@@ -106,6 +106,10 @@ class HitBox extends GameObject { // Clase para crear las hitbox de cada ojeto
         ctx.strokeStyle = "red";
         ctx.strokeRect(this.position.x * scale, this.position.y * scale, this.size.x * scale, this.size.y * scale); // Usamos las propiedades del objeto para formar el marco de la hitbox 
     }
+
+    update(){ // Método para poder actualizar el hitbox del objeto
+
+    }
 }
 
 

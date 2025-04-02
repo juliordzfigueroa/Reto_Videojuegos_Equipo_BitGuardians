@@ -15,9 +15,10 @@ class Player extends AnimatedObject {
         this.velocity = new Vec(0.0, 0.0);
         this.hp = 100; // Atributo de vida del jugador
         this.max_hp = this.hp; // Atributo de vida máxima del jugador, la cual podrá ser incrementada con powerups.
-        this.shield = 0; // Atributo de escudo del jugador
+        this.shield = 20; // Atributo de escudo del jugador
         this.max_shield = this.max_hp*0.1; // Atributo de escudo máximo del jugador, el cual podrá ser incrementado con powerups, el escudo será del 10% de la vida del jugador
-        
+        this.hitBox = new HitBox(this.position.x, this.position.y, this.size.x*0.7, this.size.y*0.9); // Hitbox del jugador
+        this.state = "idle"; 
 
         // Movimientos del jugador
         this.movement = {
@@ -98,6 +99,10 @@ class Player extends AnimatedObject {
             this.position = newPosition;
         }
 
+        this.hitBox.position.x = this.position.x+0.3; // Actualizar la posición del hitbox del jugador en x
+        this.hitBox.position.y = this.position.y+0.1; // Actualizar la posición del hitbox del jugador en y
+        this.hitBox.update(); // Actualizar el hitbox del jugador
+
         this.updateFrame(deltaTime);
     }
 
@@ -105,7 +110,7 @@ class Player extends AnimatedObject {
         const dirData = this.movement[direction];
         if (!dirData.status) {
             dirData.status = true;
-            this.velocity[dirData.axis] = dirData.sign * playerSpeed;
+            this.velocity[dirData.axis] = dirData.sign * playerspeed;
             this.setAnimation(...dirData.moveFrames, dirData.repeat, dirData.duration);
         }
     }

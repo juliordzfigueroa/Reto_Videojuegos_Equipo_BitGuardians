@@ -58,6 +58,7 @@ class Level {
             this.actors.push(actor);
             cellType = "empty";
         } else if (actor.type === "puzzle") {
+            actor.setSprite(item.sprite, item.rect);
             this.actors.push(actor);
             cellType = "empty";
         }

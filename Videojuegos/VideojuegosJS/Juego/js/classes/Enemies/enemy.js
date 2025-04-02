@@ -20,74 +20,12 @@ class Enemy extends AnimatedObject {
         this.stunTime = 0; // Tiempo de aturdimiento del enemigo por defecto
         this.state = "idle"; // Estado del enemigo por defecto
         this.attackTimmer = 0; // Tiempo de ataque del enemigo por defecto
-        this.nextAttack = 2000; // Siguiente ataque del enemigo por defecto
+        this.nextAttack = 3000; // Siguiente ataque del enemigo por defecto
+        this.hitBox = new HitBox(this.position.x, this.position.y, this.size.x, this.size.y); // Hitbox del enemigo por defecto
     }
 
-    update(level, deltaTime) {
-        const distance = this.position.distanceTo(game.player.position);
-        //Verificar el estado del enemigo
-        if (distance > 10) {
-            this.state = "idle";
-        }
-        else if (distance < 1) {
-            this.state = "attack";
-        }
-        else if (this.state == "stunned") {
-            // Aturdimiento del enemigo (Faltante)
-        }
-        else {
-            this.state = "chase";
-        }
-
-        if (this.state === "chase") {
-            let dir = game.player.position.minus(this.position).unit_V();
-            this.velocity = dir.times(this.speed);
-
-            // Calcular la nueva posición
-            let newPosition = this.position.plus(this.velocity.times(deltaTime));
-
-            // Detectar dirección principal y activar animación correspondiente
-            if (Math.abs(dir.x) > Math.abs(dir.y)) {
-                // Movimiento horizontal
-                if (dir.x > 0) {
-                    this.startMovement("right");
-                } else {
-                    this.startMovement("left");
-                }
-            } else {
-                // Movimiento vertical
-                if (dir.y > 0) {
-                    this.startMovement("down");
-                } else {
-                    this.startMovement("up");
-                }
-            }
-
-            // Aplicar movimiento si no hay pared
-            if (!level.contact(newPosition, this.size, 'wall')) {
-                this.position = newPosition;
-            }
-        }
-
-
-
-        if (this.state == "attack") {
-            this.velocity = new Vec(0, 0);
-            // Atacar al jugador
-            if (this.attackTimmer < this.nextAttack) {
-                this.attackTimmer = 0;
-                game.player.takeDamage(this.damage);
-            }
-            else {
-                this.attackTimmer += deltaTime;
-            }
-        }
-
-        if (this.state == "idle") {
-            this.velocity = new Vec(0.0, 0.0);
-        }
-
-        this.updateFrame(deltaTime);
+    update() {
+        // Método de actualización del enemigo vacío por defecto, variable por cada tipo de enemigo
     }
 
     startMovement(direction) {

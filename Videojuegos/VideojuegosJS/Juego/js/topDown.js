@@ -22,6 +22,7 @@
     let currentRoom = "main";
     let lastRoom = null;
     
+    
     let playerSpeed = 0.005;
     
     // Scale of the whole world, to be applied to all objects
@@ -29,7 +30,7 @@
     const scale = 30;
     
     let puzzleActive = false;
-    let puzzleInstance = null;
+    let levelPuzzle = null; // Puzzle no definido para el nivel
     
     class Game {
         constructor(state, level) {
@@ -38,6 +39,7 @@
             this.player = level.player;
             this.enemies = level.enemies;
             this.actors = level.actors;
+            levelPuzzle = new Puzzle(canvasWidth, canvasHeight);
             //console.log(level);
         }
         
@@ -49,17 +51,22 @@
     
         update(deltaTime) {
             this.player.update(this.level, deltaTime);
+            let playerState = this.player.state;
+            console.log(playerState);
             for (let enemy of this.enemies) {
                 enemy.update(this.level, deltaTime);
+                let enemyCurrentState = enemy.state;
+                console.log(enemyCurrentState);
             }        
             for (let actor of this.actors) {
                 actor.update(this.level, deltaTime);
             }
+
     
             let currentActors = this.actors;
             // Detect collisions
             for (let actor of currentActors) {
-                if (actor.type != 'floor' && overlapRectangles(this.player, actor)) {
+                if (actor.type != 'floor' && overlapRectangles(this.player.hitBox, actor)) {
                     //console.log(`Collision of ${this.player.type} with ${actor.type}`);
                     if (actor.type == 'wall') {
                         console.log("Hit a wall");
@@ -90,13 +97,10 @@
             }
             for (let enemy of this.enemies) {
                 enemy.draw(ctx, scale);
-                let enemyHitBox = new HitBox(enemy.position.x, enemy.position.y, enemy.size.x, enemy.size.y);
-                enemyHitBox.drawHitBox(ctx, scale);
+                enemy.hitBox.drawHitBox(ctx,scale);
             }
             this.player.draw(ctx, scale);
-            let playerHitBox = new HitBox(this.player.position.x, this.player.position.y, this.player.size.x, this.player.size.y);
-            playerHitBox.drawHitBox(ctx, scale);
-    
+            this.player.hitBox.drawHitBox(ctx, scale);
         }
     }
     
@@ -187,15 +191,15 @@
         "p": {
             objClass: GameObject,
             label: 'puzzle',
-            sprite: '',  // Sin sprite por el momento
-            rect: new Rect(0, 0, 1, 1)
+            sprite: '../assets/sprites/escenarios/computer_spritesheet.png',  // Valores para el asset de la computadora donde estará el puzzle.
+            rect: new Rect(0, 0, 16, 16),
+            sheetCols: 2,
+            startFrame: [0, 0]
         }
     };
     
     
     function main() {
-        // Set a callback for when the page is loaded,
-        // so that the canvas can be found
         window.onload = init;
     }
     
@@ -217,21 +221,29 @@
     function setEventListeners() {
         window.addEventListener("keydown", event => {
 
-            if (puzzleActive == true) { // Si el puzzle está activo
-                if (event.key === "Escape") {
+            if (event.key === "Escape") {
+                if (puzzleActive) { // Si el puzzle está activo
                     puzzleActive = false;
-                    puzzleInstance = null;
                 }
                 return;
             }
-
+            else {
+                //pausa el juego si el puzzle no está activo
+            }
+            
+            
             if (event.key === 'f') { // Si el jugador esta cerca del objeto que activa el puzzle.
-                if (isPlayerNearPuzzle()) {
-                    puzzleActive = true;
-                    if (typeof Puzzle !== "undefined") {
-                        puzzleInstance = new Puzzle(canvasWidth, canvasHeight);
-                        puzzleInstance.init();
+                if (isPuzzleNear()) {
+                    if (!puzzleActive){ // Si el puzzle no está activo
+                        puzzleActive = true; // Activa el puzzle
+                        levelPuzzle.init(); // Inicializa el puzzle
                     }
+                }
+            }
+
+            if (event.key === 'r') { // Tecla de reinicio de puzzle o Partida
+                if (puzzleActive && levelPuzzle.timeLimit <= 0) {
+                    levelPuzzle.restart(); // Reinicia el puzzle
                 }
             }
 
@@ -260,8 +272,8 @@
         // Listener para clicks del mouse: se redirige al puzzle cuando esté activo
         const canvas = document.getElementById('canvas');
         canvas.addEventListener("click", (event) => {
-            if (puzzleActive == true && puzzleInstance != null) {
-                puzzleInstance.mouseHandler(event, canvas);
+            if (puzzleActive == true && levelPuzzle != null) {
+                levelPuzzle.mouseControl(event, canvas);
             }
         });
     }
@@ -273,18 +285,16 @@
     
         if (stat > max_stat)  stat = max_stat;
       
-        // Calcula el porcentaje de vida del jugador, usado para saber hasta donde se tiene que llegar la barra de vida.
+        // Calcula el porcentaje restante de la estadistica
         let ratio = stat / max_stat;
       
-        // Dibuja el fondo de la barra (zona de vida "perdida")
+        // Fondo de la barra
         ctx.fillStyle = "red";
         ctx.fillRect(barX, barY, barWidth, barHeight);
-    
-        // Dibuja el borde de la barra
+        // Borde de la barra
         ctx.strokeStyle = "black";
         ctx.strokeRect(barX, barY, barWidth, barHeight);
       
-        // Dibuja la parte que representa la vida actual
         if (stat >= 0 && stat <= max_stat)
         {
             ctx.fillStyle = color;
@@ -305,15 +315,12 @@
     function drawPuzzleOverlay(ctx) {
         ctx.fillStyle = "rgba(0,0,0,0.8)"; // Dibuja un overlay semitransparente 
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-        if (puzzleInstance) {
-            puzzleInstance.draw(ctx);
+        if (levelPuzzle) {
+            levelPuzzle.draw(ctx);
         }
-        ctx.font = "16px Arial";
-        ctx.fillStyle = "#fff";
-        ctx.fillText("Presiona ESC para salir del puzzle", 20, canvasHeight - 20);
     }
 
-    function isPlayerNearPuzzle() {
+    function isPuzzleNear() { // Función que verifica si el puzzle está cerca del jugador
         const max_d = 2; // Variable usada como umbral como máxima distancia al puzzle
         for (let actor of game.actors) {
             if (actor.type === "puzzle") {

@@ -22,10 +22,12 @@ class Puzzle {
     this.tileSize = 150;
     this.boardSize = 3;
     this.board = [1, 2, 3, 4, 5, 6, 7, 8, 0]; //Estado por defecto del tablero: fichas del 1 al 8, y 0 representa el espacio vacío
-    this.timeLimit = 300; // 5 minutos en segundos
-    this.set_timer = null;
+    this.timeLimit; // Tiempo límite en segundos
+    this.set_timer;
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
+    this.puzzleCompleated = false;
+
 
     //Coordenadas en píxeles de cada casilla en el tablero de 3x3
     this.positionMap = {
@@ -54,8 +56,13 @@ class Puzzle {
   }
 
   init() {
-    this.shuffle();
-    this.startTimer();
+    if (this.puzzleCompleated == false) { // Si el puzzle no ha sido completado
+      this.shuffle();
+      this.restart(); // Reinicia el temporizador
+    }
+    else {
+      this.draw(ctx); // Si el puzzle ya ha sido completado, se dibuja el puzzle
+    }
   }
 
   shuffle() {
@@ -90,22 +97,22 @@ class Puzzle {
   }
 
   startTimer() {
-    if (this.set_timer) clearInterval(this.set_timer); // Si existe un tiempo, reiniciar para empezar con los 6 min iniciales
+    if (this.set_timer) clearInterval(this.set_timer); // Si existe un tiempo, reiniciar para empezar con los 3 min iniciales
     this.set_timer = setInterval(() => this.timer(), 1000);
   }
 
   timer() {
     if (this.timeLimit <= 0) { //Si el tiempo se agota
       clearInterval(this.set_timer);
-      alert("¡Tiempo agotado! ¡Inténtalo de nuevo!");
-      this.restart();
+      // No llamamos reiniciar, forzando a que el jugador reinicie el puzzle
+      this.puzzleCompleated = false; // Cambia el estado a no completado
       return;
     }
     this.timeLimit--;
   }
 
   restart() {
-    this.timeLimit = 300; // 5 Minutos
+    this.timeLimit = 180; // 3 Minutos
     clearInterval(this.set_timer); // Detiene el temporizador actual
     this.startTimer(); // Inicia un nuevo temporizador
   }
@@ -116,23 +123,13 @@ class Puzzle {
     let puzzleX = (this.canvasWidth - puzzleWidth) / 2;
     let puzzleY = (this.canvasHeight - puzzleHeight) / 2;
 
-    // Fondo del puzzle
-    ctx.fillStyle = "#141414";
-    ctx.fillRect(puzzleX, puzzleY, puzzleWidth, puzzleHeight);
+    // Guardamos las coordenadas en el objeto para poder manipularlas con el mouse
+    this.puzzleX = puzzleX;
+    this.puzzleY = puzzleY;
 
-    // Dibujar líneas de la cuadrícula
-    ctx.strokeStyle = "#fff";
-    for (let i = 0; i <= this.boardSize; i++) {
-      ctx.beginPath();
-      ctx.moveTo(puzzleX, puzzleY + i * this.tileSize);
-      ctx.lineTo(puzzleX + puzzleWidth, puzzleY + i * this.tileSize);
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.moveTo(puzzleX + i * this.tileSize, puzzleY);
-      ctx.lineTo(puzzleX + i * this.tileSize, puzzleY + puzzleHeight);
-      ctx.stroke();
-    }
+    // Fondo de cada ficha
+    ctx.fillRect(puzzleX, puzzleY, puzzleWidth, puzzleHeight); // Fondo del puzzle
+    ctx.fillStyle = "#00ff88"; // Color de las líneas
 
     // Dibujar cada ficha
     ctx.font = "100px Courier New";
@@ -159,21 +156,29 @@ class Puzzle {
     let secString = seconds < 10 ? "0" + seconds : seconds;
     ctx.fillStyle = "#fff";
     ctx.font = "20px Arial";
-    ctx.fillText(minString + ":" + secString, puzzleX + puzzleWidth - 40, puzzleY + 20);
+    ctx.fillText(minString + ":" + secString, puzzleX + puzzleWidth + 30, puzzleY + 70);
 
     // Si el puzzle está resuelto, muestra un mensaje
     if (this.checkWinCondition()) {
       clearInterval(this.set_timer);
       ctx.fillStyle = "#fff";
       ctx.font = "30px Arial";
-      ctx.fillText("¡Felicidades! Puzzle resuelto.", this.canvasWidth / 2, puzzleY - 20);
+      ctx.fillText("Felicidades! Puzzle resuelto, Use ESC para salir", this.canvasWidth / 2, puzzleY - 20);
+      if (!this.puzzleCompleated) {
+        this.puzzleCompleated = true; // Cambia el estado a completado
+      }
+    }
+    else if (this.timeLimit <= 0) { // Si el tiempo se agota
+      ctx.fillStyle = "#fff";
+      ctx.font = "30px Arial";
+      ctx.fillText("Puzzle fallido, Use 'r' para reintentar", this.canvasWidth / 2, puzzleY - 20);
     }
   }
 
   //Método que mueve una ficha si es posible 
   moveTile(id) {
     const currentPosition = this.board.indexOf(id);
-    const targetPosition = this.whereCanTo(currentPosition);
+    let targetPosition = this.ableToMove(this.board.indexOf(id));
     if (targetPosition !== -1) {
       // Intercambiar la ficha con el espacio vacío usando this.board
       this.board[targetPosition] = id;
@@ -185,21 +190,29 @@ class Puzzle {
         tile.style.left = this.positionMap[targetPosition].left + "px";
         tile.style.top = this.positionMap[targetPosition].top + "px";
       }
-
-      if (this.checkWinCondition()) {
-        clearInterval(this.set_timer);
-        alert("¡Felicidades! ¡Has completado el rompecabezas!");
-      }
     }
   }
 
-   mouseHandler(event, canvas) {
+
+  ableToMove(currentPosition) {
+    let emptyIndex = this.board.indexOf(0); // Se busca el espació vació en el puzzle
+    let possibleMoves = this.movementRules[currentPosition]; // Revisamos las reglas establecidas para ver el siguiente movimiento
+    
+    // Si el índice del espacio vacío está en los movimientos permitidos, se retorna ese índice
+    if (possibleMoves && possibleMoves.includes(emptyIndex)) {
+      return emptyIndex;
+    }
+    
+    // Si no, se retorna -1 indicando que no es posible mover la ficha a ese espacio
+    return -1;
+   }
+
+   mouseControl(event, canvas) {
     // Obtener las coordenadas del clic en el canvas
     const rect = canvas.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
 
-    // Verificar si el clic se realizó dentro del área del puzzle
     if (
       mouseX >= this.puzzleX &&
       mouseX <= this.puzzleX + this.boardSize * this.tileSize &&
