@@ -23,4 +23,73 @@ class Dron extends Enemy {
             }
         };
     }
+
+    update(level, deltaTime) {
+        const distance = this.position.distanceTo(game.player.position);
+        //Verificar el estado del enemigo
+        if (distance > 10) {
+            this.state = "idle";
+        }
+        else if (overlapRectangles(this.hitBox, game.player.hitBox)) {
+            this.state = "attack";
+        }
+        else if (this.state == "stunned") {
+            // Aturdimiento del enemigo (Faltante)
+        }
+        else {
+            this.state = "chase";
+        }
+
+        if (this.state === "chase") {
+            let dir = game.player.position.minus(this.position).unit_V();
+            this.velocity = dir.times(this.speed);
+
+            // Calcular la nueva posición
+            let newPosition = this.position.plus(this.velocity.times(deltaTime));
+
+            // Detectar dirección principal y activar animación correspondiente
+            if (Math.abs(dir.x) > Math.abs(dir.y)) {
+                // Movimiento horizontal
+                if (dir.x > 0) {
+                    this.startMovement("right");
+                } else {
+                    this.startMovement("left");
+                }
+            } else {
+                // Movimiento vertical
+                if (dir.y > 0) {
+                    this.startMovement("down");
+                } else {
+                    this.startMovement("up");
+                }
+            }
+
+            // Aplicar movimiento si no hay pared
+            if (!level.contact(newPosition, this.size, 'wall')) {
+                this.position = newPosition;
+            }
+        }
+
+
+
+        if (this.state === "attack") {
+            this.velocity = new Vec(0, 0);
+            // Atacar al jugador
+            if (this.attackTimmer < this.nextAttack) {
+                this.attackTimmer = 0;
+                game.player.takeDamage(this.damage);
+            }
+            else {
+                this.attackTimmer += deltaTime;
+            }
+        }
+
+        if (this.state == "idle") {
+            this.velocity = new Vec(0.0, 0.0);
+        }
+
+        this.hitBox.position = this.position; // Actualizar la posición del hitbox del enemigo
+        this.hitBox.update(); // Actualizar el hitbox del enemigo
+        this.updateFrame(deltaTime);
+    }
 }

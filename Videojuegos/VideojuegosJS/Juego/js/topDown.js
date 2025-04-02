@@ -28,6 +28,8 @@ let playerSpeed = 0.005;
 // Each unit in the level file will be drawn as these many square pixels
 const scale = 30;
 
+let puzzleActive = false;
+let levelPuzzle = null; // Puzzle no definido para el nivel
 
 class Game {
     constructor(state, level) {
@@ -251,7 +253,8 @@ const levelChars = {
         rect: new Rect(0, 0, 17.6, 19), // Valores para las animaciones del enemigo cuerpo a cuerpo
         sheetCols: 10,
         startFrame: [0, 0]
-    }
+    },
+    
 };
 
 
@@ -277,6 +280,33 @@ function gameStart() {
 }
 
 function setEventListeners() {
+  
+    if (event.key === "Escape") {
+        if (puzzleActive) { // Si el puzzle está activo
+            puzzleActive = false;
+        }
+        return;
+    }
+    else {
+        //pausa el juego si el puzzle no está activo
+    }
+            
+            
+    if (event.key === 'f') { // Si el jugador esta cerca del objeto que activa el puzzle.
+        if (isPuzzleNear()) {
+            if (!puzzleActive){ // Si el puzzle no está activo
+                puzzleActive = true; // Activa el puzzle
+                levelPuzzle.init(); // Inicializa el puzzle
+            }
+        }
+    }
+
+    if (event.key === 'r') { // Tecla de reinicio de puzzle o Partida
+        if (puzzleActive && levelPuzzle.timeLimit <= 0) {
+            levelPuzzle.restart(); // Reinicia el puzzle
+        }
+    }
+  
     window.addEventListener("keydown", event => {
         if (event.key === 'w') game.player.startMovement("up");
         if (event.key === 'a') game.player.startMovement("left");
@@ -298,6 +328,13 @@ function setEventListeners() {
         if (event.key === 'ArrowLeft') game.player.stopAttack("left");
         if (event.key === 'ArrowDown') game.player.stopAttack("down");
         if (event.key === 'ArrowRight') game.player.stopAttack("right");
+    });
+  
+    const canvas = document.getElementById('canvas');
+    canvas.addEventListener("click", (event) => {
+        if (puzzleActive == true && levelPuzzle != null) {
+            levelPuzzle.mouseControl(event, canvas);
+        }
     });
 }
 
@@ -337,6 +374,27 @@ function drawBar(stat, max_stat, color, barX, barY){ // Función para dibujar la
     
 }
 
+function drawPuzzleOverlay(ctx) {
+   ctx.fillStyle = "rgba(0,0,0,0.8)"; // Dibuja un overlay semitransparente 
+   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+   if (levelPuzzle) {
+    levelPuzzle.draw(ctx);
+   }
+}
+
+function isPuzzleNear() { // Función que verifica si el puzzle está cerca del jugador
+  const max_d = 2; // Variable usada como umbral como máxima distancia al puzzle
+  for (let actor of game.actors) {
+    if (actor.type === "puzzle") {
+      let distance = game.player.position.distanceTo(actor.position);
+      if (distance < max_d) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 // Function that will be called for the game loop
 function updateCanvas(frameTime) {
     if (frameStart === undefined) {
@@ -356,3 +414,8 @@ function updateCanvas(frameTime) {
 
 // Call the start function to initiate the game
 main();
+
+    
+    
+
+    
