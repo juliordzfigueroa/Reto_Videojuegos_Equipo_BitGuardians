@@ -150,7 +150,6 @@ class Player extends AnimatedObject {
 
     // Método para que el jugador reciba daño
     takeDamage(damage){
-        let currentTime = performance.now();
         if (this.shield > 0) // Si el jugador tiene escudo, este recibe el daño.
             {
                 this.shield -= damage;
