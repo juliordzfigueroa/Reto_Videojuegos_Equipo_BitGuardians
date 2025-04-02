@@ -62,21 +62,21 @@ class Player extends AnimatedObject {
                 status: false,
                 repeat: false,
                 duration: 100,
-                moveFrames: [60, 63],
+                moveFrames: [61, 63],
                 idleFrames: [60, 60]
             },
             leftattack: {
                 status: false,
                 repeat: false,
                 duration: 100,
-                moveFrames: [70, 74],
+                moveFrames: [71, 74],
                 idleFrames: [70, 70]
             },
             rightattack: {
                 status: false,
                 repeat: false,
                 duration: 100,
-                moveFrames: [80, 84],
+                moveFrames: [81, 84],
                 idleFrames: [80, 80]
             },
             upattack: {

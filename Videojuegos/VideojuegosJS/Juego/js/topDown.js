@@ -43,9 +43,14 @@ class Game {
         lastRoom = currentRoom;
         currentRoom = newRoom;
         this.level = new Level(GAME_LEVELS[currentRoom]);
+
+        // Reutilizar el jugador existente
         this.level.player = this.player;
+
+        // Actualizar enemigos y actores del nuevo nivel
         this.enemies = this.level.enemies;
         this.actors = this.level.actors;
+
         if (this.level.enemies.length > 0) {
             for (let actor of this.level.actors) {
                 if (actor instanceof Door) {
@@ -53,7 +58,7 @@ class Game {
                 }
             }
         }
-        gameStart();
+        //gameStart();
     }
 
     update(deltaTime) {
@@ -67,53 +72,8 @@ class Game {
 
         let currentActors = this.actors;
 
-        // Recorremos todos los enemigos del juego
-        for (let i = 0; i < this.enemies.length; i++) {
-            const enemyA = this.enemies[i]; // Enemigo actual
-
-            // Comparamos enemyA contra los demas enemigos
-            for (let j = i + 1; j < this.enemies.length; j++) {
-                const enemyB = this.enemies[j];
-
-                // Si enemyA y enemyB se colisionan
-                if (overlapRectangles(enemyA, enemyB)) {
-
-                    //Calculamos la distancia entre los enemigos en X y Y
-                    const distanciaX= enemyA.position.x - enemyB.position.x;
-                    const distaanciaY = enemyA.position.y - enemyB.position.y;
-
-                    //Calculamos la colision en X y Y
-                    const overlapX = (enemyA.size.x + enemyB.size.x) / 2 - Math.abs(distanciaX);
-                    const overlapY = (enemyA.size.y + enemyB.size.y) / 2 - Math.abs(distaanciaY);
-
-                    //Decidimos en qué eje separarlos. Dependiendo cual overlap sea menor
-                    if (overlapX < overlapY) {
-                        const separation = overlapX / 2; //Para repartir la colision entre dos
-
-                        //Si enemyA está a la izquierda de enemyB
-                        if (distanciaX < 0) {
-                            enemyA.position.x -= separation;
-                            enemyB.position.x += separation;
-                        } else {
-                            enemyA.position.x += separation;
-                            enemyB.position.x -= separation;
-                        }
-
-                    } else {
-                        const separation = overlapY / 2; 
-                        // Si enemyA está arriba de enemyB
-                        if (distaanciaY < 0) {
-                            enemyA.position.y -= separation;
-                            enemyB.position.y += separation;
-                        } else {
-                            enemyA.position.y += separation;
-                            enemyB.position.y -= separation;
-                        }
-                    }
-                }
-            }
-        }
-
+        // Evitar que los enemigos se sobrepongan entre sí
+        overLapEnemies(this.enemies);
 
         // Detect collisions
         for (let actor of currentActors) {
@@ -128,6 +88,9 @@ class Game {
                     }
 
                     const doorChar = actor.char;
+
+                    // Guardar la posición de la puerta antes de cambiar de nivel
+                    this.lastDoorPosition = { x: actor.position.x, y: actor.position.y };
 
                     if (currentRoom === "main") {
                         if (["<", "=", ">"].includes(doorChar)) {
@@ -368,6 +331,45 @@ function updateCanvas(frameTime) {
     frameStart = frameTime;
     requestAnimationFrame(updateCanvas);
 }
+
+function overLapEnemies(enemies) {
+    for (let i = 0; i < enemies.length; i++) {
+        const enemyA = enemies[i];
+
+        for (let j = i + 1; j < enemies.length; j++) {
+            const enemyB = enemies[j];
+
+            if (overlapRectangles(enemyA, enemyB)) {
+                const distanciaX = enemyA.position.x - enemyB.position.x;
+                const distanciaY = enemyA.position.y - enemyB.position.y;
+
+                const overlapX = (enemyA.size.x + enemyB.size.x) / 2 - Math.abs(distanciaX);
+                const overlapY = (enemyA.size.y + enemyB.size.y) / 2 - Math.abs(distanciaY);
+
+                if (overlapX < overlapY) {
+                    const separation = overlapX / 2;
+                    if (distanciaX < 0) {
+                        enemyA.position.x -= separation;
+                        enemyB.position.x += separation;
+                    } else {
+                        enemyA.position.x += separation;
+                        enemyB.position.x -= separation;
+                    }
+                } else {
+                    const separation = overlapY / 2;
+                    if (distanciaY < 0) {
+                        enemyA.position.y -= separation;
+                        enemyB.position.y += separation;
+                    } else {
+                        enemyA.position.y += separation;
+                        enemyB.position.y -= separation;
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 // Call the start function to initiate the game
 main();
