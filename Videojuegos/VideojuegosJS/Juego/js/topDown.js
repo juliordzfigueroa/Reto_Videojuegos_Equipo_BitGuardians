@@ -28,6 +28,8 @@ let playerSpeed = 0.005;
 // Each unit in the level file will be drawn as these many square pixels
 const scale = 30;
 
+let puzzleActive = false;
+let levelPuzzle; // Puzzle no definido para el nivel
 
 class Game {
     constructor(state, level) {
@@ -36,6 +38,7 @@ class Game {
         this.player = level.player;
         this.enemies = level.enemies;
         this.actors = level.actors;
+        levelPuzzle = new Puzzle(canvasWidth, canvasHeight);
         //console.log(level);
     }
     
@@ -43,10 +46,22 @@ class Game {
         lastRoom = currentRoom;
         currentRoom = newRoom;
         this.level = new Level(GAME_LEVELS[currentRoom]);
+
+        // Reutilizar el jugador existente
         this.level.player = this.player;
-        this.level.enemies = this.enemies;
-        this.actors = this.actors;
-        gameStart();
+
+        // Actualizar enemigos y actores del nuevo nivel
+        this.enemies = this.level.enemies;
+        this.actors = this.level.actors;
+
+        if (this.level.enemies.length > 0) {
+            for (let actor of this.level.actors) {
+                if (actor instanceof Door) {
+                    actor.close();
+                }
+            }
+        }
+        //gameStart();
     }
 
     update(deltaTime) {
@@ -60,53 +75,8 @@ class Game {
 
         let currentActors = this.actors;
 
-        // Recorremos todos los enemigos del juego
-        for (let i = 0; i < this.enemies.length; i++) {
-            const enemyA = this.enemies[i]; // Enemigo actual
-
-            // Comparamos enemyA contra los demas enemigos
-            for (let j = i + 1; j < this.enemies.length; j++) {
-                const enemyB = this.enemies[j];
-
-                // Si enemyA y enemyB se colisionan
-                if (overlapRectangles(enemyA, enemyB)) {
-
-                    //Calculamos la distancia entre los enemigos en X y Y
-                    const distanciaX= enemyA.position.x - enemyB.position.x;
-                    const distaanciaY = enemyA.position.y - enemyB.position.y;
-
-                    //Calculamos la colision en X y Y
-                    const overlapX = (enemyA.size.x + enemyB.size.x) / 2 - Math.abs(distanciaX);
-                    const overlapY = (enemyA.size.y + enemyB.size.y) / 2 - Math.abs(distaanciaY);
-
-                    //Decidimos en qué eje separarlos. Dependiendo cual overlap sea menor
-                    if (overlapX < overlapY) {
-                        const separation = overlapX / 2; //Para repartir la colision entre dos
-
-                        //Si enemyA está a la izquierda de enemyB
-                        if (distanciaX < 0) {
-                            enemyA.position.x -= separation;
-                            enemyB.position.x += separation;
-                        } else {
-                            enemyA.position.x += separation;
-                            enemyB.position.x -= separation;
-                        }
-
-                    } else {
-                        const separation = overlapY / 2; 
-                        // Si enemyA está arriba de enemyB
-                        if (distanciaY < 0) {
-                            enemyA.position.y -= separation;
-                            enemyB.position.y += separation;
-                        } else {
-                            enemyA.position.y += separation;
-                            enemyB.position.y -= separation;
-                        }
-                    }
-                }
-            }
-        }
-
+        // Evitar que los enemigos se sobrepongan entre sí
+        overLapEnemies(this.enemies);
 
         // Detect collisions
         for (let actor of currentActors) {
@@ -115,7 +85,15 @@ class Game {
                     console.log("Hit a wall");
                 }
                 if (actor.type == 'door') {
+                    if (!actor.isOpen) {
+                        console.log("Puerta cerrada. No puedes salir.");
+                        return;
+                    }
+
                     const doorChar = actor.char;
+
+                    // Guardar la posición de la puerta antes de cambiar de nivel
+                    this.lastDoorPosition = { x: actor.position.x, y: actor.position.y };
 
                     if (currentRoom === "main") {
                         if (["<", "=", ">"].includes(doorChar)) {
@@ -124,6 +102,9 @@ class Game {
                         } else if (["4", "5", "6"].includes(doorChar)) {
                             lastDoorChar = doorChar;
                             this.moveToLevel("dronRoom");
+                        } else if (["7", "8", "9"].includes(doorChar)) {
+                            lastDoorChar = doorChar;
+                            this.moveToLevel("puzzleRoom");
                         }
                     } else {
                         this.player.setExitPosition();
@@ -133,6 +114,7 @@ class Game {
                 }
             }
         }
+
 
         // Update player stats bars
         drawBar(game.player.hp, game.player.max_hp, 'green', 40, 480);
@@ -150,13 +132,10 @@ class Game {
         }
         for (let enemy of this.enemies) {
             enemy.draw(ctx, scale);
-            let enemyHitBox = new HitBox(enemy.position.x, enemy.position.y, enemy.size.x, enemy.size.y);
-            enemyHitBox.drawHitBox(ctx, scale);
+            enemy.hitBox.drawHitBox(ctx,scale);
         }
         this.player.draw(ctx, scale);
-        let playerHitBox = new HitBox(this.player.position.x, this.player.position.y, this.player.size.x, this.player.size.y);
-        playerHitBox.drawHitBox(ctx, scale);
-
+        this.player.hitBox.drawHitBox(ctx, scale);
     }
 }
 
@@ -173,9 +152,8 @@ function createWallTile(x) {
 function createDoorTile(x, y, char) {
     //Function to create a wall tile with the specified sprite
     return {
-        objClass: GameObject,
+        objClass: Door,
         label: "door",
-        sprite: '../assets/sprites/escenarios/door_tileset.png',
         rect: new Rect(x, y, 16, 16),
         char: char
     };
@@ -207,17 +185,17 @@ const levelChars = {
     "2": createDoorTile(1, 0, "2"),
     "3": createDoorTile(2, 0, "3"),
     //Down
-    "4": createDoorTile(0, 5, "4"),
-    "5": createDoorTile(1, 5, "5"),
-    "6": createDoorTile(2, 5, "6"),
+    "4": createDoorTile(0, 1, "4"),
+    "5": createDoorTile(1, 1, "5"),
+    "6": createDoorTile(2, 1, "6"),
     //Right
-    "7": createDoorTile(0, 6, "7"),
-    "8": createDoorTile(1, 6, "8"),
-    "9": createDoorTile(2, 6, "9"),
+    "7": createDoorTile(0, 2, "7"),
+    "8": createDoorTile(1, 2, "8"),
+    "9": createDoorTile(2, 2, "9"),
     //Left
-    ">": createDoorTile(0, 7, ">"),
-    "=": createDoorTile(1, 7, "="), 
-    "<": createDoorTile(2, 7, "<"),
+    ">": createDoorTile(0, 3, ">"),
+    "=": createDoorTile(1, 3, "="), 
+    "<": createDoorTile(2, 3, "<"),
     //Cables
     "C": {
         objClass: AnimatedObject,
@@ -251,6 +229,14 @@ const levelChars = {
         rect: new Rect(0, 0, 17.6, 19), // Valores para las animaciones del enemigo cuerpo a cuerpo
         sheetCols: 10,
         startFrame: [0, 0]
+    },
+    "p": {
+        objClass: GameObject,
+        label: 'puzzle',
+        sprite: '../assets/sprites/escenarios/computer_spritesheet.png',  // Valores para el asset de la computadora donde estará el puzzle.
+        rect: new Rect(0, 0, 16, 16),
+        sheetCols: 2,
+        startFrame: [0, 0]
     }
 };
 
@@ -277,7 +263,34 @@ function gameStart() {
 }
 
 function setEventListeners() {
+  
     window.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+            if (puzzleActive) { // Si el puzzle está activo
+                puzzleActive = false;
+            }
+            return;
+        }
+        else {
+            //pausa el juego si el puzzle no está activo
+        }
+                
+                
+        if (event.key === 'f') { // Si el jugador esta cerca del objeto que activa el puzzle.
+            if (isPuzzleNear()) {
+                if (!puzzleActive){ // Si el puzzle no está activo
+                    puzzleActive = true; // Activa el puzzle
+                    levelPuzzle.init(); // Inicializa el puzzle
+                }
+            }
+        }
+    
+        if (event.key === 'r') { // Tecla de reinicio de puzzle o Partida
+            if (puzzleActive && levelPuzzle.timeLimit <= 0) {
+                levelPuzzle.restart(); // Reinicia el puzzle
+            }
+        }
+
         if (event.key === 'w') game.player.startMovement("up");
         if (event.key === 'a') game.player.startMovement("left");
         if (event.key === 's') game.player.startMovement("down");
@@ -286,7 +299,7 @@ function setEventListeners() {
         if (event.key === 'ArrowLeft') game.player.startAttack("left");
         if (event.key === 'ArrowDown') game.player.startAttack("down");
         if (event.key === 'ArrowRight') game.player.startAttack("right");
-        if (event.key === 'f') game.player.takeDamage(20); // Usado para las pruebas de daño
+        if (event.key === 'e') game.player.takeDamage(20); // Usado para las pruebas de daño
     });
 
     window.addEventListener("keyup", event => {
@@ -298,6 +311,13 @@ function setEventListeners() {
         if (event.key === 'ArrowLeft') game.player.stopAttack("left");
         if (event.key === 'ArrowDown') game.player.stopAttack("down");
         if (event.key === 'ArrowRight') game.player.stopAttack("right");
+    });
+  
+    const canvas = document.getElementById('canvas');
+    canvas.addEventListener("click", (event) => {
+        if (puzzleActive == true && levelPuzzle != null) {
+            levelPuzzle.mouseControl(event, canvas);
+        }
     });
 }
 
@@ -337,6 +357,27 @@ function drawBar(stat, max_stat, color, barX, barY){ // Función para dibujar la
     
 }
 
+function drawPuzzleOverlay(ctx) {
+   ctx.fillStyle = "rgba(0,0,0,0.8)"; // Dibuja un overlay semitransparente 
+   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+   if (puzzleActive) { // Si el puzzle está activo
+        levelPuzzle.draw(ctx);
+   }
+}
+
+function isPuzzleNear() { // Función que verifica si el puzzle está cerca del jugador
+  const max_d = 2; // Variable usada como umbral como máxima distancia al puzzle
+  for (let actor of game.actors) {
+    if (actor.type === "puzzle") {
+      let distance = game.player.hitBox.position.distanceTo(actor.position);
+      if (distance < max_d) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 // Function that will be called for the game loop
 function updateCanvas(frameTime) {
     if (frameStart === undefined) {
@@ -346,13 +387,64 @@ function updateCanvas(frameTime) {
     //console.log(`Delta Time: ${deltaTime}`);
 
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    game.update(deltaTime);
-    game.draw(ctx, scale);
+
+    if (puzzleActive == true) {
+        // Mientras el puzzle esté activo, se muestra el overlay y se desactivan otros controles
+        game.draw(ctx, scale);
+        drawPuzzleOverlay(ctx);
+    } else {  
+        game.draw(ctx, scale);  
+        game.update(deltaTime);
+    }
 
     // Update time for the next frame
     frameStart = frameTime;
     requestAnimationFrame(updateCanvas);
 }
 
+function overLapEnemies(enemies) {
+    for (let i = 0; i < enemies.length; i++) {
+        const enemyA = enemies[i];
+
+        for (let j = i + 1; j < enemies.length; j++) {
+            const enemyB = enemies[j];
+
+            if (overlapRectangles(enemyA, enemyB)) {
+                const distanciaX = enemyA.position.x - enemyB.position.x;
+                const distanciaY = enemyA.position.y - enemyB.position.y;
+
+                const overlapX = (enemyA.size.x + enemyB.size.x) / 2 - Math.abs(distanciaX);
+                const overlapY = (enemyA.size.y + enemyB.size.y) / 2 - Math.abs(distanciaY);
+
+                if (overlapX < overlapY) {
+                    const separation = overlapX / 2;
+                    if (distanciaX < 0) {
+                        enemyA.position.x -= separation;
+                        enemyB.position.x += separation;
+                    } else {
+                        enemyA.position.x += separation;
+                        enemyB.position.x -= separation;
+                    }
+                } else {
+                    const separation = overlapY / 2;
+                    if (distanciaY < 0) {
+                        enemyA.position.y -= separation;
+                        enemyB.position.y += separation;
+                    } else {
+                        enemyA.position.y += separation;
+                        enemyB.position.y -= separation;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 // Call the start function to initiate the game
 main();
+
+    
+    
+
+    
