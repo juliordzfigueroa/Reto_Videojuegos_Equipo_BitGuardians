@@ -75,11 +75,11 @@ class Game {
 
                     //Calculamos la distancia entre los enemigos en X y Y
                     const distanciaX= enemyA.position.x - enemyB.position.x;
-                    const distaanciaY = enemyA.position.y - enemyB.position.y;
+                    const distanciaY = enemyA.position.y - enemyB.position.y;
 
                     //Calculamos la colision en X y Y
                     const overlapX = (enemyA.size.x + enemyB.size.x) / 2 - Math.abs(distanciaX);
-                    const overlapY = (enemyA.size.y + enemyB.size.y) / 2 - Math.abs(distaanciaY);
+                    const overlapY = (enemyA.size.y + enemyB.size.y) / 2 - Math.abs(distanciaY);
 
                     //Decidimos en qué eje separarlos. Dependiendo cual overlap sea menor
                     if (overlapX < overlapY) {
@@ -152,13 +152,10 @@ class Game {
         }
         for (let enemy of this.enemies) {
             enemy.draw(ctx, scale);
-            let enemyHitBox = new HitBox(enemy.position.x, enemy.position.y, enemy.size.x, enemy.size.y);
-            enemyHitBox.drawHitBox(ctx, scale);
+            enemy.hitBox.drawHitBox(ctx,scale);
         }
         this.player.draw(ctx, scale);
-        let playerHitBox = new HitBox(this.player.position.x, this.player.position.y, this.player.size.x, this.player.size.y);
-        playerHitBox.drawHitBox(ctx, scale);
-
+        this.player.hitBox.drawHitBox(ctx, scale);
     }
 }
 
