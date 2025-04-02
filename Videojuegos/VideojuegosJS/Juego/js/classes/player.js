@@ -21,6 +21,9 @@ class Player extends AnimatedObject {
         this.state = "idle"; 
         this.totalHP = this.hp + this.shield; // Atributo de vida total del jugador, el cual será la suma de la vida y el escudo del jugador
         this.hasEMP = false; // Atributo de si el jugador tiene un EMP o no
+        // Variables de la entrada de y salida al entrar a una puerta.
+        this.exitPosition = undefined;
+        this.enterPosition = undefined;
 
         // Movimientos del jugador
         this.movement = {
@@ -91,6 +94,12 @@ class Player extends AnimatedObject {
         };
         
     }
+
+    setExitPosition() {
+        this.exitPosition = new Vec(this.position.x, this.position.y);
+    }
+
+    
 
     update(level, deltaTime) {
         // Determinar donde termina el jugador después de que se mueve
@@ -176,3 +185,4 @@ class Player extends AnimatedObject {
         enemy.state = "stunned"; // Cambiar el estado del enemigo a aturdido
     }
 }
+
