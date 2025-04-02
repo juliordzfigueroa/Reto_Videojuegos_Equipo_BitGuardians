@@ -51,12 +51,9 @@
     
         update(deltaTime) {
             this.player.update(this.level, deltaTime);
-            let playerState = this.player.state;
-            console.log(playerState);
+            console.log(this.player.totalHP);
             for (let enemy of this.enemies) {
                 enemy.update(this.level, deltaTime);
-                let enemyCurrentState = enemy.state;
-                console.log(enemyCurrentState);
             }        
             for (let actor of this.actors) {
                 actor.update(this.level, deltaTime);
@@ -81,6 +78,7 @@
                     }
                 }
             }
+
             // Actualizar las barras de las estadisticas de jugador
             drawBar(game.player.hp, game.player.max_hp, 'green', 40, 480); // Draw the health bar of the player in the canvas
             drawBar(game.player.shield, game.player.max_shield, 'blue', 40, 510) // Draw the sheild bar of the player in the canvas 
@@ -255,7 +253,7 @@
             if (event.key === 'ArrowLeft') game.player.startAttack("left");
             if (event.key === 'ArrowDown') game.player.startAttack("down");
             if (event.key === 'ArrowRight') game.player.startAttack("right");
-            if (event.key === 'e') game.player.takeDamage(20); // Usado para las pruebas de daño
+            if (event.key === 'e') game.player.stunEnemy(); // Usado para las pruebas de daño
         });
     
         window.addEventListener("keyup", event => {

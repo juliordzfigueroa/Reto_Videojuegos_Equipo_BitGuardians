@@ -1,6 +1,9 @@
 class Robot extends Enemy {
     constructor(color, width, height, x, y, type) {
         super("red", width*2, height*2, x, y, "robot", 100, 10, 1.5, 0.002, 2000);
+        this.attackTimmer; // Tiempo de ataque del enemigo por defecto
+        this.nextAttack = 1500; // Siguiente ataque del enemigo por defecto
+        this.hitBox = new HitBox(this.position.x, this.position.y, this.size.x*0.6, this.size.y*0.8); // Hitbox del enemigo robot
         // Movimientos del enemigo
         this.movement = {
             right: {
@@ -59,6 +62,7 @@ class Robot extends Enemy {
         }
 
         if (this.state === "chase") {
+            this.nextAttack = 0; // Reiniciar el temporizador de ataque al perseguir
             let dir = game.player.position.minus(this.position).unit_V(); // Normalizar la dirección hacia el jugador
             // Calcular la velocidad del enemigo
             this.velocity = dir.times(this.speed);
@@ -90,23 +94,33 @@ class Robot extends Enemy {
         }
 
 
-
         if (this.state === "attack") {
+            this.velocity = new Vec(0, 0); // Detener el movimiento al atacar
+            if (this.attackTimmer >= this.nextAttack) { // Si el temporizador de ataque ha llegado al tiempo de ataque
+                game.player.takeDamage(this.damage); // Aplica daño al jugador
+                this.attackTimmer = 0; // Reinicia el contador tras el ataque
+                this.nextAttack = 1500; // Reinicia el temporizador de ataque
+            }
+            this.attackTimmer += deltaTime;
+        }
+
+        if (this.state === "stunned") {
+            // El enemigo se queda quieto mientras aturdido
             this.velocity = new Vec(0, 0);
-            console.log(game.player.hp)
-            // Atacar al jugador
-            this.attackTimmer += deltaTime; // Aumentar el temporizador de ataque
-            if (this.attackTimmer >= this.nextAttack) {
-                game.player.takeDamage(this.damage); // Restar el daño al jugador
-                this.attackTimmer = 0; // Reiniciar el temporizador de ataque
+            this.stunTime -= deltaTime; // Reducir el tiempo de aturdimiento
+            if (this.stunTime <= 0) {
+                this.state = "idle"; // Cambiar al estado idle después del aturdimiento
+                this.stunTime = stunDuration; // Reiniciar el tiempo de aturdimiento
             }
         }
+    
 
         if (this.state == "idle") {
             this.velocity = new Vec(0.0, 0.0);
         }
 
-        this.hitBox.position = this.position; // Actualizar la posición del hitbox del enemigo
+        this.hitBox.position.x = this.position.x + 0.4; // Actualizar la posición del hitbox del enemigo
+        this.hitBox.position.y = this.position.y + 0.2; // Actualizar la posición del hitbox del enemigo
         this.hitBox.update(); // Actualizar el hitbox del enemigo
         this.updateFrame(deltaTime);
     }

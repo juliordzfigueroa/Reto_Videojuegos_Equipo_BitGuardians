@@ -13,15 +13,14 @@ class Enemy extends AnimatedObject {
         this.position = new Vec(x, y); // Initialize position
         this.velocity = new Vec(0.0, 0.0);
         this.hp = hp; // Atributo de vida del enemigo
+        this.damage = damage; // Atributo de daño del enemigo
+        this.range = range; // Atributo de rango del enemigo   
         this.attackTimmer = 0; // Tiempo de ataque del enemigo</p>
         this.nextAttack = 0; // Siguiente ataque del enemigo
         this.state = "idle"; // Estado del enemigo
         this.speed = speed; // Velocidad del enemigo
         this.stunTime = 0; // Tiempo de aturdimiento del enemigo por defecto
         this.state = "idle"; // Estado del enemigo por defecto
-        this.attackTimmer = 0; // Tiempo de ataque del enemigo por defecto
-        this.nextAttack = 3000; // Siguiente ataque del enemigo por defecto
-        this.hitBox = new HitBox(this.position.x, this.position.y, this.size.x, this.size.y); // Hitbox del enemigo por defecto
     }
 
     update() {
