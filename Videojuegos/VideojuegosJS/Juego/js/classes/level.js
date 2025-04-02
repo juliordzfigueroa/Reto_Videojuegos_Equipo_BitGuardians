@@ -13,6 +13,7 @@ class Level {
         this.width = rows[0].length;
         this.actors = [];
         this.enemies = [];
+        this.doors = []; // Nueva lista para almacenar puertas temporalmente
 
         // Fill the rows array with a label for the type of element in the cell
         this.rows = rows.map((row, y) => {
@@ -22,11 +23,14 @@ class Level {
                 return cellType;
             });
         });
+
+        // Configurar las puertas después de procesar todos los actores
+        this.setupDoors();
     }
 
     setupActor(item, x, y) {
         let objClass = item.objClass;
-        let actor = new objClass("grey", 1, 1, x, y, item.label);
+        let actor = new item.objClass("grey", 1, 1, x, y, item.label);
         let cellType = item.label;
 
         if (actor.type === "player") {
@@ -52,9 +56,10 @@ class Level {
         } else if (actor.type === "cable") {
             this.addBackgroundFloor(x, y);
             actor.setSprite(item.sprite, item.rect);
-            this.actors.push(actor); 
+            this.actors.push(actor);
         } else if (actor.type === "door") {
-            actor.setSprite(item.sprite, item.rect);
+            this.doors.push(actor); // Almacenar la puerta para configurarla después
+            actor.baseRect = item.rect; 
             if (item.char !== undefined) actor.char = item.char;
             this.actors.push(actor);
         } else if (actor.type === "powerup") {
@@ -63,6 +68,20 @@ class Level {
             cellType = "empty";
         }
         return cellType;
+    }
+
+    //Función para configurar las puertas después de procesar todos los actores
+    setupDoors() {
+        this.doors.forEach(door => {
+            if (this.enemies.length > 0) {
+                door.close();
+            } else {
+                door.open();
+            }
+            if (door.baseRect) {
+                door.setSprite(door.spritePath, door.baseRect);
+            }
+        });
     }
 
     addBackgroundFloor(x, y) {

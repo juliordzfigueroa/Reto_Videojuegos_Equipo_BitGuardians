@@ -44,8 +44,15 @@ class Game {
         currentRoom = newRoom;
         this.level = new Level(GAME_LEVELS[currentRoom]);
         this.level.player = this.player;
-        this.level.enemies = this.enemies;
-        this.actors = this.actors;
+        this.enemies = this.level.enemies;
+        this.actors = this.level.actors;
+        if (this.level.enemies.length > 0) {
+            for (let actor of this.level.actors) {
+                if (actor instanceof Door) {
+                    actor.close();
+                }
+            }
+        }
         gameStart();
     }
 
@@ -95,7 +102,7 @@ class Game {
                     } else {
                         const separation = overlapY / 2; 
                         // Si enemyA está arriba de enemyB
-                        if (distanciaY < 0) {
+                        if (distaanciaY < 0) {
                             enemyA.position.y -= separation;
                             enemyB.position.y += separation;
                         } else {
@@ -115,6 +122,11 @@ class Game {
                     console.log("Hit a wall");
                 }
                 if (actor.type == 'door') {
+                    if (!actor.isOpen) {
+                        console.log("Puerta cerrada. No puedes salir.");
+                        return;
+                    }
+
                     const doorChar = actor.char;
 
                     if (currentRoom === "main") {
@@ -124,6 +136,9 @@ class Game {
                         } else if (["4", "5", "6"].includes(doorChar)) {
                             lastDoorChar = doorChar;
                             this.moveToLevel("dronRoom");
+                        } else if (["7", "8", "9"].includes(doorChar)) {
+                            lastDoorChar = doorChar;
+                            this.moveToLevel("puzzleRoom");
                         }
                     } else {
                         this.player.setExitPosition();
@@ -133,6 +148,7 @@ class Game {
                 }
             }
         }
+
 
         // Update player stats bars
         drawBar(game.player.hp, game.player.max_hp, 'green', 40, 480);
@@ -173,9 +189,8 @@ function createWallTile(x) {
 function createDoorTile(x, y, char) {
     //Function to create a wall tile with the specified sprite
     return {
-        objClass: GameObject,
+        objClass: Door,
         label: "door",
-        sprite: '../assets/sprites/escenarios/door_tileset.png',
         rect: new Rect(x, y, 16, 16),
         char: char
     };
@@ -207,17 +222,17 @@ const levelChars = {
     "2": createDoorTile(1, 0, "2"),
     "3": createDoorTile(2, 0, "3"),
     //Down
-    "4": createDoorTile(0, 5, "4"),
-    "5": createDoorTile(1, 5, "5"),
-    "6": createDoorTile(2, 5, "6"),
+    "4": createDoorTile(0, 1, "4"),
+    "5": createDoorTile(1, 1, "5"),
+    "6": createDoorTile(2, 1, "6"),
     //Right
-    "7": createDoorTile(0, 6, "7"),
-    "8": createDoorTile(1, 6, "8"),
-    "9": createDoorTile(2, 6, "9"),
+    "7": createDoorTile(0, 2, "7"),
+    "8": createDoorTile(1, 2, "8"),
+    "9": createDoorTile(2, 2, "9"),
     //Left
-    ">": createDoorTile(0, 7, ">"),
-    "=": createDoorTile(1, 7, "="), 
-    "<": createDoorTile(2, 7, "<"),
+    ">": createDoorTile(0, 3, ">"),
+    "=": createDoorTile(1, 3, "="), 
+    "<": createDoorTile(2, 3, "<"),
     //Cables
     "C": {
         objClass: AnimatedObject,
