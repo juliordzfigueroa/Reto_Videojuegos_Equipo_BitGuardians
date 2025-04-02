@@ -29,7 +29,7 @@ let playerSpeed = 0.005;
 const scale = 30;
 
 let puzzleActive = false;
-let levelPuzzle = null; // Puzzle no definido para el nivel
+let levelPuzzle; // Puzzle no definido para el nivel
 
 class Game {
     constructor(state, level) {
@@ -38,6 +38,7 @@ class Game {
         this.player = level.player;
         this.enemies = level.enemies;
         this.actors = level.actors;
+        levelPuzzle = new Puzzle(canvasWidth, canvasHeight);
         //console.log(level);
     }
     
@@ -251,7 +252,14 @@ const levelChars = {
         sheetCols: 10,
         startFrame: [0, 0]
     },
-    
+    "p": {
+        objClass: GameObject,
+        label: 'puzzle',
+        sprite: '../assets/sprites/escenarios/computer_spritesheet.png',  // Valores para el asset de la computadora donde estará el puzzle.
+        rect: new Rect(0, 0, 16, 16),
+        sheetCols: 2,
+        startFrame: [0, 0]
+    }
 };
 
 
@@ -278,33 +286,33 @@ function gameStart() {
 
 function setEventListeners() {
   
-    if (event.key === "Escape") {
-        if (puzzleActive) { // Si el puzzle está activo
-            puzzleActive = false;
+    window.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+            if (puzzleActive) { // Si el puzzle está activo
+                puzzleActive = false;
+            }
+            return;
         }
-        return;
-    }
-    else {
-        //pausa el juego si el puzzle no está activo
-    }
-            
-            
-    if (event.key === 'f') { // Si el jugador esta cerca del objeto que activa el puzzle.
-        if (isPuzzleNear()) {
-            if (!puzzleActive){ // Si el puzzle no está activo
-                puzzleActive = true; // Activa el puzzle
-                levelPuzzle.init(); // Inicializa el puzzle
+        else {
+            //pausa el juego si el puzzle no está activo
+        }
+                
+                
+        if (event.key === 'f') { // Si el jugador esta cerca del objeto que activa el puzzle.
+            if (isPuzzleNear()) {
+                if (!puzzleActive){ // Si el puzzle no está activo
+                    puzzleActive = true; // Activa el puzzle
+                    levelPuzzle.init(); // Inicializa el puzzle
+                }
             }
         }
-    }
-
-    if (event.key === 'r') { // Tecla de reinicio de puzzle o Partida
-        if (puzzleActive && levelPuzzle.timeLimit <= 0) {
-            levelPuzzle.restart(); // Reinicia el puzzle
+    
+        if (event.key === 'r') { // Tecla de reinicio de puzzle o Partida
+            if (puzzleActive && levelPuzzle.timeLimit <= 0) {
+                levelPuzzle.restart(); // Reinicia el puzzle
+            }
         }
-    }
-  
-    window.addEventListener("keydown", event => {
+
         if (event.key === 'w') game.player.startMovement("up");
         if (event.key === 'a') game.player.startMovement("left");
         if (event.key === 's') game.player.startMovement("down");
@@ -313,7 +321,7 @@ function setEventListeners() {
         if (event.key === 'ArrowLeft') game.player.startAttack("left");
         if (event.key === 'ArrowDown') game.player.startAttack("down");
         if (event.key === 'ArrowRight') game.player.startAttack("right");
-        if (event.key === 'f') game.player.takeDamage(20); // Usado para las pruebas de daño
+        if (event.key === 'e') game.player.takeDamage(20); // Usado para las pruebas de daño
     });
 
     window.addEventListener("keyup", event => {
@@ -374,8 +382,8 @@ function drawBar(stat, max_stat, color, barX, barY){ // Función para dibujar la
 function drawPuzzleOverlay(ctx) {
    ctx.fillStyle = "rgba(0,0,0,0.8)"; // Dibuja un overlay semitransparente 
    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-   if (levelPuzzle) {
-    levelPuzzle.draw(ctx);
+   if (puzzleActive) { // Si el puzzle está activo
+        levelPuzzle.draw(ctx);
    }
 }
 
@@ -383,7 +391,7 @@ function isPuzzleNear() { // Función que verifica si el puzzle está cerca del 
   const max_d = 2; // Variable usada como umbral como máxima distancia al puzzle
   for (let actor of game.actors) {
     if (actor.type === "puzzle") {
-      let distance = game.player.position.distanceTo(actor.position);
+      let distance = game.player.hitBox.position.distanceTo(actor.position);
       if (distance < max_d) {
         return true;
       }
@@ -401,8 +409,15 @@ function updateCanvas(frameTime) {
     //console.log(`Delta Time: ${deltaTime}`);
 
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    game.update(deltaTime);
-    game.draw(ctx, scale);
+
+    if (puzzleActive == true) {
+        // Mientras el puzzle esté activo, se muestra el overlay y se desactivan otros controles
+        game.draw(ctx, scale);
+        drawPuzzleOverlay(ctx);
+    } else {  
+        game.draw(ctx, scale);  
+        game.update(deltaTime);
+    }
 
     // Update time for the next frame
     frameStart = frameTime;
