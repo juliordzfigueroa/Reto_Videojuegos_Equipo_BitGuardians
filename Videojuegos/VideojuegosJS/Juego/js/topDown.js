@@ -48,10 +48,22 @@ class Game {
         lastRoom = currentRoom;
         currentRoom = newRoom;
         this.level = new Level(GAME_LEVELS[currentRoom]);
+
+        // Reutilizar el jugador existente
         this.level.player = this.player;
-        this.level.enemies = this.enemies;
-        this.actors = this.actors;
-        gameStart();
+
+        // Actualizar enemigos y actores del nuevo nivel
+        this.enemies = this.level.enemies;
+        this.actors = this.level.actors;
+
+        if (this.level.enemies.length > 0) {
+            for (let actor of this.level.actors) {
+                if (actor instanceof Door) {
+                    actor.close();
+                }
+            }
+        }
+        //gameStart();
     }
 
     update(deltaTime) {
@@ -68,53 +80,8 @@ class Game {
 
         let currentActors = this.actors;
 
-        // Recorremos todos los enemigos del juego
-        for (let i = 0; i < this.enemies.length; i++) {
-            const enemyA = this.enemies[i]; // Enemigo actual
-
-            // Comparamos enemyA contra los demas enemigos
-            for (let j = i + 1; j < this.enemies.length; j++) {
-                const enemyB = this.enemies[j];
-
-                // Si enemyA y enemyB se colisionan
-                if (overlapRectangles(enemyA, enemyB)) {
-
-                    //Calculamos la distancia entre los enemigos en X y Y
-                    const distanciaX= enemyA.position.x - enemyB.position.x;
-                    const distanciaY = enemyA.position.y - enemyB.position.y;
-
-                    //Calculamos la colision en X y Y
-                    const overlapX = (enemyA.size.x + enemyB.size.x) / 2 - Math.abs(distanciaX);
-                    const overlapY = (enemyA.size.y + enemyB.size.y) / 2 - Math.abs(distanciaY);
-
-                    //Decidimos en qué eje separarlos. Dependiendo cual overlap sea menor
-                    if (overlapX < overlapY) {
-                        const separation = overlapX / 2; //Para repartir la colision entre dos
-
-                        //Si enemyA está a la izquierda de enemyB
-                        if (distanciaX < 0) {
-                            enemyA.position.x -= separation;
-                            enemyB.position.x += separation;
-                        } else {
-                            enemyA.position.x += separation;
-                            enemyB.position.x -= separation;
-                        }
-
-                    } else {
-                        const separation = overlapY / 2; 
-                        // Si enemyA está arriba de enemyB
-                        if (distanciaY < 0) {
-                            enemyA.position.y -= separation;
-                            enemyB.position.y += separation;
-                        } else {
-                            enemyA.position.y += separation;
-                            enemyB.position.y -= separation;
-                        }
-                    }
-                }
-            }
-        }
-
+        // Evitar que los enemigos se sobrepongan entre sí
+        overLapEnemies(this.enemies);
 
         // Detect collisions
         for (let actor of currentActors) {
@@ -123,7 +90,15 @@ class Game {
                     console.log("Hit a wall");
                 }
                 if (actor.type == 'door') {
+                    if (!actor.isOpen) {
+                        console.log("Puerta cerrada. No puedes salir.");
+                        return;
+                    }
+
                     const doorChar = actor.char;
+
+                    // Guardar la posición de la puerta antes de cambiar de nivel
+                    this.lastDoorPosition = { x: actor.position.x, y: actor.position.y };
 
                     if (currentRoom === "main") {
                         if (["<", "=", ">"].includes(doorChar)) {
@@ -132,6 +107,9 @@ class Game {
                         } else if (["4", "5", "6"].includes(doorChar)) {
                             lastDoorChar = doorChar;
                             this.moveToLevel("dronRoom");
+                        } else if (["7", "8", "9"].includes(doorChar)) {
+                            lastDoorChar = doorChar;
+                            this.moveToLevel("puzzleRoom");
                         }
                     } else {
                         this.player.setExitPosition();
@@ -141,6 +119,7 @@ class Game {
                 }
             }
         }
+
 
         // Update player stats bars
         drawBar(game.player.hp, game.player.max_hp, 'green', 40, 480);
@@ -183,9 +162,8 @@ function createWallTile(x) {
 function createDoorTile(x, y, char) {
     //Function to create a wall tile with the specified sprite
     return {
-        objClass: GameObject,
+        objClass: Door,
         label: "door",
-        sprite: '../assets/sprites/escenarios/door_tileset.png',
         rect: new Rect(x, y, 16, 16),
         char: char
     };
@@ -217,17 +195,17 @@ const levelChars = {
     "2": createDoorTile(1, 0, "2"),
     "3": createDoorTile(2, 0, "3"),
     //Down
-    "4": createDoorTile(0, 5, "4"),
-    "5": createDoorTile(1, 5, "5"),
-    "6": createDoorTile(2, 5, "6"),
+    "4": createDoorTile(0, 1, "4"),
+    "5": createDoorTile(1, 1, "5"),
+    "6": createDoorTile(2, 1, "6"),
     //Right
-    "7": createDoorTile(0, 6, "7"),
-    "8": createDoorTile(1, 6, "8"),
-    "9": createDoorTile(2, 6, "9"),
+    "7": createDoorTile(0, 2, "7"),
+    "8": createDoorTile(1, 2, "8"),
+    "9": createDoorTile(2, 2, "9"),
     //Left
-    ">": createDoorTile(0, 7, ">"),
-    "=": createDoorTile(1, 7, "="), 
-    "<": createDoorTile(2, 7, "<"),
+    ">": createDoorTile(0, 3, ">"),
+    "=": createDoorTile(1, 3, "="), 
+    "<": createDoorTile(2, 3, "<"),
     //Cables
     "C": {
         objClass: AnimatedObject,
@@ -437,6 +415,45 @@ function updateCanvas(frameTime) {
     frameStart = frameTime;
     requestAnimationFrame(updateCanvas);
 }
+
+function overLapEnemies(enemies) {
+    for (let i = 0; i < enemies.length; i++) {
+        const enemyA = enemies[i];
+
+        for (let j = i + 1; j < enemies.length; j++) {
+            const enemyB = enemies[j];
+
+            if (overlapRectangles(enemyA, enemyB)) {
+                const distanciaX = enemyA.position.x - enemyB.position.x;
+                const distanciaY = enemyA.position.y - enemyB.position.y;
+
+                const overlapX = (enemyA.size.x + enemyB.size.x) / 2 - Math.abs(distanciaX);
+                const overlapY = (enemyA.size.y + enemyB.size.y) / 2 - Math.abs(distanciaY);
+
+                if (overlapX < overlapY) {
+                    const separation = overlapX / 2;
+                    if (distanciaX < 0) {
+                        enemyA.position.x -= separation;
+                        enemyB.position.x += separation;
+                    } else {
+                        enemyA.position.x += separation;
+                        enemyB.position.x -= separation;
+                    }
+                } else {
+                    const separation = overlapY / 2;
+                    if (distanciaY < 0) {
+                        enemyA.position.y -= separation;
+                        enemyB.position.y += separation;
+                    } else {
+                        enemyA.position.y += separation;
+                        enemyB.position.y -= separation;
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 // Call the start function to initiate the game
 main();
