@@ -1,6 +1,6 @@
 class Robot extends Enemy {
     constructor(color, width, height, x, y, type) {
-        super("red", width*2, height*2, x, y, "robot", 100, 10, 1.5, 0.002, 2000);
+        super("red", width*2, height*2, x, y, "robot", 100, 10, 0.002, 2000);
         this.attackTimmer; // Tiempo de ataque del enemigo por defecto
         this.nextAttack = 1500; // Siguiente ataque del enemigo por defecto
         this.hitBox = new HitBox(this.position.x, this.position.y, this.size.x*0.6, this.size.y*0.8); // Hitbox del enemigo robot
@@ -117,6 +117,10 @@ class Robot extends Enemy {
 
         if (this.state == "idle") {
             this.velocity = new Vec(0.0, 0.0);
+        }
+
+        if (this.speed > this.max_speed) { // Si la velocidad del enemigo supera la velocidad máxima, se iguala a esta.
+            this.speed = this.max_speed;
         }
 
         this.hitBox.position.x = this.position.x + 0.4; // Actualizar la posición del hitbox del enemigo

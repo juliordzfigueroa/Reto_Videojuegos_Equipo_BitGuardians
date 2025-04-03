@@ -13,6 +13,8 @@ class Level {
         this.width = rows[0].length;
         this.actors = [];
         this.enemies = [];
+        this.enemyBullets = []; // Arreglo de balas de los enemigos
+        this.playerBullets = []; // Arreglo de balas del jugadorx
 
         // Fill the rows array with a label for the type of element in the cell
         this.rows = rows.map((row, y) => {

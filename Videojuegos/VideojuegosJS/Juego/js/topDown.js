@@ -38,6 +38,8 @@ class Game {
         this.player = level.player;
         this.enemies = level.enemies;
         this.actors = level.actors;
+        this.enemyBullets = level.enemyBullets;
+        this.playerbullets = level.playerbullets;
         levelPuzzle = new Puzzle(canvasWidth, canvasHeight);
         //console.log(level);
     }
@@ -59,6 +61,9 @@ class Game {
         }
         for (let actor of this.actors) {
             actor.update(this.level, deltaTime);
+        }
+        for (let bullet of this.enemyBullets) {
+            bullet.update(this.level, deltaTime);
         }
 
         let currentActors = this.actors;
@@ -140,10 +145,11 @@ class Game {
         // Update player stats bars
         drawBar(game.player.hp, game.player.max_hp, 'green', 40, 480);
         drawBar(game.player.shield, game.player.max_shield, 'blue', 40, 510);
+        game.enemyBullets = game.enemyBullets.filter(bullet => !bullet.destroy);
 
         if (game.player.hp <= 0) {
             console.log("Game Over");
-            gameStart();
+            restartGame();
         }
     }
 
@@ -154,6 +160,9 @@ class Game {
         for (let enemy of this.enemies) {
             enemy.draw(ctx, scale);
             enemy.hitBox.drawHitBox(ctx,scale);
+        }
+        for (let bullet of this.enemyBullets) {
+            bullet.draw(ctx, scale);
         }
         this.player.draw(ctx, scale);
         this.player.hitBox.drawHitBox(ctx, scale);
@@ -282,6 +291,10 @@ function init() {
 function gameStart() {
     game = new Game('playing', new Level(GAME_LEVELS[currentRoom]));
     updateCanvas(document.timeline.currentTime);
+}
+
+function restartGame() { // Función para reiniciar el juego tras un gameover
+    game = new Game('playing', new Level(GAME_LEVELS[currentRoom]));
 }
 
 function setEventListeners() {
