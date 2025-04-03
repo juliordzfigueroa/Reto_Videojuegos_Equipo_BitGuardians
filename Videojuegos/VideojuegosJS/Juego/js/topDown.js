@@ -46,25 +46,22 @@ class Game {
     moveToLevel(newRoom) {
         lastRoom = currentRoom;
         currentRoom = newRoom;
-        this.level = new Level(GAME_LEVELS[currentRoom]);
+        this.level = new Level(GAME_LEVELS[currentRoom].layout);
 
         // Reutilizar el jugador existente
         this.level.player = this.player;
 
-        // Actualizar enemigos y actores del nuevo nivel
-        this.enemies = this.level.enemies;
-        this.actors = this.level.actors;
-
-        if (this.level.enemies.length > 0) {
-            for (let actor of this.level.actors) {
-                if (actor instanceof Door) {
-                    actor.close();
-                }
-            }
+        if (!GAME_LEVELS[currentRoom].statusCompleted) {
+            this.level = new Level(GAME_LEVELS[currentRoom].layout);
+            this.enemies = this.level.enemies;
+            this.actors = this.level.actors;
+        } else {
+            this.enemies = [];
+            this.actors = this.level.actors;
         }
+
         //Acomodar al enemigo dependiendo de la dirección de entrada
         if (lastRoom && lastDoorChar) { //De donde viene el jugador y la dirección de entrada
-            console.log("Last Room: " + lastRoom);
             for (let actor of this.level.actors) {
                 if (actor.type === "door" && actor.char === lastDoorChar) {
                     //Determina la posición basada en la dirección de entrada
@@ -93,7 +90,7 @@ class Game {
         this.player.update(this.level, deltaTime);
         for (let enemy of this.enemies) {
             enemy.update(this.level, deltaTime);
-            console.log(enemy.hp);
+           // console.log(enemy.hp);
         }
         for (let actor of this.actors) {
             actor.update(this.level, deltaTime);
@@ -129,7 +126,7 @@ class Game {
                             this.moveToLevel("dronRoom");
                         } else if (["7", "8", "9"].includes(doorChar)) {
                             lastDoorChar = doorChar;
-                            this.player.entryPoint = { x: actor.position.x -1, y: actor.position.y }; //Aqui no es necesario usar size
+                            this.player.entryPoint = { x: actor.position.x - this.player.size.x, y: actor.position.y };
                             this.moveToLevel("puzzleRoom");
                         } 
                     } else {
@@ -163,8 +160,18 @@ class Game {
         // El método filter devuelve un nuevo arreglo con las balas que no han sido destruidas. Recuperado de: https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
         game.enemyBullets = game.enemyBullets.filter(bullet => !bullet.destroy); // Función filter para borrar las balas que han sido marcadas como destruidas
         game.playerBullets = game.playerBullets.filter(bullet => !bullet.destroy); // Función filter para borrar las balas que han sido marcadas como destruidas
-        game.enemies = game.enemies.filter(enemy => !enemy.destroyed); // Función filter para borrar los enemigos que han sido destruidos
-
+        //Se quitan del array los enemigos que han sido destruidos
+        this.enemies = this.enemies.filter(enemy => !enemy.destroyed);
+        this.level.enemies = this.enemies; //Actualiza la lista de enemigos en el nivel
+        if(currentRoom == "puzzleRoom" && levelPuzzle.puzzleCompleated == true && this.enemies.length == 0) {
+            GAME_LEVELS[currentRoom].statusCompleted = true; // Marca el nivel como completado
+            this.level.setupDoors(); // Actualiza la puerta
+        }
+        if (this.enemies.length == 0 && currentRoom != "main" && currentRoom != "puzzleRoom") {
+            GAME_LEVELS[currentRoom].statusCompleted = true; // Marca el nivel como completado
+            this.level.setupDoors(); // Actualiza la puerta
+        }
+        
         if (game.player.hp <= 0) {
             console.log("Game Over");
             restartGame();
@@ -309,14 +316,17 @@ function init() {
 }
 
 function gameStart() {
-    game = new Game('playing', new Level(GAME_LEVELS[currentRoom]));
+    game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
     updateCanvas(document.timeline.currentTime);
 }
 
 function restartGame() { // Función para reiniciar el juego tras un gameover
     currentRoom = "main"; // Reinicia el nivel a la sala principal
-    lastRoom = null; // Reinicia la sala anterior a null
-    game = new Game('playing', new Level(GAME_LEVELS[currentRoom]));
+    lastRoom = null; // Reinicia la sala anterior
+    for (let level in GAME_LEVELS) {
+        GAME_LEVELS[level].statusCompleted = false; // Reinicia el estado de los niveles
+    }
+    gameStart();    
 }
 
 function setEventListeners() {
@@ -444,7 +454,6 @@ function updateCanvas(frameTime) {
         frameStart = frameTime;
     }
     let deltaTime = frameTime - frameStart;
-    //console.log(`Delta Time: ${deltaTime}`);
 
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
