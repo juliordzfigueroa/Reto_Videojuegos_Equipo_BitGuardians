@@ -38,6 +38,8 @@ class Game {
         this.player = level.player;
         this.enemies = level.enemies;
         this.actors = level.actors;
+        this.enemyBullets = level.enemyBullets;
+        this.playerbullets = level.playerbullets;
         levelPuzzle = new Puzzle(canvasWidth, canvasHeight);
         //console.log(level);
     }
@@ -71,6 +73,9 @@ class Game {
         }
         for (let actor of this.actors) {
             actor.update(this.level, deltaTime);
+        }
+        for (let bullet of this.enemyBullets) {
+            bullet.update(this.level, deltaTime);
         }
 
         let currentActors = this.actors;
@@ -119,10 +124,12 @@ class Game {
         // Update player stats bars
         drawBar(game.player.hp, game.player.max_hp, 'green', 40, 480);
         drawBar(game.player.shield, game.player.max_shield, 'blue', 40, 510);
+        // El método filter devuelve un nuevo arreglo con las balas que no han sido destruidas. Recuperado de: https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
+        game.enemyBullets = game.enemyBullets.filter(bullet => !bullet.destroy); // Función filter para borrar las balas que han sido marcadas como destruidas
 
         if (game.player.hp <= 0) {
             console.log("Game Over");
-            gameStart();
+            restartGame();
         }
     }
 
@@ -133,6 +140,9 @@ class Game {
         for (let enemy of this.enemies) {
             enemy.draw(ctx, scale);
             enemy.hitBox.drawHitBox(ctx,scale);
+        }
+        for (let bullet of this.enemyBullets) {
+            bullet.draw(ctx, scale);
         }
         this.player.draw(ctx, scale);
         this.player.hitBox.drawHitBox(ctx, scale);
@@ -262,6 +272,12 @@ function gameStart() {
     updateCanvas(document.timeline.currentTime);
 }
 
+function restartGame() { // Función para reiniciar el juego tras un gameover
+    currentRoom = "main"; // Reinicia el nivel a la sala principal
+    lastRoom = null; // Reinicia la sala anterior a null
+    game = new Game('playing', new Level(GAME_LEVELS[currentRoom]));
+}
+
 function setEventListeners() {
   
     window.addEventListener("keydown", event => {
@@ -288,6 +304,9 @@ function setEventListeners() {
         if (event.key === 'r') { // Tecla de reinicio de puzzle o Partida
             if (puzzleActive && levelPuzzle.timeLimit <= 0) {
                 levelPuzzle.restart(); // Reinicia el puzzle
+            }
+            else{
+                restartGame(); // Reinicia el juego
             }
         }
 
