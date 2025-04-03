@@ -98,7 +98,6 @@ class Dron extends Enemy {
             this.shootCooldown = 1500; // Reiniciar el tiempo de recarga del disparo
             let bullet = new Bullet(this.position.x, this.position.y, 1, 1, "red", dir.x, dir.y, this.damage); // Crear la bala
             game.enemyBullets.push(bullet); // Añadir la bala al array de balas del enemigo
-            bullet.destroyBullet(); // Destruir la bala al impactar con un muro o el jugador
             this.shootCooldown = 1000; // Reiniciar el tiempo de recarga del disparo
         }
     }

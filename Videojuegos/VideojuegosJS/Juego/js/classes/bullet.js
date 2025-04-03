@@ -32,10 +32,4 @@ class Bullet extends GameObject{
         }
     }
 
-    destroyBullet(){
-        if (this.destroy){
-            game.enemyBullets = game.enemyBullets.filter(bullet => !bullet.destroy);
-        }
-    }
-
 }
