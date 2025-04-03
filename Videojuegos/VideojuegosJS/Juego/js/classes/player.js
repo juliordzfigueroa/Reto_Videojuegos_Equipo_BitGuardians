@@ -24,10 +24,11 @@ class Player extends AnimatedObject {
         // Variables de la entrada de y salida al entrar a una puerta.
         this.exitPosition = undefined;
         this.enterPosition = undefined;
+        this.shootCooldown = 0; // Tiempo de recarga del disparo
 
-        this.facing = "down"; // Dirección en la que el jugador está mirando por defecto
         this.currentAttackHitbox = null; // Hitbox del ataque del jugador definida nulla para que no inicie el ataque al principio
-        this.attackHitboxTimer = 0;
+        this.attackHitboxTimer = 0; // Timer de la hitbox de ataque del jugador
+        this.attackTimer = 0;
 
         this.weapon = {
             damage: 20
@@ -131,17 +132,15 @@ class Player extends AnimatedObject {
 
         this.updateFrame(deltaTime);
         
+        
+        // Actualiza el timer de la hitbox de ataque si está activa
         if (this.attackHitboxTimer > 0) {
             this.attackHitboxTimer -= deltaTime;
             if (this.attackHitboxTimer <= 0) {
-                this.currentAttackHitbox = null;
+                this.currentAttackHitbox = null; // Se borra la hitbox de ataque al terminar el tiempo
             }
         }
-    }
 
-    draw(ctx, scale) {
-        // Dibuja al jugador usando el método heredado
-        super.draw(ctx, scale);
         if (this.currentAttackHitbox) {
             this.currentAttackHitbox.drawHitBox(ctx, scale);
         }
@@ -175,54 +174,61 @@ class Player extends AnimatedObject {
             attackHeight = this.size.y * 0.4;
             attackX = this.position.x; 
             attackY = this.position.y - attackHeight;
-            this.facing = "up";
             break;
         case "down":
             attackWidth = this.size.x * 1;
             attackHeight = this.size.y * 0.4;
             attackX = this.position.x; 
             attackY = this.position.y + this.size.y;
-            this.facing = "down";
             break;
         case "left":
             attackWidth = this.size.x * 0.4;
             attackHeight = this.size.y * 1;
             attackY = this.position.y;
             attackX = this.position.x - attackWidth;
-            this.facing = "left";
             break;
         case "right":
             attackWidth = this.size.x * 0.4;
             attackHeight = this.size.y * 1;
             attackY = this.position.y;
             attackX = this.position.x + this.size.x;
-            this.facing = "right";
             break;
         }
         
         // Crea la hitbox del ataque
         this.currentAttackHitbox = new HitBox(attackX, attackY, attackWidth, attackHeight);
 
-        this.attackHitboxTimer = 500;
+        this.attackHitboxTimer = 300; // Duración de la hitbox de ataque
         
         for (let enemy of game.enemies) {
             if (overlapRectangles(this.currentAttackHitbox, enemy)) {
                 enemy.takeDamage(this.weapon.damage);
             }
         }
+
+        this.attackTimer = 1000;
     }
 
     // Método para iniciar el ataque del jugador con la pistola
-    shoot(deltaTime) {
-        if (this.shootCooldown > 0){
-            this.shootCooldown -= deltaTime; // Disminuir el tiempo de recarga del disparo
+    shoot(deltaTime, direction) {
+        let bdirection; // Variable para la dirección de la bala
+        switch (direction) {
+            case "up":
+                bdirection = new Vec(0, -1); // Dirección hacia arriba
+                break;
+            case "down":
+                bdirection = new Vec(0, 1); // Dirección hacia abajo
+                break;
+            case "left":
+                bdirection = new Vec(-1, 0); // Dirección hacia la izquierda
+                break;
+            case "right":
+                bdirection = new Vec(1, 0); // Dirección hacia la derecha
+                break;
         }
-        if (this.shootCooldown <= 0){
-            this.shootCooldown = 1800; // Reiniciar el tiempo de recarga del disparo
-            let bullet = new Bullet(this.position.x, this.position.y, 1, 0.5    , "blue", dir.x, dir.y, this.damage); // Crear la bala
-            game.playerBullets.push(bullet); // Añadir la bala al array de balas del enemigo
-            this.shootCooldown = 1800; // Reiniciar el tiempo de recarga del disparo
-        }
+        this.shootCooldown = 1800; // Reiniciar el tiempo de recarga del disparo
+        let bullet = new Bullet(this.position.x, this.position.y, 1, 0.5, "blue", bdirection.x, bdirection.y, this.damage); // Crear la bala
+        game.playerBullets.push(bullet); // Añadir la bala al array de balas del enemigo
     }
 
     startAttack(direction) {
@@ -231,6 +237,7 @@ class Player extends AnimatedObject {
         dirData.status = true;        
         this.setAnimation(...dirData.moveFrames, dirData.repeat, dirData.duration);
         this.swordAttack(direction); // Llama a la función de ataque
+        //this.shoot(this.deltaTime, direction); // Llama a la función de disparo
     }
 
     stopAttack(direction) {

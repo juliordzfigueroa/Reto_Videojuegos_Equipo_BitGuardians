@@ -27,6 +27,8 @@ let playerSpeed = 0.005;
 // Scale of the whole world, to be applied to all objects
 // Each unit in the level file will be drawn as these many square pixels
 const scale = 30;
+const levelWidth = Math.floor(canvasWidth / scale);
+const levelHeight = Math.floor(canvasHeight / scale);
 
 let puzzleActive = false;
 let levelPuzzle; // Puzzle no definido para el nivel
@@ -39,7 +41,7 @@ class Game {
         this.enemies = level.enemies;
         this.actors = level.actors;
         this.enemyBullets = level.enemyBullets;
-        this.playerbullets = level.playerbullets;
+        this.playerBullets = level.playerBullets;
         levelPuzzle = new Puzzle(canvasWidth, canvasHeight);
         //console.log(level);
     }
@@ -63,7 +65,31 @@ class Game {
                 }
             }
         }
-        //gameStart();
+        //Acomodar al enemigo dependiendo de la dirección de entrada
+        if (lastRoom && lastDoorChar) { //De donde viene el jugador y la dirección de entrada
+            console.log("Last Room: " + lastRoom);
+            for (let actor of this.level.actors) {
+                if (actor.type === "door" && actor.char === lastDoorChar) {
+                    //Determina la posición basada en la dirección de entrada
+                    if (["<", "=", ">"].includes(lastDoorChar)) { //Puerta derecha en MAIN
+                        this.player.position.x = levelWidth -3;
+                        this.player.position.y = actor.position.y;
+                    } else if (["7", "8", "9"].includes(lastDoorChar)) { //Puerta izquierda en MAIN
+                        this.player.position.x = 1;
+                        this.player.position.y = actor.position.y;
+                    } else if (["1", "2", "3"].includes(lastDoorChar)) { //Puerta arriba en MAIN
+                        this.player.position.x = actor.position.x;
+                        this.player.position.y = levelHeight - 3;
+                    } else if (["4", "5", "6"].includes(lastDoorChar)) { //Puerta abajo en MAIN
+                        this.player.position.x = actor.position.x;
+                        this.player.position.y = 1;
+                    } 
+                } 
+            } 
+        } if (lastRoom !== "main") { //Para regresar al main usamos las coordenadas de entrada ajustadas para que el jugador no se quede pegado a la pared
+            this.player.position.x = this.player.entryPoint.x;
+            this.player.position.y = this.player.entryPoint.y;
+        }
     }
 
     update(deltaTime) {
@@ -74,9 +100,6 @@ class Game {
         }
         for (let actor of this.actors) {
             actor.update(this.level, deltaTime);
-        }
-        for (let bullet of this.enemyBullets) {
-            bullet.update(this.level, deltaTime);
         }
 
         let currentActors = this.actors;
@@ -98,26 +121,32 @@ class Game {
 
                     const doorChar = actor.char;
 
-                    // Guardar la posición de la puerta antes de cambiar de nivel
-                    this.lastDoorPosition = { x: actor.position.x, y: actor.position.y };
-
                     if (currentRoom === "main") {
                         if (["<", "=", ">"].includes(doorChar)) {
                             lastDoorChar = doorChar;
+                            this.player.entryPoint = { x: actor.position.x + 1, y: actor.position.y }; //Aqui no es necesario usar size
                             this.moveToLevel("robotRoom");
                         } else if (["4", "5", "6"].includes(doorChar)) {
                             lastDoorChar = doorChar;
+                            this.player.entryPoint = { x: actor.position.x, y: actor.position.y - this.player.size.y }; //Aqui utilizamos size para que el jugador no se quede pegado a la pared
                             this.moveToLevel("dronRoom");
                         } else if (["7", "8", "9"].includes(doorChar)) {
                             lastDoorChar = doorChar;
+                            this.player.entryPoint = { x: actor.position.x -1, y: actor.position.y }; //Aqui no es necesario usar size
                             this.moveToLevel("puzzleRoom");
-                        }
+                        } 
                     } else {
-                        this.player.setExitPosition();
-                        lastDoorChar = doorChar;
                         this.moveToLevel("main");
                     }
                 }
+            }
+        }
+
+        for (let bullet of this.enemyBullets) {
+            bullet.update(this.level, deltaTime);
+            if (overlapRectangles(bullet, game.player)){
+                game.player.takeDamage(bullet.damage); // Aplica daño al jugador
+                bullet.destroy = true; // Destruir la bala al impactar con el jugador
             }
         }
 
@@ -127,6 +156,7 @@ class Game {
         drawBar(game.player.shield, game.player.max_shield, 'blue', 40, 510);
         // El método filter devuelve un nuevo arreglo con las balas que no han sido destruidas. Recuperado de: https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
         game.enemyBullets = game.enemyBullets.filter(bullet => !bullet.destroy); // Función filter para borrar las balas que han sido marcadas como destruidas
+        game.playerBullets = game.playerBullets.filter(bullet => !bullet.destroy); // Función filter para borrar las balas que han sido marcadas como destruidas
         game.enemies = game.enemies.filter(enemy => !enemy.destroyed); // Función filter para borrar los enemigos que han sido destruidos
 
         if (game.player.hp <= 0) {
@@ -144,6 +174,9 @@ class Game {
             enemy.hitBox.drawHitBox(ctx,scale);
         }
         for (let bullet of this.enemyBullets) {
+            bullet.draw(ctx, scale);
+        }
+        for (let bullet of this.playerBullets) {
             bullet.draw(ctx, scale);
         }
         this.player.draw(ctx, scale);
@@ -461,6 +494,17 @@ function overLapEnemies(enemies) {
     }
 }
 
+function setPlayerBullets() { // Aqui hay un problema
+    for (let bullet of this.playerBullets) {
+        bullet.update(this.level, deltaTime);
+        for (let enemy of this.enemies) {
+            if(overlapRectangles(bullet, game.enemy)){
+                game.enemy.takeDamage(bullet.damage); // Aplica daño al enemigo
+                bullet.destroyed = true;
+            }
+        }
+    }
+}
 
 // Call the start function to initiate the game
 main();
