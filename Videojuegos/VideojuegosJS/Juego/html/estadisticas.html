@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>The Final Hack</title>
+        <link rel="stylesheet" href="../css/estadisticas.css">
+        <script src="../js/videojuego.js"></script>
+    </head>
+
+    <body>
+        <div id="headerContainer">
+            <h1>Estadísticas</h1>
+            <div id="menu">
+                <button id="menuButton">&#9776;</button>
+                <div id="dropdownMenu">
+                    <a href="../html/videojuego.html">Videojuego</a>
+                    <a href="../html/creditos.html">Estadísticas</a>
+                </div>
+            </div>
+        </div>
+        <canvas id="canvas"></canvas>
+        <script>
+            const menuButton = document.getElementById('menuButton');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+
+            menuButton.onclick = function () {
+                if(dropdownMenu.style.display === 'block'){
+            dropdownMenu.style.display = 'none';
+            } 
+                else{
+                dropdownMenu.style.display = 'block';
+            }
+            };
+
+            document.onclick = function (e) {
+                if(e.target !== menuButton && e.target.parentNode !== dropdownMenu){
+                    dropdownMenu.style.display = 'none';
+                }
+            };
+    
+            // Tu función main del juego
+            main();
+        </script>
+    </body>
+</html>
