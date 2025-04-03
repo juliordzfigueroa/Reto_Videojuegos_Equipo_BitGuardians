@@ -273,6 +273,8 @@ function gameStart() {
 }
 
 function restartGame() { // Función para reiniciar el juego tras un gameover
+    currentRoom = "main"; // Reinicia el nivel a la sala principal
+    lastRoom = null; // Reinicia la sala anterior a null
     game = new Game('playing', new Level(GAME_LEVELS[currentRoom]));
 }
 
@@ -302,6 +304,9 @@ function setEventListeners() {
         if (event.key === 'r') { // Tecla de reinicio de puzzle o Partida
             if (puzzleActive && levelPuzzle.timeLimit <= 0) {
                 levelPuzzle.restart(); // Reinicia el puzzle
+            }
+            else{
+                restartGame(); // Reinicia el juego
             }
         }
 

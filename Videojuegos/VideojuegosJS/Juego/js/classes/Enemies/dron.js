@@ -69,7 +69,7 @@ class Dron extends Enemy {
             this.shoot(deltaTime);
         }
 
-        if (overlapRectangles(this.hitBox, game.player.hitBox)){r
+        if (overlapRectangles(this.hitBox, game.player.hitBox)){
             if (this.attackTimmer >= this.nextAttack) { // Si el temporizador de ataque ha llegado al tiempo de ataque
                 game.player.takeDamage(this.damage); // Aplica daño al jugador
                 this.attackTimmer = 0; // Reinicia el contador tras el ataque
