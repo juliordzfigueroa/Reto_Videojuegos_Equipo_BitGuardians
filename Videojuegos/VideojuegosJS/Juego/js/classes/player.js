@@ -25,6 +25,14 @@ class Player extends AnimatedObject {
         this.exitPosition = undefined;
         this.enterPosition = undefined;
 
+        this.facing = "down"; // Dirección en la que el jugador está mirando por defecto
+        this.currentAttackHitbox = null; // Hitbox del ataque del jugador definida nulla para que no inicie el ataque al principio
+        this.attackHitboxTimer = 0;
+
+        this.weapon = {
+            damage: 20
+        };
+
         // Movimientos del jugador
         this.movement = {
             down: {
@@ -59,40 +67,39 @@ class Player extends AnimatedObject {
                 axis: "x",
                 sign: -1,
                 repeat: true,
-                duration: 100,
+                duration: 50,
                 moveFrames: [40, 46], 
                 idleFrames: [40, 40]
             },
             downattack: {
                 status: false,
                 repeat: false,
-                duration: 100,
+                duration: 50,
                 moveFrames: [61, 63],
                 idleFrames: [60, 60]
             },
             leftattack: {
                 status: false,
                 repeat: false,
-                duration: 100,
+                duration: 50,
                 moveFrames: [71, 74],
                 idleFrames: [70, 70]
             },
             rightattack: {
                 status: false,
                 repeat: false,
-                duration: 100,
+                duration: 50,
                 moveFrames: [81, 84],
                 idleFrames: [80, 80]
             },
             upattack: {
                 status: false,
                 repeat: false,
-                duration: 100,
+                duration: 50,
                 moveFrames: [91, 94],
                 idleFrames: [90, 90]
             }
         };
-        
     }
 
     setExitPosition() {
@@ -123,6 +130,21 @@ class Player extends AnimatedObject {
         this.totalHP = this.hp + this.shield; // Actualizar la vida total del jugador
 
         this.updateFrame(deltaTime);
+        
+        if (this.attackHitboxTimer > 0) {
+            this.attackHitboxTimer -= deltaTime;
+            if (this.attackHitboxTimer <= 0) {
+                this.currentAttackHitbox = null;
+            }
+        }
+    }
+
+    draw(ctx, scale) {
+        // Dibuja al jugador usando el método heredado
+        super.draw(ctx, scale);
+        if (this.currentAttackHitbox) {
+            this.currentAttackHitbox.drawHitBox(ctx, scale);
+        }
     }
 
     startMovement(direction) {
@@ -141,12 +163,74 @@ class Player extends AnimatedObject {
         this.setAnimation(...dirData.idleFrames, dirData.repeat, dirData.duration);
     }
 
-    // Para ataque
+    // Métodos de ataque hechos para cada arma
+
+    // Método para realizar el ataque de la espada, creando una hitbox temporal para cuando ataque el jugador
+    swordAttack(direction) {
+        let attackWidth, attackHeight, attackX, attackY; // Variables para la hitbox del ataque
+        // Según la dirección, posiciona la hitbox en frente del jugador
+        switch (direction) {
+        case "up":
+            attackWidth = this.size.x * 1;
+            attackHeight = this.size.y * 0.4;
+            attackX = this.position.x; 
+            attackY = this.position.y - attackHeight;
+            this.facing = "up";
+            break;
+        case "down":
+            attackWidth = this.size.x * 1;
+            attackHeight = this.size.y * 0.4;
+            attackX = this.position.x; 
+            attackY = this.position.y + this.size.y;
+            this.facing = "down";
+            break;
+        case "left":
+            attackWidth = this.size.x * 0.4;
+            attackHeight = this.size.y * 1;
+            attackY = this.position.y;
+            attackX = this.position.x - attackWidth;
+            this.facing = "left";
+            break;
+        case "right":
+            attackWidth = this.size.x * 0.4;
+            attackHeight = this.size.y * 1;
+            attackY = this.position.y;
+            attackX = this.position.x + this.size.x;
+            this.facing = "right";
+            break;
+        }
+        
+        // Crea la hitbox del ataque
+        this.currentAttackHitbox = new HitBox(attackX, attackY, attackWidth, attackHeight);
+
+        this.attackHitboxTimer = 500;
+        
+        for (let enemy of game.enemies) {
+            if (overlapRectangles(this.currentAttackHitbox, enemy)) {
+                enemy.takeDamage(this.weapon.damage);
+            }
+        }
+    }
+
+    // Método para iniciar el ataque del jugador con la pistola
+    shoot(deltaTime) {
+        if (this.shootCooldown > 0){
+            this.shootCooldown -= deltaTime; // Disminuir el tiempo de recarga del disparo
+        }
+        if (this.shootCooldown <= 0){
+            this.shootCooldown = 1800; // Reiniciar el tiempo de recarga del disparo
+            let bullet = new Bullet(this.position.x, this.position.y, 1, 0.5    , "blue", dir.x, dir.y, this.damage); // Crear la bala
+            game.playerBullets.push(bullet); // Añadir la bala al array de balas del enemigo
+            this.shootCooldown = 1800; // Reiniciar el tiempo de recarga del disparo
+        }
+    }
+
     startAttack(direction) {
         const dirData = this.movement[direction + "attack"];
         if (!dirData || dirData.status) return;
         dirData.status = true;        
         this.setAnimation(...dirData.moveFrames, dirData.repeat, dirData.duration);
+        this.swordAttack(direction); // Llama a la función de ataque
     }
 
     stopAttack(direction) {
@@ -155,6 +239,7 @@ class Player extends AnimatedObject {
         dirData.status = false;
         const idleData = this.movement[direction];
         this.setAnimation(...idleData.idleFrames, true, idleData.duration);
+
     }
 
     // Método para que el jugador reciba daño

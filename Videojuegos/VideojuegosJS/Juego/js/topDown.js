@@ -70,6 +70,7 @@ class Game {
         this.player.update(this.level, deltaTime);
         for (let enemy of this.enemies) {
             enemy.update(this.level, deltaTime);
+            console.log(enemy.hp);
         }
         for (let actor of this.actors) {
             actor.update(this.level, deltaTime);
@@ -126,6 +127,7 @@ class Game {
         drawBar(game.player.shield, game.player.max_shield, 'blue', 40, 510);
         // El método filter devuelve un nuevo arreglo con las balas que no han sido destruidas. Recuperado de: https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
         game.enemyBullets = game.enemyBullets.filter(bullet => !bullet.destroy); // Función filter para borrar las balas que han sido marcadas como destruidas
+        game.enemies = game.enemies.filter(enemy => !enemy.destroyed); // Función filter para borrar los enemigos que han sido destruidos
 
         if (game.player.hp <= 0) {
             console.log("Game Over");
