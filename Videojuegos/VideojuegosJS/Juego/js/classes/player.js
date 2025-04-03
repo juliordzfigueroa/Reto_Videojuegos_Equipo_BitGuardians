@@ -222,7 +222,7 @@ class Player extends AnimatedObject {
                 break;
         }
         this.shootCooldown = 1800; // Reiniciar el tiempo de recarga del disparo
-        let bullet = new Bullet(this.position.x, this.position.y, 1, 0.5, "blue", bdirection.x, bdirection.y, this.damage); // Crear la bala
+        let bullet = new Bullet(this.position.x, this.position.y, 1, 0.5, "blue", bdirection.x, bdirection.y, this.weapon.damage); // Crear la bala
         game.playerBullets.push(bullet); // Añadir la bala al array de balas del enemigo
     }
 
@@ -231,8 +231,8 @@ class Player extends AnimatedObject {
         if (!dirData || dirData.status) return;
         dirData.status = true;        
         this.setAnimation(...dirData.moveFrames, dirData.repeat, dirData.duration);
-        this.swordAttack(direction); // Llama a la función de ataque
-        //this.shoot(this.deltaTime, direction); // Llama a la función de disparo
+        //this.swordAttack(direction); // Llama a la función de ataque
+        this.shoot(this.deltaTime, direction); // Llama a la función de disparo
     }
 
     stopAttack(direction) {

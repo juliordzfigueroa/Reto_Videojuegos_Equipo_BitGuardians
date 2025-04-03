@@ -147,6 +147,15 @@ class Game {
             }
         }
 
+        for (let bullet of this.playerBullets) {
+            bullet.update(this.level, deltaTime);
+            for (let enemy of this.enemies) {
+                if(overlapRectangles(bullet, enemy.hitBox)){
+                    enemy.takeDamage(bullet.damage); // Aplica daño al enemigo
+                    bullet.destroy = true;
+                }
+            }
+        }
 
         // Update player stats bars
         drawBar(game.player.hp, game.player.max_hp, 'green', 40, 480);
@@ -486,18 +495,6 @@ function overLapEnemies(enemies) {
                         enemyB.position.y -= separation;
                     }
                 }
-            }
-        }
-    }
-}
-
-function setPlayerBullets() { // Aqui hay un problema
-    for (let bullet of this.playerBullets) {
-        bullet.update(this.level, deltaTime);
-        for (let enemy of this.enemies) {
-            if(overlapRectangles(bullet, game.enemy)){
-                game.enemy.takeDamage(bullet.damage); // Aplica daño al enemigo
-                bullet.destroyed = true;
             }
         }
     }
