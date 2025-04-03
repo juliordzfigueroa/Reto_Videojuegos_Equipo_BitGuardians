@@ -95,11 +95,6 @@ class Player extends AnimatedObject {
         
     }
 
-    setExitPosition() {
-        this.exitPosition = new Vec(this.position.x, this.position.y);
-    }
-
-    
 
     update(level, deltaTime) {
         // Determinar donde termina el jugador después de que se mueve
