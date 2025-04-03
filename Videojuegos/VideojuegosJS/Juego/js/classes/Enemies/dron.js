@@ -95,10 +95,10 @@ class Dron extends Enemy {
             this.shootCooldown -= deltaTime; // Disminuir el tiempo de recarga del disparo
         }
         if (this.shootCooldown <= 0){
-            this.shootCooldown = 1500; // Reiniciar el tiempo de recarga del disparo
-            let bullet = new Bullet(this.position.x, this.position.y, 1, 1, "red", dir.x, dir.y, this.damage); // Crear la bala
+            this.shootCooldown = 1800; // Reiniciar el tiempo de recarga del disparo
+            let bullet = new Bullet(this.position.x, this.position.y, 0.8, 0.5, "red", dir.x, dir.y, this.damage); // Crear la bala
             game.enemyBullets.push(bullet); // Añadir la bala al array de balas del enemigo
-            this.shootCooldown = 1000; // Reiniciar el tiempo de recarga del disparo
+            this.shootCooldown = 1800; // Reiniciar el tiempo de recarga del disparo
         }
     }
 }

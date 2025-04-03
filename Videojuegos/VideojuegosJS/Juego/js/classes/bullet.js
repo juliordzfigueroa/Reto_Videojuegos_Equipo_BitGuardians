@@ -25,11 +25,6 @@ class Bullet extends GameObject{
             return;
         }
         this.position = new Vec(newposX, newposY);
-
-        if (overlapRectangles(this, game.player)){
-            game.player.takeDamage(this.damage); // Aplica daño al jugador
-            this.destroy = true; // Destruir la bala al impactar con el jugador
-        }
     }
 
 }

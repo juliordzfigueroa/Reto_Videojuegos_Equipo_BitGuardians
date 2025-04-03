@@ -21,6 +21,7 @@ class Enemy extends AnimatedObject {
         this.stunTime = 0; // Tiempo de aturdimiento del enemigo por defecto
         this.state = "idle"; // Estado del enemigo por defecto
         this.max_speed = speed; // Velocidad máxima del enemigo por defecto
+        this.destroyed = false; // Estado de destrucción del enemigo por defecto
     }
 
     update() {
@@ -46,5 +47,13 @@ class Enemy extends AnimatedObject {
         dirData.status = false;
         this.velocity[dirData.axis] = 0;
         this.setAnimation(...dirData.idleFrames, dirData.repeat, dirData.duration);
+    }
+
+    // Métodos temporales para hacer pruebas
+    takeDamage(damage) { // Método para aplicar daño al enemigo
+        this.hp -= damage; // Se le resta el daño a la vida del enemigo
+        if (this.hp <= 0) { // Si la vida del enemigo es menor o igual a 0, se destruye el enemigo
+            this.destroyed = true; // Atributo que inidca si el enemigo ha sido destruido
+        }
     }
 }

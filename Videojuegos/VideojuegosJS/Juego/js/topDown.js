@@ -39,7 +39,7 @@ class Game {
         this.enemies = level.enemies;
         this.actors = level.actors;
         this.enemyBullets = level.enemyBullets;
-        this.playerbullets = level.playerbullets;
+        this.playerBullets = level.playerBullets;
         levelPuzzle = new Puzzle(canvasWidth, canvasHeight);
     }
     
@@ -93,12 +93,10 @@ class Game {
         this.player.update(this.level, deltaTime);
         for (let enemy of this.enemies) {
             enemy.update(this.level, deltaTime);
+            console.log(enemy.hp);
         }
         for (let actor of this.actors) {
             actor.update(this.level, deltaTime);
-        }
-        for (let bullet of this.enemyBullets) {
-            bullet.update(this.level, deltaTime);
         }
 
         let currentActors = this.actors;
@@ -141,12 +139,22 @@ class Game {
             }
         }
 
+        for (let bullet of this.enemyBullets) {
+            bullet.update(this.level, deltaTime);
+            if (overlapRectangles(bullet, game.player)){
+                game.player.takeDamage(bullet.damage); // Aplica daño al jugador
+                bullet.destroy = true; // Destruir la bala al impactar con el jugador
+            }
+        }
+
 
         // Update player stats bars
         drawBar(game.player.hp, game.player.max_hp, 'green', 40, 480);
         drawBar(game.player.shield, game.player.max_shield, 'blue', 40, 510);
         // El método filter devuelve un nuevo arreglo con las balas que no han sido destruidas. Recuperado de: https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
         game.enemyBullets = game.enemyBullets.filter(bullet => !bullet.destroy); // Función filter para borrar las balas que han sido marcadas como destruidas
+        game.playerBullets = game.playerBullets.filter(bullet => !bullet.destroy); // Función filter para borrar las balas que han sido marcadas como destruidas
+        game.enemies = game.enemies.filter(enemy => !enemy.destroyed); // Función filter para borrar los enemigos que han sido destruidos
 
         if (game.player.hp <= 0) {
             console.log("Game Over");
@@ -163,6 +171,9 @@ class Game {
             enemy.hitBox.drawHitBox(ctx,scale);
         }
         for (let bullet of this.enemyBullets) {
+            bullet.draw(ctx, scale);
+        }
+        for (let bullet of this.playerBullets) {
             bullet.draw(ctx, scale);
         }
         this.player.draw(ctx, scale);
@@ -480,6 +491,17 @@ function overLapEnemies(enemies) {
     }
 }
 
+function setPlayerBullets() { // Aqui hay un problema
+    for (let bullet of this.playerBullets) {
+        bullet.update(this.level, deltaTime);
+        for (let enemy of this.enemies) {
+            if(overlapRectangles(bullet, game.enemy)){
+                game.enemy.takeDamage(bullet.damage); // Aplica daño al enemigo
+                bullet.destroyed = true;
+            }
+        }
+    }
+}
 
 // Call the start function to initiate the game
 main();
