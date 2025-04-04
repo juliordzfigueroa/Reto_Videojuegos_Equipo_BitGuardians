@@ -68,6 +68,7 @@ class HealthIncrease extends PowerUp {
 
 class EMPBomb extends PowerUp {
     constructor(color, width, height, x, y, type, empBomb, spawrate, rarity) {
+        super("yelloy", x, y, empBomb, spawrate, "Legendary");
     }
     
     effect() {
@@ -80,7 +81,21 @@ class EMPBomb extends PowerUp {
 }
 
 class Weapon extends PowerUp {
-    constructor(color, x, y, type, id, damage, range, spawrate, rarity) {
-        super("black", x, y, "weapon", id, damage, range, spawrate, "Epic", nid); 
+    constructor(color, width, height, x, y, wtype, spawrate, damage, rarity, animations) {
+        super("purple", x, y, wtype, spawrate, damage, "Epic"); 
+        this.type = wtype; // Tipo de arma que tendrá el jugador.
+        this.spawrate = spawrate; // Probabilidad de aparición del arma.
+        this.damage = damage;
+        this.animations = animations; // Animaciones que tenga el jugador dependiendo del arma
     }
+}
+
+function getRandomWeapon(){ // Método para obtener un arma aleatoria de la lista de armas.
+    const weapons = [ 
+        new Weapon("purple", 30, 30, 0, 0, "sword", 0.1, 20, "Epic", attackAnimations.sword),
+        new Weapon("purple", 30, 30, 0, 0, "gun", 0.1, 10, "Epic", attackAnimations.gun),
+        new Weapon("purple", 30, 30, 0, 0, "taser", 0.1, 15, "Epic", attackAnimations.taser),
+    ];
+    let randomIndex = Math.floor(Math.random() * weapons.length);
+    return weapons[randomIndex]; // Devuelve un arma aleatoria de la lista de armas.
 }

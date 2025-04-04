@@ -15,7 +15,8 @@ class Level {
         this.enemies = [];
         this.doors = []; // Nueva lista para almacenar puertas temporalmente
         this.enemyBullets = []; // Arreglo de balas de los enemigos
-        this.playerBullets = []; // Arreglo de balas del jugadorx
+        this.playerBullets = []; // Arreglo de balas del jugador
+        this.levelPowerUps = []; // Arreglo de powerups del nivel
 
         // Fill the rows array with a label for the type of element in the cell
         this.rows = rows.map((row, y) => {
@@ -66,7 +67,7 @@ class Level {
             this.actors.push(actor);
         } else if (actor.type === "powerup") {
             actor.setSprite(item.sprite, item.rect);
-            this.actors.push(actor);
+            this.levelPowerUps.push(actor);
             cellType = "empty";
         } else if (actor.type === "puzzle") {
             actor.setSprite(item.sprite, item.rect);
