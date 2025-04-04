@@ -69,3 +69,10 @@ En esta sala contará con 4 enemigos, estos pueden ser cuerpo a cuerpo o a dista
 Al igual que las anteriores, esta contara con 4 enemigos, y un puzzle, los enemigos podrán ser a distancia o cuerpo a cuerpo y el puzzle será definido aleatoriamente cada que se reinicie.
 
 ## Mécanicas y funcionalidades por terminar que están en desarrollo
+
+En cuanto a las mecanicas pendientes por desarrollar, están:
+
+- La hitbox de ataque del táser con el cambio de estado a los enemigos
+- Prueba del powerUp EMP para aturdir a los enemigos y cambiarlos de estado
+- *Sala del jefe y el jefe 
+- Implementación del obstaculo de los cables saliendo del piso
