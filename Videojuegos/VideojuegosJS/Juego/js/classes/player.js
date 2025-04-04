@@ -30,9 +30,7 @@ class Player extends AnimatedObject {
         this.attackHitboxTimer = 0; // Timer de la hitbox de ataque del jugador
         this.attackTimer = 0;
 
-        this.weapon = {
-            damage: 20
-        };
+        this.weapon = getRandomWeapon(); // Arma inicial del jugador, aleatoria al inicio
 
         // Movimientos del jugador
         this.movement = {
@@ -71,34 +69,6 @@ class Player extends AnimatedObject {
                 duration: 50,
                 moveFrames: [40, 46], 
                 idleFrames: [40, 40]
-            },
-            downattack: {
-                status: false,
-                repeat: false,
-                duration: 50,
-                moveFrames: [61, 63],
-                idleFrames: [60, 60]
-            },
-            leftattack: {
-                status: false,
-                repeat: false,
-                duration: 50,
-                moveFrames: [71, 74],
-                idleFrames: [70, 70]
-            },
-            rightattack: {
-                status: false,
-                repeat: false,
-                duration: 50,
-                moveFrames: [81, 84],
-                idleFrames: [80, 80]
-            },
-            upattack: {
-                status: false,
-                repeat: false,
-                duration: 50,
-                moveFrames: [91, 94],
-                idleFrames: [90, 90]
             }
         };
     }
@@ -159,7 +129,7 @@ class Player extends AnimatedObject {
 
     // Métodos de ataque hechos para cada arma
 
-    // Método para realizar el ataque de la espada, creando una hitbox temporal para cuando ataque el jugador
+    // Método para realizar el ataque de la espada
     swordAttack(direction) {
         let attackWidth, attackHeight, attackX, attackY; // Variables para la hitbox del ataque
         // Según la dirección, posiciona la hitbox en frente del jugador
@@ -190,7 +160,7 @@ class Player extends AnimatedObject {
             break;
         }
         
-        // Crea la hitbox del ataque
+        // Se define la hitbox temporal del ataque del jugador
         this.currentAttackHitbox = new HitBox(attackX, attackY, attackWidth, attackHeight);
 
         this.attackHitboxTimer = 300; // Duración de la hitbox de ataque
@@ -205,7 +175,7 @@ class Player extends AnimatedObject {
     }
 
     // Método para iniciar el ataque del jugador con la pistola
-    shoot(deltaTime, direction) {
+    shoot(direction) {
         let bdirection; // Variable para la dirección de la bala
         switch (direction) {
             case "up":
@@ -213,7 +183,7 @@ class Player extends AnimatedObject {
                 break;
             case "down":
                 bdirection = new Vec(0, 1); // Dirección hacia abajo
-                break;
+                break;  
             case "left":
                 bdirection = new Vec(-1, 0); // Dirección hacia la izquierda
                 break;
@@ -222,21 +192,30 @@ class Player extends AnimatedObject {
                 break;
         }
         this.shootCooldown = 1800; // Reiniciar el tiempo de recarga del disparo
-        let bullet = new Bullet(this.position.x, this.position.y, 1, 0.5, "blue", bdirection.x, bdirection.y, this.weapon.damage); // Crear la bala
+        let bullet = new Bullet(this.position.x + 0.6, this.position.y + 0.8, 0.7, 0.25, "blue", bdirection.x, bdirection.y, this.weapon.damage); // Crear la bala
         game.playerBullets.push(bullet); // Añadir la bala al array de balas del enemigo
     }
 
     startAttack(direction) {
-        const dirData = this.movement[direction + "attack"];
+        const dirData = attackAnimations[this.weapon.type][direction + "attack"];
         if (!dirData || dirData.status) return;
         dirData.status = true;        
-        this.setAnimation(...dirData.moveFrames, dirData.repeat, dirData.duration);
-        //this.swordAttack(direction); // Llama a la función de ataque
-        this.shoot(this.deltaTime, direction); // Llama a la función de disparo
+        this.setAnimation(...dirData.moveFrames, true, dirData.duration); // Se cambia a la animación de ataque
+        // Ejecuta la acción de ataque según el tipo de arma
+        if (this.weapon.type === "sword") {
+            this.swordAttack(direction);
+        } 
+        else if (this.weapon.type === "gun") {
+            this.shoot(direction);
+        }
+        else if (this.weapon.type === "taser") {
+            this.swordAttack(direction);
+        } 
+
     }
 
     stopAttack(direction) {
-        const dirData = this.movement[direction + "attack"];
+        const dirData = attackAnimations[this.weapon.type][direction + "attack"];
         if (!dirData || !dirData.status) return;
         dirData.status = false;
         const idleData = this.movement[direction];
@@ -273,3 +252,96 @@ class Player extends AnimatedObject {
     }
 }
 
+// Objeto que contiene los diferentes frames de ataque del jugador según el arma que use
+const attackAnimations = {
+    sword: {
+        upattack: { 
+            status: false,
+            repeat: false,
+            duration: 50, 
+            moveFrames: [91, 94], 
+            idleFrames: [90, 90]
+        },
+        downattack: { 
+            status: false,
+            repeat: false,
+            duration: 50,
+            moveFrames: [61, 63], 
+            idleFrames: [60, 60] 
+        },
+        leftattack: { 
+            status: false,
+            repeat: false,
+            duration: 50,
+            moveFrames: [71, 74], 
+            idleFrames: [70, 70] 
+        },
+        rightattack: { 
+            status: false,
+            repeat: false,
+            duration: 50,
+            moveFrames: [81, 84], 
+            idleFrames: [80, 80]
+        }
+    },
+    taser: {
+        upattack: { 
+            status: false,
+            repeat: false,
+            duration: 50,
+            moveFrames: [103, 105], 
+            idleFrames: [103, 103]
+        },
+        downattack: { 
+            status: false,
+            repeat: false,
+            duration: 50,
+            moveFrames: [100, 102], 
+            idleFrames: [100, 100] 
+        },
+        leftattack: { 
+            status: false,
+            repeat: false,
+            duration: 50,
+            moveFrames: [110, 113], 
+            idleFrames: [110, 110]
+        },
+        rightattack: { 
+            status: false,
+            repeat: false,
+            duration: 50,  
+            moveFrames: [120, 123], 
+            idleFrames: [120, 120]
+        }
+    },
+    gun:{
+        upattack: { 
+            status: false,
+            repeat: false,
+            duration: 50,
+            moveFrames: [134, 137], 
+            idleFrames: [134, 134]
+        },
+        downattack: { 
+            status: false,
+            repeat: false,
+            duration: 50,
+            moveFrames: [130, 133], 
+            idleFrames: [130, 130]
+        },
+        leftattack: { 
+            status: false,
+            repeat: false,
+            duration: 50,
+            moveFrames: [140, 143], 
+            idleFrames: [140, 140]
+        },
+        rightattack: { 
+            status: false,
+            repeat: false,
+            duration: 50,
+            moveFrames: [150, 153], 
+            idleFrames: [150, 150]
+        }
+    }
+};
