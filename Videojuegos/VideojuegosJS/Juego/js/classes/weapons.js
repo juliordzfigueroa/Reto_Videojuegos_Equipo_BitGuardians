@@ -85,7 +85,6 @@ class Weapon extends PowerUp {
         super("purple", x, y, wtype, spawrate, damage, "Epic"); 
         this.type = wtype; // Tipo de arma que tendrá el jugador.
         this.spawrate = spawrate; // Probabilidad de aparición del arma.
-
         this.damage = damage;
         this.animations = animations; // Animaciones que tenga el jugador dependiendo del arma
     }
