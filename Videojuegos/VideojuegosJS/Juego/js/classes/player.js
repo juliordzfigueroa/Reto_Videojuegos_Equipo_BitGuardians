@@ -30,6 +30,9 @@ class Player extends AnimatedObject {
         this.attackHitboxTimer = 0; // Timer de la hitbox de ataque del jugador
         this.attackTimer = 0;
 
+        this.cableDamageTimer = 0; // Timer del daño del cable
+        this.touchedCable = false;
+
         this.weapon = getRandomWeapon(); // Arma inicial del jugador, aleatoria al inicio
 
         // Movimientos del jugador
@@ -109,6 +112,8 @@ class Player extends AnimatedObject {
         if (this.currentAttackHitbox) {
             this.currentAttackHitbox.drawHitBox(ctx, scale);
         }
+
+        this.cableDamageTimer += deltaTime; // Aumentar el timer del daño del cable
     }
 
     startMovement(direction) {
