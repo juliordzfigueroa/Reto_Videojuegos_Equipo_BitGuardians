@@ -1,6 +1,6 @@
 class Robot extends Enemy {
-    constructor(color, width, height, x, y, type) {
-        super("red", width*2, height*2, x, y, "robot", 100, 10, 0.002, 2000);
+    constructor(color, width, height, x, y, type, hp = 100, damage = 10, speed = 0.002, cooldown = 2000) {
+        super(color, width*2, height*2, x, y, type, hp, damage, speed, cooldown);
         this.attackTimmer; // Tiempo de ataque del enemigo por defecto
         this.nextAttack = 1500; // Siguiente ataque del enemigo por defecto
         this.hitBox = new HitBox(this.position.x, this.position.y, this.size.x*0.6, this.size.y*0.8); // Hitbox del enemigo robot
@@ -13,7 +13,7 @@ class Robot extends Enemy {
                 repeat: true,
                 duration: 100,
                 moveFrames: [20, 26],
-                idleFrames: [20, 20]
+                idleFrames: [17, 17]
             },
             left: {
                 status: false,
@@ -22,7 +22,7 @@ class Robot extends Enemy {
                 repeat: true,
                 duration: 100,
                 moveFrames: [30, 36],
-                idleFrames: [30, 30]
+                idleFrames: [17, 17]
             },
             up: {
                 status: false,
@@ -31,7 +31,7 @@ class Robot extends Enemy {
                 repeat: true,
                 duration: 100,
                 moveFrames: [40, 45],
-                idleFrames: [40, 40]
+                idleFrames: [17, 17]
             },
             down: {
                 status: false,
@@ -40,7 +40,7 @@ class Robot extends Enemy {
                 repeat: true,
                 duration: 100,
                 moveFrames: [40, 45],
-                idleFrames: [40, 40]
+                idleFrames: [17, 17]
             }
         };
     }

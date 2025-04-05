@@ -73,7 +73,7 @@ class Game {
                         this.player.position.y = actor.position.y;
                     } else if (["1", "2", "3"].includes(lastDoorChar)) { //Puerta arriba en MAIN
                         this.player.position.x = actor.position.x;
-                        this.player.position.y = levelHeight - 3;
+                        this.player.position.y = levelHeight - 9;
                     } else if (["4", "5", "6"].includes(lastDoorChar)) { //Puerta abajo en MAIN
                         this.player.position.x = actor.position.x;
                         this.player.position.y = 1;
@@ -90,7 +90,6 @@ class Game {
         this.player.update(this.level, deltaTime);
         for (let enemy of this.enemies) {
             enemy.update(this.level, deltaTime);
-           // console.log(enemy.hp);
         }
         for (let actor of this.actors) {
             actor.update(this.level, deltaTime);
@@ -99,42 +98,10 @@ class Game {
         let currentActors = this.actors;
 
         // Evitar que los enemigos se sobrepongan entre sí
-        overLapEnemies(this.enemies);
+        overLapEnemies(this.enemies, currentActors);
+        //Verificar si el jugador toca un cable, puerta o pared
+        overlapPlayer(this.player, currentActors);
 
-        // Detect collisions
-        for (let actor of currentActors) {
-            if (actor.type != 'floor' && overlapRectangles(this.player, actor)) {
-                if (actor.type == 'wall') {
-                    console.log("Hit a wall");
-                }
-                if (actor.type == 'door') {
-                    if (!actor.isOpen) {
-                        console.log("Puerta cerrada. No puedes salir.");
-                        return;
-                    }
-
-                    const doorChar = actor.char;
-
-                    if (currentRoom === "main") {
-                        if (["<", "=", ">"].includes(doorChar)) {
-                            lastDoorChar = doorChar;
-                            this.player.entryPoint = { x: actor.position.x + 1, y: actor.position.y }; //Aqui no es necesario usar size
-                            this.moveToLevel("robotRoom");
-                        } else if (["4", "5", "6"].includes(doorChar)) {
-                            lastDoorChar = doorChar;
-                            this.player.entryPoint = { x: actor.position.x, y: actor.position.y - this.player.size.y }; //Aqui utilizamos size para que el jugador no se quede pegado a la pared
-                            this.moveToLevel("dronRoom");
-                        } else if (["7", "8", "9"].includes(doorChar)) {
-                            lastDoorChar = doorChar;
-                            this.player.entryPoint = { x: actor.position.x - this.player.size.x, y: actor.position.y };
-                            this.moveToLevel("puzzleRoom");
-                        } 
-                    } else {
-                        this.moveToLevel("main");
-                    }
-                }
-            }
-        }
 
         for (let bullet of this.enemyBullets) {
             bullet.update(this.level, deltaTime);
@@ -256,10 +223,12 @@ const levelChars = {
     "<": createDoorTile(2, 3, "<"),
     //Cables
     "C": {
-        objClass: AnimatedObject,
+        objClass: Cable,
         label: "cable",
         sprite: '../assets/sprites/escenarios/cable_suelo.png',
-        rect: new Rect(0, 0, 16, 32)
+        rect: new Rect(0, 0, 16, 32),
+        sheetCols: 2,
+        startFrame: [0, 1]
     },
 
     //PLAYER
@@ -275,6 +244,14 @@ const levelChars = {
     "R": {
         objClass: Robot,
         label: "robot",
+        sprite: '../assets/sprites/enemigos/robot_assets1.png',
+        rect: new Rect(0, 0, 39.6, 42), // Valores para las animaciones del enemigo cuerpo a cuerpo
+        sheetCols: 10,
+        startFrame: [0, 0]
+    },
+    "B": {
+        objClass: Boss,
+        label: "boss",
         sprite: '../assets/sprites/enemigos/robot_assets1.png',
         rect: new Rect(0, 0, 39.6, 42), // Valores para las animaciones del enemigo cuerpo a cuerpo
         sheetCols: 10,
@@ -369,7 +346,7 @@ function setEventListeners() {
         if (event.key === 'ArrowLeft') game.player.startAttack("left");
         if (event.key === 'ArrowDown') game.player.startAttack("down");
         if (event.key === 'ArrowRight') game.player.startAttack("right");
-        if (event.key === 'e') game.player.takeDamage(20); // Usado para las pruebas de daño
+        if (event.key === 'e') game.player.hp+=20; // Usado para las pruebas de daño
     });
 
     window.addEventListener("keyup", event => {
@@ -471,7 +448,7 @@ function updateCanvas(frameTime) {
     requestAnimationFrame(updateCanvas);
 }
 
-function overLapEnemies(enemies) {
+function overLapEnemies(enemies, actors) {
     for (let i = 0; i < enemies.length; i++) {
         const enemyA = enemies[i];
 
@@ -506,7 +483,93 @@ function overLapEnemies(enemies) {
                 }
             }
         }
+        for (let actor of actors) {
+            if (actor.type !== 'floor' && overlapRectangles(enemyA, actor)) {
+                if (actor.type === 'wall') {
+                    if (enemyA.velocity) { //Si chocca con una pared entonces su velocidad se revierte
+                        enemyA.velocity.x *= -1;
+                        enemyA.velocity.y *= -1;
+                    }
+                }
+            }
+        }
     }
+}
+
+function overlapPlayer(player, actors) {
+    let isTouchingCable = false;
+
+    for (let actor of actors) {
+        if (actor.type !== 'floor' && overlapRectangles(player, actor)) {
+            if (actor.type === 'wall') {
+                console.log("Hit a wall");
+            }
+
+            if (actor.type === 'door') {
+                if (!actor.isOpen) {
+                    console.log("Puerta cerrada.");
+                    return false; // Prevents passing through the door
+                }
+
+                const doorChar = actor.char;
+
+                if (currentRoom === "main") {
+                    if (["<", "=", ">"].includes(doorChar)) {
+                        lastDoorChar = doorChar;
+                        player.entryPoint = { x: actor.position.x + 1, y: actor.position.y };
+                        game.moveToLevel("robotRoom");
+                    } else if (["4", "5", "6"].includes(doorChar)) {
+                        lastDoorChar = doorChar;
+                        player.entryPoint = { x: actor.position.x, y: actor.position.y - player.size.y };
+                        game.moveToLevel("dronRoom");
+                    } else if (["7", "8", "9"].includes(doorChar)) {
+                        lastDoorChar = doorChar;
+                        player.entryPoint = { x: actor.position.x - player.size.x, y: actor.position.y };
+                        game.moveToLevel("puzzleRoom");
+                    } if (["1", "2", "3"].includes(doorChar)) {
+                        if (!areAllRoomsCompleted()) {
+                            actor.close();
+                            return false;
+                        } else {
+                            lastDoorChar = doorChar;
+                            player.entryPoint = { x: actor.position.x, y: actor.position.y + 1 };
+                            game.moveToLevel("BossRoom");
+                        }
+                    }
+                } else {
+                    game.moveToLevel("main");
+                }
+            }
+
+            if (actor.type === 'cable') {
+                isTouchingCable = true;
+
+                if (!player.touchedCable) {
+                    player.hp -= 5;
+                    player.cableDamageTimer = 0;
+                    player.touchedCable = true;
+                } else if (player.cableDamageTimer >= 3000) {
+                    player.hp -= 5;
+                    player.cableDamageTimer = 0;
+                }
+            }
+        }
+    }
+
+    if (!isTouchingCable) {
+        player.touchedCable = false;
+    }
+
+    return true;
+}
+
+function areAllRoomsCompleted() {
+    for (let level in GAME_LEVELS) {
+        if (level !== "main" && level !== "BossRoom" && !GAME_LEVELS[level].statusCompleted) {
+            return false;
+        }
+    }
+    return true;
 }
 
 // Call the start function to initiate the game

@@ -43,11 +43,19 @@ class Level {
             actor.setAnimation(...item.startFrame, true, 100);
             this.player = actor;
             cellType = "empty";
-        } else if (actor.type === "robot" || actor.type === "dron") {
+        } else if (actor.type === "robot" || actor.type === "dron" || actor.type === "boss") {
             this.addBackgroundFloor(x, y);
             actor.setSprite(item.sprite, item.rect);
             actor.sheetCols = item.sheetCols;
+            actor.setAnimation(...item.startFrame, true, 100);
             this.enemies.push(actor);
+            cellType = "empty";
+        } else if (actor.type == "cable") {
+            this.addBackgroundFloor(x, y);
+            actor.setSprite(item.sprite, item.rect);
+            actor.sheetCols = item.sheetCols;
+            actor.setAnimation(...item.startFrame, true, 100);
+            this.actors.push(actor);
             cellType = "empty";
         } else if (actor.type === "floor") {
             item.rect = this.randomTile(0, 3, 0, 16, 16);
@@ -79,17 +87,30 @@ class Level {
 
     //Función para configurar las puertas después de procesar todos los actores
     setupDoors() {
+        const allRoomsCompleted = areAllRoomsCompleted();
+
         this.doors.forEach(door => {
-            if (this.enemies.length > 0) {
-                door.close();
+            if (currentRoom === "main" && ["1", "2", "3"].includes(door.char) && !allRoomsCompleted) {
+                door.close(); //Cerrar puertas si no se han completado todas las habitaciones
+            } else if (currentRoom === "BossRoom" && this.enemies.length > 0) {
+                door.close(); //Cerrar puertas si hay enemigos en la habitación del jefe
+            } else if (this.enemies.length > 0) {
+                door.close(); //Cerrar puertas si hay enemigos en la habitación
             } else {
-                door.open();
+                door.open(); //Abrir puertas si no hay enemigos
             }
-            if (door.baseRect) {
+
+            if (door.baseRect && door.spritePath) {
                 door.setSprite(door.spritePath, door.baseRect);
             }
         });
     }
+
+
+
+
+
+
 
     addBackgroundFloor(x, y) {
         let floor = levelChars['.'];
