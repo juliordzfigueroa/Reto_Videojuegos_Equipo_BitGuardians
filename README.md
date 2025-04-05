@@ -55,18 +55,23 @@ En esta sala contará con 4 enemigos cuerpo a cuerpo, los cuales contarán con l
 |-------|----|-------|------|------|
 |Robot|100|10|1|2|
 
-### Sala con Enemigos Cuerpo a Cuerpo
-
+### Sala con Enemigos a distancia
 En esta sala contará con 4 enemigos, estos pueden ser cuerpo a cuerpo o a distancia, los cuales contarán con las siguientes estadisticas: 
 
 |Enemigo|Vida|Daño|Alcance|**Velocidad**|
 |-------|----|-------|------|------|
-|Robot|100|10|1|2|
 |Dron|50|20|Infinito|2.5| ** Valor por ajustar
 
 ### Sala con enemigos y puzzle
 
 Al igual que las anteriores, esta contara con 4 enemigos, y un puzzle, los enemigos podrán ser a distancia o cuerpo a cuerpo y el puzzle será definido aleatoriamente cada que se reinicie.
+
+### Sala del Boss
+|Enemigo|Vida|Daño|Alcance|**Velocidad**|
+|-------|----|-------|------|------|
+|Robot|200|20|1|3|
+
+Esta sala únicamente se abrirá cuando las demás hayan sido completadas. 
 
 ## Mécanicas y funcionalidades por terminar que están en desarrollo
 
@@ -74,5 +79,3 @@ En cuanto a las mecanicas pendientes por desarrollar, están:
 
 - La hitbox de ataque del táser con el cambio de estado a los enemigos
 - Prueba del powerUp EMP para aturdir a los enemigos y cambiarlos de estado
-- *Sala del jefe y el jefe 
-- Implementación del obstaculo de los cables saliendo del piso
