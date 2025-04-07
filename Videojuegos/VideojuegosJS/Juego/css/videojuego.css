@@ -33,6 +33,7 @@ body {
     justify-items: center;
 }
 
+
 h1{
   margin: 0px;
 }
@@ -126,4 +127,10 @@ canvas {
   
 #dropdownMenu a:hover{
     background-color: #333;
+}
+
+img {
+  width: 200px;
+  height: 200px;
+  margin-top: auto;
 }
