@@ -1,7 +1,7 @@
 -- Base de datos de videojuego final hack versión actualizada
 -- Datos Dummy para The Final Hack
 
-USE FinalHack_Actualizada;
+USE finalhack_actualizada;
 
 SET AUTOCOMMIT=0;
 INSERT INTO Arma VALUES
@@ -19,15 +19,15 @@ INSERT INTO Arma VALUES
 SET AUTOCOMMIT=0;
 INSERT INTO Jugador VALUES
 (1, 6, 'Jugador1', 31, 'jugador1@correo.com', 52, 93, 3.79, 100),
-(2, 16, 'Jugador2', 27, 'jugador2@correo.com', 54, 66, 4.63, 67),
+(2, 8, 'Jugador2', 27, 'jugador2@correo.com', 54, 66, 4.63, 67),
 (3, 6, 'Jugador3', 30, 'jugador3@correo.com', 42, 51, 2.83, 60),
 (4, 4, 'Jugador4', 30, 'jugador4@correo.com', 3, 68, 1.06, 59),
 (5, 1, 'Jugador5', 23, 'jugador5@correo.com', 73, 5, 1.31, 75),
 (6, 5, 'Jugador6', 20, 'jugador6@correo.com', 47, 47, 3.04, 67),
-(7, 18, 'Jugador7', 27, 'jugador7@correo.com', 4, 79, 1.2, 72),
-(8, 20, 'Jugador8', 35, 'jugador8@correo.com', 34, 10, 4.49, 91),
-(9, 17, 'Jugador9', 38, 'jugador9@correo.com', 84, 64, 2.75, 84),
-(10, 13, 'Jugador10', 24, 'jugador10@correo.com', 31, 87, 3.98, 81);
+(7, 9, 'Jugador7', 27, 'jugador7@correo.com', 4, 79, 1.2, 72),
+(8, 8, 'Jugador8', 35, 'jugador8@correo.com', 34, 10, 4.49, 91),
+(9, 7, 'Jugador9', 38, 'jugador9@correo.com', 84, 64, 2.75, 84),
+(10, 3, 'Jugador10', 24, 'jugador10@correo.com', 31, 87, 3.98, 81);
 
 SET AUTOCOMMIT=0;
 INSERT INTO Estadisticas VALUES
