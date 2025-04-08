@@ -1,6 +1,6 @@
 class Robot extends Enemy {
-    constructor(color, width, height, x, y, type, hp = 100, damage = 10, speed = 0.002, cooldown = 2000) {
-        super(color, width*2, height*2, x, y, type, hp, damage, speed, cooldown);
+    constructor(color, width, height, x, y, type) {
+        super(color, width*2, height*2, x, y, type, 100, 10, 0.002, 1500);
         this.attackTimmer; // Tiempo de ataque del enemigo por defecto
         this.nextAttack = 1500; // Siguiente ataque del enemigo por defecto
         this.hitBox = new HitBox(this.position.x, this.position.y, this.size.x*0.6, this.size.y*0.8); // Hitbox del enemigo robot

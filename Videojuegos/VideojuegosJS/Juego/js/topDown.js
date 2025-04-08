@@ -40,6 +40,7 @@ class Game {
         this.actors = level.actors;
         this.enemyBullets = level.enemyBullets;
         this.playerBullets = level.playerBullets;
+        this.levelPowerUps = level.levelPowerUps;
         levelPuzzle = new Puzzle(canvasWidth, canvasHeight);
     }
     
@@ -88,6 +89,7 @@ class Game {
 
     update(deltaTime) {
         this.player.update(this.level, deltaTime);
+        console.log(this.player.hasEMP)
         for (let enemy of this.enemies) {
             enemy.update(this.level, deltaTime);
         }
@@ -105,8 +107,8 @@ class Game {
 
         for (let bullet of this.enemyBullets) {
             bullet.update(this.level, deltaTime);
-            if (overlapRectangles(bullet, game.player)){
-                game.player.takeDamage(bullet.damage); // Aplica daño al jugador
+            if (overlapRectangles(bullet, this.player)){
+                this.player.takeDamage(bullet.damage); // Aplica daño al jugador
                 bullet.destroy = true; // Destruir la bala al impactar con el jugador
             }
         }
@@ -122,13 +124,23 @@ class Game {
         }
 
         // Update player stats bars
-        drawBar(game.player.hp, game.player.max_hp, 'green', 40, 480);
-        drawBar(game.player.shield, game.player.max_shield, 'blue', 40, 510);
+        drawBar(this.player.hp, this.player.max_hp, 'green', 40, 480);
+        drawBar(this.player.shield, this.player.max_shield, 'blue', 40, 510);
         // El método filter devuelve un nuevo arreglo con las balas que no han sido destruidas. Recuperado de: https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
-        game.enemyBullets = game.enemyBullets.filter(bullet => !bullet.destroy); // Función filter para borrar las balas que han sido marcadas como destruidas
-        game.playerBullets = game.playerBullets.filter(bullet => !bullet.destroy); // Función filter para borrar las balas que han sido marcadas como destruidas
+        this.enemyBullets = this.enemyBullets.filter(bullet => !bullet.destroy); // Función filter para borrar las balas que han sido marcadas como destruidas
+        this.playerBullets = this.playerBullets.filter(bullet => !bullet.destroy); // Función filter para borrar las balas que han sido marcadas como destruidas
         //Se quitan del array los enemigos que han sido destruidos
         this.enemies = this.enemies.filter(enemy => !enemy.destroyed);
+
+        for (let i = 0; i < this.level.levelPowerUps.length; i++) {
+            let powerup = this.level.levelPowerUps[i];
+            if (overlapRectangles(powerup, this.player)) {
+                powerup.effect(this.player);
+                this.level.levelPowerUps.splice(i, 1);
+                i--;
+            }
+        }
+
         this.level.enemies = this.enemies; //Actualiza la lista de enemigos en el nivel
         if(currentRoom == "puzzleRoom" && levelPuzzle.puzzleCompleated == true && this.enemies.length == 0) {
             GAME_LEVELS[currentRoom].statusCompleted = true; // Marca el nivel como completado
@@ -137,6 +149,15 @@ class Game {
         if (this.enemies.length == 0 && currentRoom != "main" && currentRoom != "puzzleRoom") {
             GAME_LEVELS[currentRoom].statusCompleted = true; // Marca el nivel como completado
             this.level.setupDoors(); // Actualiza la puerta
+        }
+
+        if (GAME_LEVELS[currentRoom].statusCompleted == true && currentRoom != "BossRoom") {
+            if (!GAME_LEVELS[currentRoom].powerupSpawned) { 
+               let powerup = getRandomPowerUp();
+               powerup.position = new Vec(Math.floor(levelWidth / 2), Math.floor(levelHeight / 2));
+               this.level.levelPowerUps.push(powerup);
+               GAME_LEVELS[currentRoom].powerupSpawned = true;
+            }
         }
         
         if (game.player.hp <= 0) {
@@ -158,6 +179,9 @@ class Game {
         }
         for (let bullet of this.playerBullets) {
             bullet.draw(ctx, scale);
+        }
+        for (let powerUp of this.level.levelPowerUps) {
+            powerUp.draw(ctx, scale);
         }
         this.player.draw(ctx, scale);
         this.player.hitBox.drawHitBox(ctx, scale);
@@ -338,6 +362,15 @@ function setEventListeners() {
             }
         }
 
+        if (event.key === 'e') {
+            if (game.player.hasEMP) {
+                for (let enemy of game.enemies) {
+                    enemy.takeDamage(100); // Aplica daño a todos los enemigos
+                }
+                game.player.hasEMP = false; // Desactiva el EMP
+            }
+        }
+
         if (event.key === 'w') game.player.startMovement("up");
         if (event.key === 'a') game.player.startMovement("left");
         if (event.key === 's') game.player.startMovement("down");
@@ -346,7 +379,6 @@ function setEventListeners() {
         if (event.key === 'ArrowLeft') game.player.startAttack("left");
         if (event.key === 'ArrowDown') game.player.startAttack("down");
         if (event.key === 'ArrowRight') game.player.startAttack("right");
-        if (event.key === 'e') game.player.hp+=20; // Usado para las pruebas de daño
     });
 
     window.addEventListener("keyup", event => {
@@ -545,11 +577,11 @@ function overlapPlayer(player, actors) {
                 isTouchingCable = true;
 
                 if (!player.touchedCable) {
-                    player.hp -= 5;
+                    player.takeDamage(5); 
                     player.cableDamageTimer = 0;
                     player.touchedCable = true;
                 } else if (player.cableDamageTimer >= 3000) {
-                    player.hp -= 5;
+                    player.takeDamage(5);
                     player.cableDamageTimer = 0;
                 }
             }
