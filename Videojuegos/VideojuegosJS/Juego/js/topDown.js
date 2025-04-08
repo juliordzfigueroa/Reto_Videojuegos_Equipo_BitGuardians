@@ -1,12 +1,12 @@
 /*
     topDown.js
-    Archivo principal para el juego de vista superior
+    Main file for the top-down game
     BitGuardians
  */
 
 "use strict";
 
-// Variables globales
+// Global variables
 const canvasWidth = 810;
 const canvasHeight = 600;
 
@@ -22,13 +22,16 @@ let lastDoorChar = null;
 
 let playerSpeed = 0.005;
 
-// Escala del mundo completo, se aplicará a todos los objetos
-// Cada unidad en el archivo de nivel se dibujará como estos muchos píxeles cuadrados
+// Scale of the whole world, to be applied to all objects
+// Each unit in the level file will be drawn as these many square pixels
 const scale = 30;
 const levelWidth = Math.floor(canvasWidth / scale);
 const levelHeight = Math.floor(canvasHeight / scale);
 
 let puzzleActive = false;
+let pauseActive = false; // Booleano creado para pausar el juego
+const pauseOptions = ["Continuar", "Reiniciar", "Controles"];
+let pauseIndex = 0;
 let levelPuzzle; // Puzzle no definido para el nivel
 
 class Game {
@@ -42,7 +45,7 @@ class Game {
         this.playerBullets = level.playerBullets;
         levelPuzzle = new Puzzle(canvasWidth, canvasHeight);
     }
-
+    
     moveToLevel(newRoom) {
         lastRoom = currentRoom;
         currentRoom = newRoom;
@@ -60,27 +63,27 @@ class Game {
             this.actors = this.level.actors;
         }
 
-        // Acomodar al enemigo dependiendo de la dirección de entrada
-        if (lastRoom && lastDoorChar) { // De dónde viene el jugador y la dirección de entrada
+        //Acomodar al enemigo dependiendo de la dirección de entrada
+        if (lastRoom && lastDoorChar) { //De donde viene el jugador y la dirección de entrada
             for (let actor of this.level.actors) {
                 if (actor.type === "door" && actor.char === lastDoorChar) {
-                    // Determina la posición basada en la dirección de entrada
-                    if (["<", "=", ">"].includes(lastDoorChar)) { // Puerta derecha en MAIN
-                        this.player.position.x = levelWidth - 3;
+                    //Determina la posición basada en la dirección de entrada
+                    if (["<", "=", ">"].includes(lastDoorChar)) { //Puerta derecha en MAIN
+                        this.player.position.x = levelWidth -3;
                         this.player.position.y = actor.position.y;
-                    } else if (["7", "8", "9"].includes(lastDoorChar)) { // Puerta izquierda en MAIN
+                    } else if (["7", "8", "9"].includes(lastDoorChar)) { //Puerta izquierda en MAIN
                         this.player.position.x = 1;
                         this.player.position.y = actor.position.y;
-                    } else if (["1", "2", "3"].includes(lastDoorChar)) { // Puerta arriba en MAIN
+                    } else if (["1", "2", "3"].includes(lastDoorChar)) { //Puerta arriba en MAIN
                         this.player.position.x = actor.position.x;
                         this.player.position.y = levelHeight - 9;
-                    } else if (["4", "5", "6"].includes(lastDoorChar)) { // Puerta abajo en MAIN
+                    } else if (["4", "5", "6"].includes(lastDoorChar)) { //Puerta abajo en MAIN
                         this.player.position.x = actor.position.x;
                         this.player.position.y = 1;
-                    }
-                }
-            }
-        } if (lastRoom !== "main") { // Para regresar al main usamos las coordenadas de entrada ajustadas para que el jugador no se quede pegado a la pared
+                    } 
+                } 
+            } 
+        } if (lastRoom !== "main") { //Para regresar al main usamos las coordenadas de entrada ajustadas para que el jugador no se quede pegado a la pared
             this.player.position.x = this.player.entryPoint.x;
             this.player.position.y = this.player.entryPoint.y;
         }
@@ -99,12 +102,13 @@ class Game {
 
         // Evitar que los enemigos se sobrepongan entre sí
         overLapEnemies(this.enemies, currentActors);
-        // Verificar si el jugador toca un cable, puerta o pared
+        //Verificar si el jugador toca un cable, puerta o pared
         overlapPlayer(this.player, currentActors);
+
 
         for (let bullet of this.enemyBullets) {
             bullet.update(this.level, deltaTime);
-            if (overlapRectangles(bullet, game.player)) {
+            if (overlapRectangles(bullet, game.player)){
                 game.player.takeDamage(bullet.damage); // Aplica daño al jugador
                 bullet.destroy = true; // Destruir la bala al impactar con el jugador
             }
@@ -113,23 +117,23 @@ class Game {
         for (let bullet of this.playerBullets) {
             bullet.update(this.level, deltaTime);
             for (let enemy of this.enemies) {
-                if (overlapRectangles(bullet, enemy.hitBox)) {
+                if(overlapRectangles(bullet, enemy.hitBox)){
                     enemy.takeDamage(bullet.damage); // Aplica daño al enemigo
                     bullet.destroy = true;
                 }
             }
         }
 
-        // Actualizar las barras de estadísticas del jugador
+        // Update player stats bars
         drawBar(game.player.hp, game.player.max_hp, 'green', 40, 480);
         drawBar(game.player.shield, game.player.max_shield, 'blue', 40, 510);
         // El método filter devuelve un nuevo arreglo con las balas que no han sido destruidas. Recuperado de: https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
         game.enemyBullets = game.enemyBullets.filter(bullet => !bullet.destroy); // Función filter para borrar las balas que han sido marcadas como destruidas
         game.playerBullets = game.playerBullets.filter(bullet => !bullet.destroy); // Función filter para borrar las balas que han sido marcadas como destruidas
-        // Se quitan del array los enemigos que han sido destruidos
+        //Se quitan del array los enemigos que han sido destruidos
         this.enemies = this.enemies.filter(enemy => !enemy.destroyed);
-        this.level.enemies = this.enemies; // Actualiza la lista de enemigos en el nivel
-        if (currentRoom == "puzzleRoom" && levelPuzzle.puzzleCompleated == true && this.enemies.length == 0) {
+        this.level.enemies = this.enemies; //Actualiza la lista de enemigos en el nivel
+        if(currentRoom == "puzzleRoom" && levelPuzzle.puzzleCompleated == true && this.enemies.length == 0) {
             GAME_LEVELS[currentRoom].statusCompleted = true; // Marca el nivel como completado
             this.level.setupDoors(); // Actualiza la puerta
         }
@@ -137,7 +141,7 @@ class Game {
             GAME_LEVELS[currentRoom].statusCompleted = true; // Marca el nivel como completado
             this.level.setupDoors(); // Actualiza la puerta
         }
-
+        
         if (game.player.hp <= 0) {
             console.log("Game Over");
             restartGame();
@@ -150,7 +154,7 @@ class Game {
         }
         for (let enemy of this.enemies) {
             enemy.draw(ctx, scale);
-            enemy.hitBox.drawHitBox(ctx, scale);
+            enemy.hitBox.drawHitBox(ctx,scale);
         }
         for (let bullet of this.enemyBullets) {
             bullet.draw(ctx, scale);
@@ -164,7 +168,7 @@ class Game {
 }
 
 function createWallTile(x) {
-    //Función para crear un tile de pared con el sprite especificado
+    //Function to create a wall tile with the specified sprite
     return {
         objClass: GameObject,
         label: "wall",
@@ -174,7 +178,7 @@ function createWallTile(x) {
 }
 
 function createDoorTile(x, y, char) {
-    //Función para crear un tile de puerta con el sprite especificado
+    //Function to create a wall tile with the specified sprite
     return {
         objClass: Door,
         label: "door",
@@ -184,9 +188,10 @@ function createDoorTile(x, y, char) {
 }
 
 
-// Objeto que contiene los caracteres del nivel
+// Object with the characters that appear in the level description strings
+// and their corresponding objects
 const levelChars = {
-    // Rect definido como un desplazamiento desde el primer tile y el tamaño de los tiles
+    // Rect defined as offset from the first tile, and size of the tiles
     ".": {
         objClass: GameObject,
         label: "floor",
@@ -194,28 +199,28 @@ const levelChars = {
         rect: new Rect(0, 0, 16, 16)
     },
 
-    //Paredes
-    "*": createWallTile(0), // Esquina superior izquierda
-    ":": createWallTile(1), // Esquina superior derecha
+    //WALLS
+    "*": createWallTile(0), // Upper left corner wall
+    ":": createWallTile(1), // Upper right
     "#": createWallTile(2), // Vertical
-    "/": createWallTile(3), // Esquina inferior izquierda
-    "$": createWallTile(4), // Esquina inferior derecha
+    "/": createWallTile(3), // Lower left
+    "$": createWallTile(4), // Lower right
     "&": createWallTile(5), // Horizontal
 
-    //Puertas
-    //Arriba
+    //DOORS
+    //Upper
     "1": createDoorTile(0, 0, "1"),
     "2": createDoorTile(1, 0, "2"),
     "3": createDoorTile(2, 0, "3"),
-    //Abajo
+    //Down
     "4": createDoorTile(0, 1, "4"),
     "5": createDoorTile(1, 1, "5"),
     "6": createDoorTile(2, 1, "6"),
-    //Derecha
+    //Right
     "7": createDoorTile(0, 2, "7"),
     "8": createDoorTile(1, 2, "8"),
     "9": createDoorTile(2, 2, "9"),
-    //Izquierda
+    //Left
     ">": createDoorTile(0, 3, ">"),
     "=": createDoorTile(1, 3, "="), 
     "<": createDoorTile(2, 3, "<"),
@@ -229,7 +234,7 @@ const levelChars = {
         startFrame: [0, 1]
     },
 
-    //Jugador
+    //PLAYER
     "@": {
         objClass: Player,
         label: "player",
@@ -238,12 +243,12 @@ const levelChars = {
         sheetCols: 10,
         startFrame: [0, 0]
     },
-    //Enemigos
+    //ENEMIES
     "R": {
         objClass: Robot,
         label: "robot",
         sprite: '../assets/sprites/enemigos/robot_assets1.png',
-        rectParams: [0, 0, 39.6, 42], // Valores para las animaciones del enemigo cuerpo a cuerpo
+        rect: new Rect(0, 0, 39.6, 42), // Valores para las animaciones del enemigo cuerpo a cuerpo
         sheetCols: 10,
         startFrame: [0, 0]
     },
@@ -251,7 +256,7 @@ const levelChars = {
         objClass: Boss,
         label: "boss",
         sprite: '../assets/sprites/enemigos/robot_assets1.png',
-        rectParams: [0, 0, 39.6, 42], // Valores para las animaciones del enemigo cuerpo a cuerpo
+        rect: new Rect(0, 0, 39.6, 42), // Valores para las animaciones del enemigo cuerpo a cuerpo
         sheetCols: 10,
         startFrame: [0, 0]
     },
@@ -259,7 +264,7 @@ const levelChars = {
         objClass: Dron,
         label: "dron",
         sprite: '../assets/sprites/enemigos/dron_assets1.png',
-        rectParams: [0, 0, 17.6, 19], // Valores para las animaciones del enemigo cuerpo a cuerpo
+        rect: new Rect(0, 0, 17.6, 19), // Valores para las animaciones del enemigo cuerpo a cuerpo
         sheetCols: 10,
         startFrame: [0, 0]
     },
@@ -275,13 +280,14 @@ const levelChars = {
 
 
 function main() {
-    // Establece un callback para cuando la página se haya cargado,
-    // de modo que se pueda encontrar el canvas
+    // Set a callback for when the page is loaded,
+    // so that the canvas can be found
     window.onload = init;
 }
 
 function init() {
     const canvas = document.getElementById('canvas');
+    //const canvas = document.querySelector('canvas');
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
     ctx = canvas.getContext('2d');
@@ -304,17 +310,41 @@ function restartGame() { // Función para reiniciar el juego tras un gameover
 }
 
 function setEventListeners() {
-  
     window.addEventListener("keydown", event => {
-        if (event.key === "Escape") {
-            if (puzzleActive) { // Si el puzzle está activo
-                puzzleActive = false;
+        if (pauseActive){
+            if (event.key == "ArrowUp"){
+                pauseIndex = (pauseIndex - 1 + pauseOptions.length) % pauseOptions.length;
+            }
+            else if (event.key == "ArrowDown"){
+                pauseIndex = (pauseIndex + 1) % pauseOptions.length;
+            }
+            else if (event.key == "Enter"){
+                if (pauseOptions[pauseIndex] == "Continuar"){
+                    pauseActive = false;
+                }
+                else if (pauseOptions[pauseIndex] == "Reiniciar"){
+                    pauseActive = false;
+                    restartGame();
+                }
+                else if (pauseOptions[pauseIndex] == "Controles"){
+                    // funcion para cambiar controles y sonido
+                }
+                return;
             }
             return;
         }
-        else {
-            //pausa el juego si el puzzle no está activo
+
+        if (event.key === "Escape") {
+            if (puzzleActive){ // Si el puzzle está activo
+                puzzleActive = false;
+            }
+            else{
+                pauseActive = !pauseActive;
+            }
+            return;
         }
+
+        if (puzzleActive) return;
                 
                 
         if (event.key === 'f') { // Si el jugador esta cerca del objeto que activa el puzzle.
@@ -409,6 +439,28 @@ function drawPuzzleOverlay(ctx) {
    }
 }
 
+function drawPauseMenu(ctx) {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.7)"; // Dibuja un overlay semitransparente 
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+    ctx.font = "32px monospace";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.fillText("PAUSA", canvasWidth / 2, canvasHeight / 2 - 100);
+
+    ctx.font = "24px monospace";
+    for (let i = 0; i < pauseOptions.length; i++){
+        if (i == pauseIndex){
+            ctx.fillStyle = "cyan";
+            ctx.fillText("> " + pauseOptions[i], canvasWidth / 2, canvasHeight / 2 + i * 40);
+        } 
+        else{
+            ctx.fillStyle = "white";
+            ctx.fillText("  " + pauseOptions[i], canvasWidth / 2, canvasHeight / 2 + i * 40);
+        }
+    }
+}
+
 function isPuzzleNear() { // Función que verifica si el puzzle está cerca del jugador
   const max_d = 2; // Variable usada como umbral como máxima distancia al puzzle
   for (let actor of game.actors) {
@@ -422,7 +474,7 @@ function isPuzzleNear() { // Función que verifica si el puzzle está cerca del 
   return false;
 }
 
-// Función que se llamará para el bucle del juego
+// Function that will be called for the game loop
 function updateCanvas(frameTime) {
     if (frameStart === undefined) {
         frameStart = frameTime;
@@ -435,12 +487,15 @@ function updateCanvas(frameTime) {
         // Mientras el puzzle esté activo, se muestra el overlay y se desactivan otros controles
         game.draw(ctx, scale);
         drawPuzzleOverlay(ctx);
+    } else if (pauseActive){
+        game.draw(ctx, scale);
+        drawPauseMenu(ctx);
     } else {  
         game.draw(ctx, scale);  
         game.update(deltaTime);
     }
 
-    // Actualiza el tiempo para el siguiente frame
+    // Update time for the next frame
     frameStart = frameTime;
     requestAnimationFrame(updateCanvas);
 }
@@ -505,7 +560,7 @@ function overlapPlayer(player, actors) {
             if (actor.type === 'door') {
                 if (!actor.isOpen) {
                     console.log("Puerta cerrada.");
-                    return false; //Evita pasar por la puerta
+                    return false; // Prevents passing through the door
                 }
 
                 const doorChar = actor.char;
@@ -569,7 +624,7 @@ function areAllRoomsCompleted() {
     return true;
 }
 
-//Llamada a la función principal para iniciar el juego
+// Call the start function to initiate the game
 main();
 
     
