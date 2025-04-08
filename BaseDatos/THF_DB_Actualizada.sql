@@ -125,3 +125,5 @@ CREATE TABLE Estadisticas_Juego(
     partidas_perdidas INT DEFAULT 0,
     FOREIGN KEY (id_jugador) REFERENCES Jugador(id_jugador)
 );
+
+select * from finalhack_actualizada.jugador;
