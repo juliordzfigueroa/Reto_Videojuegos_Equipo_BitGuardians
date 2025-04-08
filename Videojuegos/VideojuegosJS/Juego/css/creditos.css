@@ -22,7 +22,7 @@ body {
 
 /* Imagen del título */
 #tituloCreditos {
-  margin-top: 25px;
+  margin-top: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,7 +30,7 @@ body {
 }
 
 #tituloCreditos img {
-  width: 300px;
+  width: 350px;
   height: auto;
   image-rendering: pixelated;
 }

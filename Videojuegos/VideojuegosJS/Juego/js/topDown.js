@@ -29,6 +29,9 @@ const levelWidth = Math.floor(canvasWidth / scale);
 const levelHeight = Math.floor(canvasHeight / scale);
 
 let puzzleActive = false;
+let pauseActive = false; // Booleano creado para pausar el juego
+const pauseOptions = ["Continuar", "Reiniciar", "Controles"];
+let pauseIndex = 0;
 let levelPuzzle; // Puzzle no definido para el nivel
 
 class Game {
@@ -307,17 +310,41 @@ function restartGame() { // Función para reiniciar el juego tras un gameover
 }
 
 function setEventListeners() {
-  
     window.addEventListener("keydown", event => {
-        if (event.key === "Escape") {
-            if (puzzleActive) { // Si el puzzle está activo
-                puzzleActive = false;
+        if (pauseActive){
+            if (event.key == "ArrowUp"){
+                pauseIndex = (pauseIndex - 1 + pauseOptions.length) % pauseOptions.length;
+            }
+            else if (event.key == "ArrowDown"){
+                pauseIndex = (pauseIndex + 1) % pauseOptions.length;
+            }
+            else if (event.key == "Enter"){
+                if (pauseOptions[pauseIndex] == "Continuar"){
+                    pauseActive = false;
+                }
+                else if (pauseOptions[pauseIndex] == "Reiniciar"){
+                    pauseActive = false;
+                    restartGame();
+                }
+                else if (pauseOptions[pauseIndex] == "Controles"){
+                    // funcion para cambiar controles y sonido
+                }
+                return;
             }
             return;
         }
-        else {
-            //pausa el juego si el puzzle no está activo
+
+        if (event.key === "Escape") {
+            if (puzzleActive){ // Si el puzzle está activo
+                puzzleActive = false;
+            }
+            else{
+                pauseActive = !pauseActive;
+            }
+            return;
         }
+
+        if (puzzleActive) return;
                 
                 
         if (event.key === 'f') { // Si el jugador esta cerca del objeto que activa el puzzle.
@@ -412,6 +439,28 @@ function drawPuzzleOverlay(ctx) {
    }
 }
 
+function drawPauseMenu(ctx) {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.7)"; // Dibuja un overlay semitransparente 
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+    ctx.font = "32px monospace";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.fillText("PAUSA", canvasWidth / 2, canvasHeight / 2 - 100);
+
+    ctx.font = "24px monospace";
+    for (let i = 0; i < pauseOptions.length; i++){
+        if (i == pauseIndex){
+            ctx.fillStyle = "cyan";
+            ctx.fillText("> " + pauseOptions[i], canvasWidth / 2, canvasHeight / 2 + i * 40);
+        } 
+        else{
+            ctx.fillStyle = "white";
+            ctx.fillText("  " + pauseOptions[i], canvasWidth / 2, canvasHeight / 2 + i * 40);
+        }
+    }
+}
+
 function isPuzzleNear() { // Función que verifica si el puzzle está cerca del jugador
   const max_d = 2; // Variable usada como umbral como máxima distancia al puzzle
   for (let actor of game.actors) {
@@ -438,6 +487,9 @@ function updateCanvas(frameTime) {
         // Mientras el puzzle esté activo, se muestra el overlay y se desactivan otros controles
         game.draw(ctx, scale);
         drawPuzzleOverlay(ctx);
+    } else if (pauseActive){
+        game.draw(ctx, scale);
+        drawPauseMenu(ctx);
     } else {  
         game.draw(ctx, scale);  
         game.update(deltaTime);

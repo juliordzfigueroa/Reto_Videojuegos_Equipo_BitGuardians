@@ -3,21 +3,39 @@
     <head>
         <title>The Final Hack</title>
         <link rel="stylesheet" href="../css/estadisticas.css">
-        <script src="../js/videojuego.js"></script>
     </head>
 
     <body>
         <div id="headerContainer">
-            <h1>Estadísticas</h1>
+            <div id="tituloCreditos">
+                <img src="../images/estadisticastitulo.png" alt="Estadísticas">
+            </div>
             <div id="menu">
                 <button id="menuButton">&#9776;</button>
                 <div id="dropdownMenu">
+                    <a href="../html/prueba.html">Inicio</a>
                     <a href="../html/videojuego.html">Videojuego</a>
-                    <a href="../html/creditos.html">Estadísticas</a>
+                    <a href="../html/creditos.html">Creditos</a>
+                    <a href="../html/Info.html">Acerca de</a>
                 </div>
             </div>
         </div>
-        <canvas id="canvas"></canvas>
+
+        <div id="estadisticasContainer">
+            <div class="cuadroEstadistica">
+                <div class="tituloEstadisticas">
+                    <img src="../images/jugadorestadisticas.png" alt="Jugador Estadísticas">
+                </div>
+           
+            </div>
+            <div class="cuadroEstadistica">
+                <div class="tituloEstadisticas">
+                    <img src="../images/partidasestadisticas.png" alt="Partida Estadísticas">
+                </div>
+               
+            </div>
+        </div>
+
         <script>
             const menuButton = document.getElementById('menuButton');
             const dropdownMenu = document.getElementById('dropdownMenu');
@@ -36,8 +54,6 @@
                     dropdownMenu.style.display = 'none';
                 }
             };
-    
-            // Tu función main del juego
             main();
         </script>
     </body>

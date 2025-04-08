@@ -6,8 +6,19 @@
         <link rel="stylesheet" href="../css/Info.css">
     </head>
     <body>
-        <div style="text-align: center; margin-top: 20px;">
-            <img src="../images/infotitulo.png" alt="The Final Hack Logo" style="width: 500px; image-rendering: pixelated;">
+        <div id="headerContainer">
+            <div id="tituloInfo">
+                <img src="../images/infotitulo.png" alt="The Final Hack Logo">
+            </div>
+            <div id="menu">
+                <button id="menuButton">&#9776;</button>
+                <div id="dropdownMenu">
+                    <a href="../html/prueba.html">Inicio</a>
+                    <a href="../html/videojuego.html">Videojuego</a>
+                    <a href="../html/estadisticas.html">Estadisticas</a>
+                    <a href="../html/creditos.html">Creditos</a>
+                </div>
+            </div>
         </div>
         <div class="resumeninfo">
             <p>¿Qué harías si el destino del mundo dependiera de un solo hacker? <strong>The Final Hack</strong>, un roguelite de acción, con un combate cuerpo a cuerpo similar al de <em>Dead Cells</em> y una vista desde arriba inspirada en <em>The Binding of Isaac</em>. Es un juego donde encarnas a un hacker de élite con nombre clave <strong>Cipher</strong>, el encargado de infiltrarse a una base de seguridad robada por "The Core" para evitar una catástrofe mundial.</p>
@@ -23,14 +34,31 @@
         <br>
         <br>
         <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
         <div class="cerebro">
             <img src="../images/infocerebro.png" alt="Cerebro pixelado" class="cerebro-img">
         </div>
+
+        <script>
+            const menuButton = document.getElementById('menuButton');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+
+            menuButton.onclick = function () {
+                if(dropdownMenu.style.display === 'block'){
+            dropdownMenu.style.display = 'none';
+            } 
+                else{
+                dropdownMenu.style.display = 'block';
+            }
+            };
+
+            document.onclick = function (e) {
+                if(e.target !== menuButton && e.target.parentNode !== dropdownMenu){
+                    dropdownMenu.style.display = 'none';
+                }
+            };
+    
+            // Tu función main del juego
+            main();
+        </script>
     </body>
 </html>
