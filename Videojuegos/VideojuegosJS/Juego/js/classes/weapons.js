@@ -94,6 +94,17 @@ class Weapon extends PowerUp {
         this.wtype = wtype; // Tipo de arma que tendrá el jugador.
         this.damage = damage;
         this.animations = animations; // Animaciones que tenga el jugador dependiendo del arma
+        switch(wtype) {
+            case "sword":
+                this.setSprite("../assets/sprites/powerUps/sword_asset.png", new Rect(0, 0, 26, 32));
+                break;
+            case "gun":
+                this.setSprite("../assets/sprites/powerUps/gun_asset.png", new Rect(0, 0, 26, 32));
+                break;
+            case "taser":
+                this.setSprite("../assets/sprites/powerUps/taser_asset.png", new Rect(0, 0, 26, 32));
+                break;
+        }
     }
 }
 
