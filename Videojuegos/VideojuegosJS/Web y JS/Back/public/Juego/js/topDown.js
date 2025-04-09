@@ -296,7 +296,7 @@ const levelChars = {
         objClass: Robot,
         label: "robot",
         sprite: '../assets/sprites/enemigos/robot_assets1.png',
-        rect: new Rect(0, 0, 39.6, 42), // Valores para las animaciones del enemigo cuerpo a cuerpo
+        rectParams: [0, 0, 39.6, 42], // Valores para las animaciones del enemigo cuerpo a cuerpo
         sheetCols: 10,
         startFrame: [0, 0]
     },
@@ -304,7 +304,7 @@ const levelChars = {
         objClass: Boss,
         label: "boss",
         sprite: '../assets/sprites/enemigos/robot_assets1.png',
-        rect: new Rect(0, 0, 39.6, 42), // Valores para las animaciones del enemigo cuerpo a cuerpo
+        rectParams: [0, 0, 39.6, 42], // Valores para las animaciones del enemigo cuerpo a cuerpo
         sheetCols: 10,
         startFrame: [0, 0]
     },
@@ -312,7 +312,7 @@ const levelChars = {
         objClass: Dron,
         label: "dron",
         sprite: '../assets/sprites/enemigos/dron_assets1.png',
-        rect: new Rect(0, 0, 17.6, 19), // Valores para las animaciones del enemigo cuerpo a cuerpo
+        rectParams: [0, 0, 17.6, 19], // Valores para las animaciones del enemigo cuerpo a cuerpo
         sheetCols: 10,
         startFrame: [0, 0]
     },

@@ -45,7 +45,8 @@ class Level {
             cellType = "empty";
         } else if (actor.type === "robot" || actor.type === "dron" || actor.type === "boss") {
             this.addBackgroundFloor(x, y);
-            actor.setSprite(item.sprite, item.rect);
+            let instanceRect = new Rect(...item.rectParams);
+            actor.setSprite(item.sprite, instanceRect);
             actor.sheetCols = item.sheetCols;
             actor.setAnimation(...item.startFrame, true, 100);
             this.enemies.push(actor);
