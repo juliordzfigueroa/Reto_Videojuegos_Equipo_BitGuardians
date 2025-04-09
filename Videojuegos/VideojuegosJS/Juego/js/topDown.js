@@ -92,11 +92,13 @@ class Game {
 
     update(deltaTime) {
         this.player.update(this.level, deltaTime);
+        console.log(this.player.hasEMP);
         if (this.player.previousWeapon) {
             console.log(this.player.previousWeapon.wtype);
         }
         for (let enemy of this.enemies) {
             enemy.update(this.level, deltaTime);
+            console.log(enemy.state);
         }
         for (let actor of this.actors) {
             actor.update(this.level, deltaTime);
@@ -135,13 +137,18 @@ class Game {
                     let revertWeapon = this.player.weapon;
                     this.player.weapon = powerup;
                     powerup.isCollected = true;
-                    let droppedWeapon = revertWeapon.clone();
+                    let droppedWeapon = new Weapon("purple", 30, 30, revertWeapon.position.x, revertWeapon.position.y, "weapon", revertWeapon.wtype, revertWeapon.damage, "Epic", revertWeapon.animations);
                     droppedWeapon.position = new Vec(powerup.position.x + 1, powerup.position.y);
                     this.level.levelPowerUps.push(droppedWeapon);
                     GAME_LEVELS[currentRoom].roomPowerUp = droppedWeapon;
                     this.player.powerupCooldown = 1000;
                     break;
-                } else {
+                } 
+                else if (powerup.type === "empBomb") {
+                    this.player.hasEMP = true; // El jugador obtiene una bomba EMP.
+                    powerup.isCollected = true;
+                }
+                else {
                     powerup.effect(this.player);
                     powerup.isCollected = true;
                 }
@@ -362,7 +369,6 @@ function setEventListeners() {
             //pausa el juego si el puzzle no está activo
         }
                 
-                
         if (event.key === 'f') { // Si el jugador esta cerca del objeto que activa el puzzle.
             if (isPuzzleNear()) {
                 if (!puzzleActive){ // Si el puzzle no está activo
@@ -384,9 +390,9 @@ function setEventListeners() {
         if (event.key === 'e') {
             if (game.player.hasEMP) {
                 for (let enemy of game.enemies) {
-                    enemy.takeDamage(100); // Aplica daño a todos los enemigos
+                    enemy.state = "stunned"; // Cambia el estado de todos los enemigos a aturdido.
                 }
-                game.player.hasEMP = false; // Desactiva el EMP
+                game.player.hasEMP = false; // Marca como usado la bombaEMP
             }
         }
 

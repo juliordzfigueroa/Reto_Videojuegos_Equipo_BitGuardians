@@ -19,7 +19,6 @@ class Enemy extends AnimatedObject {
         this.state = "idle"; // Estado del enemigo
         this.speed = speed; // Velocidad del enemigo
         this.stunTime = 0; // Tiempo de aturdimiento del enemigo por defecto
-        this.state = "idle"; // Estado del enemigo por defecto
         this.speed = speed; // Velocidad máxima del enemigo por defecto
         this.destroyed = false; // Estado de destrucción del enemigo por defecto
     }

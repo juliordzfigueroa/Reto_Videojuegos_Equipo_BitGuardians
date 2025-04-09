@@ -13,7 +13,6 @@ class PowerUp extends GameObject {
         this.effectN = effectN; // Nombre del efecto que tendrá cada powerup.
         this.isCollected = false; // Variable para saber si el powerup fue recogido tras completar la sala.
         this.rarity = rarity; // Variable para saber la rareza de cada powerup.
-        //this.setSprite('../assets/sprites/powerUps/assets_powerUps2.png', powerUpSprites.effectN);
     }
 
     update() {
@@ -32,6 +31,7 @@ class Heal extends PowerUp {
     constructor(color, width, height, x, y, type, effectN, rarity) {
         super("red", x, y, type, "heal", "Uncommon"); 
         this.type = "heal"; // Tipo de powerup que será la cura.
+        this.setSprite("../assets/sprites/powerUps/heal_asset.png", new Rect(0, 0, 26, 32));
     }
 
     effect(player) {
@@ -47,6 +47,7 @@ class Shield extends PowerUp {
     constructor(color, width, height, x, y, type, effectN, rarity) {
         super("blue", x, y, type, "shield", "Uncommon"); 
         this.type = "shield"; // Tipo de powerup que será el escudo.
+        this.setSprite("../assets/sprites/powerUps/shield_asset.png", new Rect(0, 0, 26, 32));
     }
 
     effect(player) {
@@ -62,6 +63,7 @@ class HealthIncrease extends PowerUp {
     constructor(color, width, height, x, y, type, effectN, rarity) {
         super("green", x, y, type, "hpIncrease", "Rare");
         this.type = "hpIncrease"; // Tipo de powerup que será el aumento de vida. 
+        this.setSprite("../assets/sprites/powerUps/hpIncrease_asset.png", new Rect(0, 0, 26, 32));
     }
 
     effect(player) {
@@ -74,11 +76,14 @@ class HealthIncrease extends PowerUp {
 class EMPBomb extends PowerUp {
     constructor(color, width, height, x, y, type, effectN, rarity) {
         super("yellow", x, y, type, "empBomb", "Legendary");
-        this.type = "empBomb"; 
+        this.type = "empBomb";
+        this.setSprite("../assets/sprites/powerUps/empBomb_asset.png", new Rect(0, 0, 26, 32)); 
     }
     
-    effect(player) {
-        game.player.hasEMP = true; // El jugador obtiene una bomba EMP.
+    effect() {
+        for (let enemy in game.enemies){
+            enemy.state = "stunned"; // Cambia el estado de todos los enemigos a aturdido.
+        }
     }
 }
 
@@ -89,10 +94,6 @@ class Weapon extends PowerUp {
         this.wtype = wtype; // Tipo de arma que tendrá el jugador.
         this.damage = damage;
         this.animations = animations; // Animaciones que tenga el jugador dependiendo del arma
-    }
-
-    clone() { // Método temporal
-        return new Weapon("purple", 30, 30, this.position.x, this.position.y, "weapon", this.wtype, this.damage, "Epic", this.animations);
     }
 }
 
@@ -119,13 +120,3 @@ function getRandomPowerUp() { // Método para obtener un powerup aleatorio de la
     let randPower = Math.floor(Math.random() * powerups.length); // Usado la longitud del arreglo en caso de que se añadan más tipos en el futuro.
     return powerups[randPower]; // Devuelve un powerup aleatorio
 }
-
-const powerUpSprites = {
-    heal:       new Rect(0, 0, 26, 32), // primer ícono
-    shield:     new Rect(27, 0, 26, 32), // segundo ícono
-    hpIncrease: new Rect(53, 0, 26, 32), // tercer ícono
-    empBomb:    new Rect(79, 0, 26, 32), // cuarto ícono
-    sword:      new Rect(105, 0, 26, 32), // quinto ícono (si lo usaras)
-    gun:        new Rect(131, 0, 26, 32), // sexto ícono
-    taser:      new Rect(157, 0, 26, 32)  // séptimo ícono
-  };
