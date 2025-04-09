@@ -33,7 +33,11 @@ class Player extends AnimatedObject {
         this.cableDamageTimer = 0; // Timer del daño del cable
         this.touchedCable = false;
 
-        this.weapon = getRandomWeapon(); // Arma inicial del jugador, aleatoria al inicio
+        this.weapon = getRandomInitWeapon(); // Arma inicial del jugador, aleatoria al inicio
+
+        this.previousWeapon = null; // Arma anterior del jugador, la cual se guardará al cambiar de arma
+
+        this.weaponChangeCooldown = 0;  // Cooldown para el cambio de arma
 
         // Movimientos del jugador
         this.movement = {
@@ -111,6 +115,10 @@ class Player extends AnimatedObject {
 
         if (this.currentAttackHitbox) {
             this.currentAttackHitbox.drawHitBox(ctx, scale);
+        }
+
+        if (this.weaponChangeCooldown > 0) {
+            this.weaponChangeCooldown -= deltaTime;
         }
 
         this.cableDamageTimer += deltaTime; // Aumentar el timer del daño del cable
@@ -202,25 +210,25 @@ class Player extends AnimatedObject {
     }
 
     startAttack(direction) {
-        const dirData = attackAnimations[this.weapon.type][direction + "attack"];
+        const dirData = attackAnimations[this.weapon.wtype][direction + "attack"];
         if (!dirData || dirData.status) return;
         dirData.status = true;        
         this.setAnimation(...dirData.moveFrames, true, dirData.duration); // Se cambia a la animación de ataque
         // Ejecuta la acción de ataque según el tipo de arma
-        if (this.weapon.type === "sword") {
+        if (this.weapon.wtype === "sword") {
             this.swordAttack(direction);
         } 
-        else if (this.weapon.type === "gun") {
+        else if (this.weapon.wtype === "gun") {
             this.shoot(direction);
         }
-        else if (this.weapon.type === "taser") {
+        else if (this.weapon.wtype === "taser") {
             this.swordAttack(direction);
         } 
 
     }
 
     stopAttack(direction) {
-        const dirData = attackAnimations[this.weapon.type][direction + "attack"];
+        const dirData = attackAnimations[this.weapon.wtype][direction + "attack"];
         if (!dirData || !dirData.status) return;
         dirData.status = false;
         const idleData = this.movement[direction];

@@ -73,10 +73,6 @@ class Level {
             actor.baseRect = item.rect; 
             if (item.char !== undefined) actor.char = item.char;
             this.actors.push(actor);
-        } else if (actor.type === "powerup") {
-            actor.setSprite(item.sprite, item.rect);
-            this.levelPowerUps.push(actor);
-            cellType = "empty";
         } else if (actor.type === "puzzle") {
             actor.setSprite(item.sprite, item.rect);
             this.actors.push(actor);

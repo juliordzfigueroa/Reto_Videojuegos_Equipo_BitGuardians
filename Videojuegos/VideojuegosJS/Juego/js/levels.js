@@ -47,7 +47,9 @@ let GAME_LEVELS = {
 #.........................#
 /&&&&&&&&&&&&&&&&&&&&&&&&&$
 `,
-    statusCompleted: false
+    statusCompleted: false,
+    roomPowerUp: null,
+    powerupSpawned: false
   },
 
   dronRoom: {
@@ -68,7 +70,9 @@ let GAME_LEVELS = {
 #.........................#
 /&&&&&&&&&&&&&&&&&&&&&&&&&$
 `,
-    statusCompleted: false
+    statusCompleted: false,
+    roomPowerUp: null,
+    powerupSpawned: false
   },
 
   puzzleRoom: {
@@ -89,7 +93,9 @@ let GAME_LEVELS = {
 #.........................#
 /&&&&&&&&&&&&&&&&&&&&&&&&&$
 `,
-    statusCompleted: false
+    statusCompleted: false,
+    roomPowerUp: null,
+    powerupSpawned: false
   },
   BossRoom: {
     layout: `

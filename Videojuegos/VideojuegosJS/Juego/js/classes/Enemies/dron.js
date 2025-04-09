@@ -39,7 +39,13 @@ class Dron extends Enemy {
     update(level, deltaTime) {
         //Verificar el estado del enemigo
         if (this.state == "stunned") {
-            // Aturdimiento del enemigo (Faltante)
+            // El enemigo se queda quieto mientras aturdido
+            this.velocity = new Vec(0, 0);
+            this.stunTime -= deltaTime; // Reducir el tiempo de aturdimiento
+            if (this.stunTime <= 0) {
+                this.state = "idle"; // Cambiar al estado idle después del aturdimiento
+                this.stunTime = stunDuration; // Reiniciar el tiempo de aturdimiento
+            }
         }
         else {
             this.state = "movementpattern";
