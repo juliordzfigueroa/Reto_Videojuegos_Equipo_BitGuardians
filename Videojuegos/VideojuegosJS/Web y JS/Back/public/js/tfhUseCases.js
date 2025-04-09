@@ -5,7 +5,7 @@ function main() {
         const data = new FormData(formSelectUser)
         const dataObj = Object.fromEntries(data.entries())
 
-        let response = await fetch(`http://localhost:5000/api/users/${dataObj['userID']}`, {
+        let response = await fetch(`http://localhost:5000/api/jugador/${dataObj['userID']}`, {
             method: 'GET'
         })
 
@@ -55,7 +55,7 @@ function main() {
         const data = new FormData(formInsert)
         const dataObj = Object.fromEntries(data.entries())
 
-        let response = await fetch('http://localhost:5000/api/users', {
+        let response = await fetch('http://localhost:5000/api/jugador', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dataObj)
@@ -72,28 +72,28 @@ function main() {
         }
     }
 
-    document.getElementById('formUpdate').onsubmit = async (e) => {
-        e.preventDefault()
+    // document.getElementById('formUpdate').onsubmit = async (e) => {
+    //     e.preventDefault()
 
-        const data = new FormData(formUpdate)
-        const dataObj = Object.fromEntries(data.entries())
+    //     const data = new FormData(formUpdate)
+    //     const dataObj = Object.fromEntries(data.entries())
 
-        let response = await fetch('http://localhost:5000/api/users', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dataObj)
-        })
+    //     let response = await fetch('http://localhost:5000/api/jugador', {
+    //         method: 'PUT',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify(dataObj)
+    //     })
 
-        if (response.ok) {
-            let results = await response.json()
+    //     if (response.ok) {
+    //         let results = await response.json()
 
-            console.log(results)
-            putResults.innerHTML = results.message
-        }
-        else {
-            putResults.innerHTML = response.status
-        }
-    }
+    //         console.log(results)
+    //         putResults.innerHTML = results.message
+    //     }
+    //     else {
+    //         putResults.innerHTML = response.status
+    //     }
+    // }
 
     document.getElementById('formDelete').onsubmit = async (e) => {
         e.preventDefault()
@@ -101,7 +101,7 @@ function main() {
         const data = new FormData(formDelete)
         const dataObj = Object.fromEntries(data.entries())
 
-        let response = await fetch(`http://localhost:5000/api/users/${dataObj['userID']}`, {
+        let response = await fetch(`http://localhost:5000/api/jugador/${dataObj['userID']}`, {
             method: 'DELETE'
         })
 
