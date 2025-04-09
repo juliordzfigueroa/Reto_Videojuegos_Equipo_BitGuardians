@@ -3,7 +3,7 @@
 
 USE finalhack_actualizada;
 
-SET AUTOCOMMIT=0;
+SET AUTOCOMMIT=1;
 INSERT INTO Arma VALUES
 (1, 'Tipo1', 0.94, 53, 1),
 (2, 'Tipo2', 0.78, 48, 3),
@@ -16,7 +16,7 @@ INSERT INTO Arma VALUES
 (9, 'Tipo9', 0.16, 61, 10),
 (10, 'Tipo10', 0.97, 46, 2);
 
-SET AUTOCOMMIT=0;
+SET AUTOCOMMIT=1;
 INSERT INTO Jugador VALUES
 (1, 6, 'Jugador1', 31, 'jugador1@correo.com', 52, 93, 3.79, 100),
 (2, 8, 'Jugador2', 27, 'jugador2@correo.com', 54, 66, 4.63, 67),
@@ -29,7 +29,7 @@ INSERT INTO Jugador VALUES
 (9, 7, 'Jugador9', 38, 'jugador9@correo.com', 84, 64, 2.75, 84),
 (10, 3, 'Jugador10', 24, 'jugador10@correo.com', 31, 87, 3.98, 81);
 
-SET AUTOCOMMIT=0;
+SET AUTOCOMMIT=1;
 INSERT INTO Estadisticas VALUES
 (1, 1, 42, 9, 290, 8, 10, 2, 0, 'Tipo9'),
 (2, 2, 90, 0, 26, 6, 6, 3, 0, 'Tipo18'),
@@ -55,7 +55,7 @@ INSERT INTO Enemigo VALUES
 (9, 'Dron', 157, 13, 1, 2.7, 42, 15),
 (10, 'Dron', 144, 11, 8, 2.42, 60, 16);
 
-SET AUTOCOMMIT=0;
+SET AUTOCOMMIT=1;
 INSERT INTO Puzzle VALUES
 (1, '01:43:29', NULL, 10, 6, 'Puzzle 1 para hackear consola'),
 (2, '00:19:05', NULL, 4, 0, 'Puzzle 2 para hackear consola'),
@@ -68,7 +68,7 @@ INSERT INTO Puzzle VALUES
 (9, '02:54:17', NULL, 10, 7, 'Puzzle 9 para hackear consola'),
 (10, '02:25:36', NULL, 4, 4, 'Puzzle 10 para hackear consola');
 
-SET AUTOCOMMIT=0;
+SET AUTOCOMMIT=1;
 INSERT INTO PowerUp VALUES
 (1, 'TipoPower1', 'épico', 0.33),
 (2, 'TipoPower2', 'épico', 0.52),
@@ -94,7 +94,7 @@ INSERT INTO Sala VALUES
 (9, 10, 1, 9, 'jefe', 'robot', 'incompleta'),
 (10, 9, 6, 10, 'subsala', 'puzzle', 'incompleta');
 
-SET AUTOCOMMIT=0;
+SET AUTOCOMMIT=1;
 INSERT INTO Partida VALUES
 (1, '00:14:10', '2023-09-01 02:03:43', 'En progreso'),
 (2, '02:28:51', '2023-12-01 10:20:54', 'En progreso'),
@@ -108,7 +108,7 @@ INSERT INTO Partida VALUES
 (10, '02:50:59', '2023-09-07 21:37:31', 'En progreso');
 
 
-SET AUTOCOMMIT=0;
+SET AUTOCOMMIT=1;
 INSERT INTO Nivel VALUES
 (1, 1),
 (2, 10),
@@ -121,7 +121,7 @@ INSERT INTO Nivel VALUES
 (9, 10),
 (10, 9);
 
-SET AUTOCOMMIT=0;
+SET AUTOCOMMIT=1;
 INSERT INTO Partida_Progreso VALUES
 (6, 1, 4, '2023-06-19 09:11:57', '00:39:40', 'activo'),
 (8, 2, 2, '2024-06-04 15:15:43', '00:58:13', 'pausa'),
@@ -134,7 +134,7 @@ INSERT INTO Partida_Progreso VALUES
 (10, 9, 5, '2024-04-29 10:13:55', '00:11:21', 'muerto'),
 (4, 10, 8, '2023-07-19 10:52:14', '02:49:43', 'muerto');
 
-SET AUTOCOMMIT=0;
+SET AUTOCOMMIT=1;
 INSERT INTO Estadisticas_Juego VALUES
 (1, 1, '01:23:40', 5, 2, 7),
 (2, 2, '00:11:47', 6, 10, 4),

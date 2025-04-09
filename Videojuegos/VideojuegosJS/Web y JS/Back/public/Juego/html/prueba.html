@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>The Final Hack</title>
+        <link rel="stylesheet" href="Juego/css/prueba.css">
+        <script src="../../js/funciones.js"></script>
+    </head>
+    <body>
+        <audio autoplay loop id="musicaFondo">
+            <source src="Juego/images/songinicio.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>        
+        <video autoplay muted loop id="videoFondo">
+            <source src="Juego/images/hackercode.mp4" type="video/mp4">
+            Your browser does not support the video element.
+        </video>
+        <div id="contenedor-logo">
+            <img src="Juego/images/logopantallainicio.png" alt="Logo The Final Hack">
+        
+            <nav id="menu">
+                <a href="videojuego.html" class="boton">Jugar</a>
+                <a href="estadisticas.html" class="boton">Estadísticas</a>
+                <a href="creditos.html" class="boton">Créditos</a>
+                <a href="#" class="boton" onclick="mostrarPopup()">Iniciar sesión</a>
+            </nav>
+        </div>
+
+        <div id="popupLogin" class="popup">
+            <div class="popup-contenido">
+                <span class="cerrar" onclick="cerrarPopup()">&times;</span>
+                <h2>Iniciar sesión</h2>
+                <input type="nombre" placeholder="Ingresa tu nombre" id="nombre">
+                <input type="email" placeholder="Ingresa tu email" id="email">
+                <input type="password" placeholder="Ingresa tu contraseña" id="contrasena">
+                <button onclick="cerrarPopup()">Iniciar sesión</button>
+            </div>
+        </div>
+
+        <footer>
+            <p>The Bit Guardians © 2025</p>
+        </footer>
+    </body>
+</html>

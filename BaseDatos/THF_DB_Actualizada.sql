@@ -1,5 +1,5 @@
 -- Base de datos de videojuego final hack versión actualizada
--- CREATE DATABASE FinalHack_Actualizada;
+CREATE DATABASE FinalHack_Actualizada;
 USE FinalHack_Actualizada;
 
 -- Armas
@@ -13,7 +13,7 @@ CREATE TABLE Arma(
 
 -- Jugadores
 CREATE TABLE Jugador(
-    id_jugador INT PRIMARY KEY,
+    id_jugador INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	id_arma_actual INT NOT NULL,
     nombre VARCHAR(50) NOT NULL,
     edad INT NOT NULL,
@@ -126,4 +126,4 @@ CREATE TABLE Estadisticas_Juego(
     FOREIGN KEY (id_jugador) REFERENCES Jugador(id_jugador)
 );
 
-select * from finalhack_actualizada.jugador;
+select * from jugador;
