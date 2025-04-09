@@ -95,13 +95,11 @@ class Game {
 
     update(deltaTime) {
         this.player.update(this.level, deltaTime);
-        console.log(this.player.hasEMP);
         if (this.player.previousWeapon) {
             console.log(this.player.previousWeapon.wtype);
         }
         for (let enemy of this.enemies) {
             enemy.update(this.level, deltaTime);
-            console.log(enemy.state);
         }
         for (let actor of this.actors) {
             actor.update(this.level, deltaTime);

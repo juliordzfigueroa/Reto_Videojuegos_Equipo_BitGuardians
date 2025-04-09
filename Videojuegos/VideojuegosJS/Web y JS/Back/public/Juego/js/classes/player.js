@@ -37,8 +37,6 @@ class Player extends AnimatedObject {
 
         this.previousWeapon = null; // Arma anterior del jugador, la cual se guardará al cambiar de arma
 
-        this.weaponChangeCooldown = 0;  // Cooldown para el cambio de arma
-
         // Movimientos del jugador
         this.movement = {
             down: {
