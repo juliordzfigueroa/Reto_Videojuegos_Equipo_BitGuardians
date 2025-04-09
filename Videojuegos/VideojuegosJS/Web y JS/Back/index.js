@@ -8,7 +8,7 @@ import mysql from 'mysql2/promise'
 import fs from 'fs'
 
 const app = express()
-const port = 5000
+const port = 3000
 
 app.use(express.json())
 app.use(express.static('./public'))
@@ -19,21 +19,21 @@ async function connectToDB() {
         host: "localhost",
         user: "card_user",
         password: "asdf1234",
-        database: "FinalHack_Actualizada",
+        database: "FinalHack_Api",
     });
 }
 
 // Routes definition and handling
 app.get('/', (request, response) => {
-    fs.readFile('./public/html/tfhUseCases.html', 'utf8', (err, html) => {
+    fs.readFile('./public/Juego/html/prueba.html', 'utf8', (err, html) => {
         if (err) response.status(500).send('There was an error: ' + err)
         console.log('Loading page...')
         response.send(html)
     })
 })
 
-// Get all users from the database and return them as a JSON object
-app.get('/api/users', async (request, response) => {
+// Get all jugadores from the database and return them as a JSON object
+app.get('/api/jugador', async (request, response) => {
     let connection = null
 
     try {
@@ -58,13 +58,13 @@ app.get('/api/users', async (request, response) => {
 })
 
 // Get a specific user from the database and return it as a JSON object
-app.get('/api/users/:id', async (request, response) => {
+app.get('/api/jugador/:id', async (request, response) => {
     let connection = null
 
     try {
         connection = await connectToDB()
 
-        const [results_user, _] = await connection.query('select * from users where id_users= ?', [request.params.id])
+        const [results_user, _] = await connection.query('select * from jugador where id_jugador= ?', [request.params.id])
 
         console.log(`${results_user.length} rows returned`)
         response.json(results_user)
@@ -83,14 +83,14 @@ app.get('/api/users/:id', async (request, response) => {
 })
 
 // Insert a new user into the database and return a JSON object with the id of the new user
-app.post('/api/users', async (request, response) => {
+app.post('/api/jugador', async (request, response) => {
 
     let connection = null
 
     try {
         connection = await connectToDB()
 
-        const [results, fields] = await connection.query('insert into users set ?', request.body)
+        const [results, fields] = await connection.query('insert into jugador set ?', request.body)
 
         console.log(`${results.affectedRows} row inserted`)
         response.status(201).json({ 'message': "Data inserted correctly.", "id": results.insertId })
@@ -109,14 +109,14 @@ app.post('/api/users', async (request, response) => {
 })
 
 // Update a user in the database and return a JSON object with the number of rows updated
-app.put('/api/users', async (request, response) => {
+app.put('/api/jugador', async (request, response) => {
 
     let connection = null
 
     try {
         connection = await connectToDB()
 
-        const [results, fields] = await connection.query('update users set name = ?, surname = ? where id_users= ?', [request.body['name'], request.body['surname'], request.body['userID']])
+        const [results, fields] = await connection.query('update jugador set name = ?, surname = ? where id_jugador= ?', [request.body['name'], request.body['surname'], request.body['userID']])
 
         console.log(`${results.affectedRows} rows updated`)
         response.json({ 'message': `Data updated correctly: ${results.affectedRows} rows updated.` })
@@ -135,14 +135,14 @@ app.put('/api/users', async (request, response) => {
 })
 
 // Delete a user from the database and return a JSON object with the number of rows deleted
-app.delete('/api/users/:id', async (request, response) => {
+app.delete('/api/jugador/:id', async (request, response) => {
 
     let connection = null
 
     try {
         connection = await connectToDB()
 
-        const [results, fields] = await connection.query('delete from users where id_users= ?', [request.params.id])
+        const [results, fields] = await connection.query('delete from Jugador where id_jugador = ?', [request.params.id])
 
         console.log(`${results.affectedRows} row deleted`)
         response.json({ 'message': `Data deleted correctly: ${results.affectedRows} rows deleted.` })
