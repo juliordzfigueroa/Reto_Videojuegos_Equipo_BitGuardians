@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>The Final Hack</title>
+        <link rel="stylesheet" href="../css/prueba.css">
+    </head>
+    <body>
+        <audio autoplay loop id="musicaFondo">
+            <source src="../images/songinicio.mp3" type="audio/mpeg">
+        </audio>        
+        <video autoplay muted loop id="videoFondo">
+            <source src="../images/hackercode.mp4" type="video/mp4">
+        </video>
+        <div id="contenedor-logo">
+            <img src="../images/logopantallainicio.png" alt="Logo The Final Hack">
+            <br>
+            <button id="botonInicio">Acerca de</button>
+            <button id="botonInicio">Jugar</button>
+            <button id="botonInicio">Creditos</button>
+        </div>
+        <footer>
+            <p>The Bit Guardians © 2025</p>
+        </footer>
+        <script>
+            const musica = document.getElementById("musicaFondo");
+            const activarMusica = () => {
+            musica.play();
+            document.removeEventListener("click", activarMusica);
+            };
+            document.addEventListener("click", activarMusica);
+        </script>
+    </body>
+</html>
