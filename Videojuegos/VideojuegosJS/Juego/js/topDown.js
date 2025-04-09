@@ -40,7 +40,6 @@ class Game {
         this.actors = level.actors;
         this.enemyBullets = level.enemyBullets;
         this.playerBullets = level.playerBullets;
-        this.levelPowerUps = level.levelPowerUps;
         levelPuzzle = new Puzzle(canvasWidth, canvasHeight);
     }
     
@@ -59,6 +58,10 @@ class Game {
         } else {
             this.enemies = [];
             this.actors = this.level.actors;
+            if (GAME_LEVELS[currentRoom].roomPowerUp) {
+                console.log("PowerUp: " + GAME_LEVELS[currentRoom].roomPowerUp.type);
+                this.level.levelPowerUps.push(GAME_LEVELS[currentRoom].roomPowerUp);
+            }
         }
 
         //Acomodar al enemigo dependiendo de la dirección de entrada
@@ -89,7 +92,9 @@ class Game {
 
     update(deltaTime) {
         this.player.update(this.level, deltaTime);
-        console.log(this.player.hasEMP)
+        if (this.player.previousWeapon) {
+            console.log(this.player.previousWeapon.wtype);
+        }
         for (let enemy of this.enemies) {
             enemy.update(this.level, deltaTime);
         }
@@ -123,6 +128,26 @@ class Game {
             }
         }
 
+        for (let i = this.level.levelPowerUps.length - 1; i >= 0; i--) {
+            let powerup = this.level.levelPowerUps[i];
+            if (overlapRectangles(powerup, this.player)) {
+                if (powerup.type === "weapon") {
+                    let revertWeapon = this.player.weapon;
+                    this.player.weapon = powerup;
+                    powerup.isCollected = true;
+                    let droppedWeapon = revertWeapon.clone();
+                    droppedWeapon.position = new Vec(powerup.position.x + 1, powerup.position.y);
+                    this.level.levelPowerUps.push(droppedWeapon);
+                    GAME_LEVELS[currentRoom].roomPowerUp = droppedWeapon;
+                    this.player.powerupCooldown = 1000;
+                    break;
+                } else {
+                    powerup.effect(this.player);
+                    powerup.isCollected = true;
+                }
+            }
+        }
+
         // Update player stats bars
         drawBar(this.player.hp, this.player.max_hp, 'green', 40, 480);
         drawBar(this.player.shield, this.player.max_shield, 'blue', 40, 510);
@@ -131,15 +156,7 @@ class Game {
         this.playerBullets = this.playerBullets.filter(bullet => !bullet.destroy); // Función filter para borrar las balas que han sido marcadas como destruidas
         //Se quitan del array los enemigos que han sido destruidos
         this.enemies = this.enemies.filter(enemy => !enemy.destroyed);
-
-        for (let i = 0; i < this.level.levelPowerUps.length; i++) {
-            let powerup = this.level.levelPowerUps[i];
-            if (overlapRectangles(powerup, this.player)) {
-                powerup.effect(this.player);
-                this.level.levelPowerUps.splice(i, 1);
-                i--;
-            }
-        }
+        this.level.levelPowerUps = this.level.levelPowerUps.filter(powerup => !powerup.isCollected); // Se quitan del array los powerups que han sido recogidos
 
         this.level.enemies = this.enemies; //Actualiza la lista de enemigos en el nivel
         if(currentRoom == "puzzleRoom" && levelPuzzle.puzzleCompleated == true && this.enemies.length == 0) {
@@ -153,10 +170,11 @@ class Game {
 
         if (GAME_LEVELS[currentRoom].statusCompleted == true && currentRoom != "BossRoom") {
             if (!GAME_LEVELS[currentRoom].powerupSpawned) { 
-               let powerup = getRandomPowerUp();
-               powerup.position = new Vec(Math.floor(levelWidth / 2), Math.floor(levelHeight / 2));
-               this.level.levelPowerUps.push(powerup);
-               GAME_LEVELS[currentRoom].powerupSpawned = true;
+                let powerup = getRandomPowerUp();
+                powerup.position = new Vec(Math.floor(levelWidth / 2), Math.floor(levelHeight / 2));
+                this.level.levelPowerUps.push(powerup);
+                GAME_LEVELS[currentRoom].powerupSpawned = true;
+                GAME_LEVELS[currentRoom].roomPowerUp = powerup; // Guarda el powerup en el nivel
             }
         }
         
@@ -185,6 +203,7 @@ class Game {
         }
         this.player.draw(ctx, scale);
         this.player.hitBox.drawHitBox(ctx, scale);
+        drawHUD(ctx, this.player, scale); // Dibuja el HUD del jugador
     }
 }
 
@@ -436,6 +455,33 @@ function drawBar(stat, max_stat, color, barX, barY){ // Función para dibujar la
     
 }
 
+function drawHUD(ctx, player, scale) {
+    const currentWeaponX = canvasWidth - 450;
+    const currentWeaponY = 480;
+    ctx.font = "14px Arial";
+    ctx.fillStyle = "white";
+    if (player.weapon) {
+      if (player.weapon.spriteImage && player.weapon.spriteRect) {
+        ctx.drawImage(
+          player.weapon.spriteImage,
+          player.weapon.spriteRect.x * player.weapon.spriteRect.width,
+          player.weapon.spriteRect.y * player.weapon.spriteRect.height,
+          player.weapon.spriteRect.width,
+          player.weapon.spriteRect.height,
+          currentWeaponX,
+          currentWeaponY,
+          player.weapon.spriteRect.width,
+          player.weapon.spriteRect.height
+        );
+      } else {
+        ctx.fillStyle = "purple";
+        ctx.fillRect(currentWeaponX, currentWeaponY, 50, 50);
+        ctx.fillStyle = "white";
+        ctx.fillText("Arma Actual: " + player.weapon.wtype, currentWeaponX, currentWeaponY - 5);
+      }
+    }
+  }
+
 function drawPuzzleOverlay(ctx) {
    ctx.fillStyle = "rgba(0,0,0,0.8)"; // Dibuja un overlay semitransparente 
    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
@@ -605,9 +651,4 @@ function areAllRoomsCompleted() {
 }
 
 // Call the start function to initiate the game
-main();
-
-    
-    
-
-    
+main();  

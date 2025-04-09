@@ -9,7 +9,7 @@
 
 class PowerUp extends GameObject {
     constructor(color, width, height, x, y, type, effectN, rarity) {
-        super(color, 1, 1, x, y, "powerup"); // Width y height fijos para todos los powerups por el tamaño de los sprites.
+        super(color, 1, 1, x, y, type); // Width y height fijos para todos los powerups por el tamaño de los sprites
         this.effectN = effectN; // Nombre del efecto que tendrá cada powerup.
         this.isCollected = false; // Variable para saber si el powerup fue recogido tras completar la sala.
         this.rarity = rarity; // Variable para saber la rareza de cada powerup.
@@ -30,7 +30,8 @@ class PowerUp extends GameObject {
 
 class Heal extends PowerUp {
     constructor(color, width, height, x, y, type, effectN, rarity) {
-        super("red", x, y, "powerup", "heal", "Uncommon"); 
+        super("red", x, y, type, "heal", "Uncommon"); 
+        this.type = "heal"; // Tipo de powerup que será la cura.
     }
 
     effect(player) {
@@ -44,7 +45,8 @@ class Heal extends PowerUp {
 
 class Shield extends PowerUp {
     constructor(color, width, height, x, y, type, effectN, rarity) {
-        super("blue", x, y, "powerup", "shield", "Uncommon"); 
+        super("blue", x, y, type, "shield", "Uncommon"); 
+        this.type = "shield"; // Tipo de powerup que será el escudo.
     }
 
     effect(player) {
@@ -58,7 +60,8 @@ class Shield extends PowerUp {
 
 class HealthIncrease extends PowerUp {
     constructor(color, width, height, x, y, type, effectN, rarity) {
-        super("green", x, y, "powerup", "hpIncrease", "Rare"); 
+        super("green", x, y, type, "hpIncrease", "Rare");
+        this.type = "hpIncrease"; // Tipo de powerup que será el aumento de vida. 
     }
 
     effect(player) {
@@ -70,7 +73,8 @@ class HealthIncrease extends PowerUp {
 
 class EMPBomb extends PowerUp {
     constructor(color, width, height, x, y, type, effectN, rarity) {
-        super("yellow", x, y, "empBomb", "empBomb", "Legendary");
+        super("yellow", x, y, type, "empBomb", "Legendary");
+        this.type = "empBomb"; 
     }
     
     effect(player) {
@@ -79,19 +83,24 @@ class EMPBomb extends PowerUp {
 }
 
 class Weapon extends PowerUp {
-    constructor(color, width, height, x, y, wtype, damage, rarity, animations) {
-        super("purple", x, y, wtype, damage, "Epic"); 
-        this.type = wtype; // Tipo de arma que tendrá el jugador.
+    constructor(color, width, height, x, y, type, wtype, damage, rarity, animations) {
+        super("purple", x, y, type, wtype, damage, "Epic"); 
+        this.type = "weapon"; // Tipo de powerup que será el arma.
+        this.wtype = wtype; // Tipo de arma que tendrá el jugador.
         this.damage = damage;
         this.animations = animations; // Animaciones que tenga el jugador dependiendo del arma
     }
+
+    clone() { // Método temporal
+        return new Weapon("purple", 30, 30, this.position.x, this.position.y, "weapon", this.wtype, this.damage, "Epic", this.animations);
+    }
 }
 
-function getRandomWeapon(){ // Método para obtener un arma aleatoria de la lista de armas.
+function getRandomInitWeapon(){ // Método para obtener un arma aleatoria de la lista de armas.
     const weapons = [ 
-        new Weapon("purple", 30, 30, 0, 0, "sword", 20, "Epic", attackAnimations.sword),
-        new Weapon("purple", 30, 30, 0, 0, "gun", 10, "Epic", attackAnimations.gun),
-        new Weapon("purple", 30, 30, 0, 0, "taser", 15, "Epic", attackAnimations.taser),
+        new Weapon("purple", 30, 30, 0, 0, "weapon", "sword", 20, "Epic", attackAnimations.sword),
+        new Weapon("purple", 30, 30, 0, 0, "weapon", "gun", 10, "Epic", attackAnimations.gun),
+        new Weapon("purple", 30, 30, 0, 0, "weapon", "taser", 15, "Epic", attackAnimations.taser),
     ];
     let randomIndex = Math.floor(Math.random() * weapons.length);
     return weapons[randomIndex]; // Devuelve un arma aleatoria de la lista de armas.
@@ -102,7 +111,9 @@ function getRandomPowerUp() { // Método para obtener un powerup aleatorio de la
         new Heal("red", 30, 30, 0, 0, "heal", "Uncommon"),
         new Shield("blue", 30, 30, 0, 0, "shield", "Uncommon"),
         new HealthIncrease("green", 30, 30, 0, 0, "healthIncrease", "Rare"),
-        getRandomWeapon(),
+        new Weapon("purple", 30, 30, 0, 0, "weapon", "sword", 20, "Epic", attackAnimations.sword),
+        new Weapon("purple", 30, 30, 0, 0, "weapon", "gun", 10, "Epic", attackAnimations.gun),
+        new Weapon("purple", 30, 30, 0, 0, "weapon", "taser", 15, "Epic", attackAnimations.taser),
         new EMPBomb("yellow", 30, 30, 0, 0, "empBomb", "Legendary"),
     ];
     let randPower = Math.floor(Math.random() * powerups.length); // Usado la longitud del arreglo en caso de que se añadan más tipos en el futuro.
