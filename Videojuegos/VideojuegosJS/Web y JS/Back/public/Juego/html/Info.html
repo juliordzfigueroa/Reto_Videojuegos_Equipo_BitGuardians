@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <title>The Final Hack - Información</title>
         <link rel="stylesheet" href="../css/Info.css">
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     </head>
     <body>
         <div id="headerContainer">
@@ -11,7 +12,9 @@
                 <img src="../images/infotitulo.png" alt="The Final Hack Logo">
             </div>
             <div id="menu">
-                <button id="menuButton">&#9776;</button>
+                <button id="menuButton">
+                    <img src="../images/imagenboton.png" alt="Menú" />
+                </button>
                 <div id="dropdownMenu">
                     <a href="../html/prueba.html">Inicio</a>
                     <a href="../html/videojuego.html">Videojuego</a>
@@ -25,35 +28,40 @@
             <p>Cada partida te sumergirá en desafiantes acertijos y un combate intenso. Además de un sistema de progresión consiguiendo objetos que pueden ser permanentes, los cuales serán de ayuda para próximas partidas. ¿Estás listo para hackear el sistema y salvar el mundo?</p>
         </div>
         <div class="gameplayinfo">
-            <p>Nuestro juego tiene como característica principal la vista desde arriba que se pueda controlar con el mismo teclado, pudiendo mover en las 4 direcciones. Cuenta también con diferentes tipos de combate, ya sea cuerpo a cuerpo o con un arma a distancia, para que el jugador venza a los diferentes enemigos.</p>
+            <p>The Final Hack es un juego con vista desde arriba, controlado con el teclado y centrado en el combate tanto cuerpo a cuerpo como a distancia. Cada nivel contiene una sala principal con tres subsalas, las cuales deben completarse para abrir la puerta del jefe. </p>
             <br>
-            <p>En cada nivel tenemos una sala con 3 subsalas y arriba la puerta del jefe. Para que se abra la puerta del jefe se necesita completar los desafíos de las demás salas. En cada subsala hay robots que te atacan y en caso de que logren golpearte te quitan la vida. Asimismo, al completar el reto de cada subsala se le dará al jugador un power up para llegar con el jefe. Una vez llegado con el jefe, si el jugador derrota al jefe podrá avanzar al siguiente nivel. El juego acaba cuando te robas la información de The Core.</p>
+            <p>Al superar los desafíos de cada subsala, el jugador recibe un power up que le ayudará en el combate final. Las armas, enemigos, retos y salas se generan de forma aleatoria, aportando variedad a cada partida.</p>
             <br>
-            <p>Los elementos aleatorios son las diferentes armas y power ups que van saliendo tras completar los retos. Los desafíos de cada subsala son aleatorios. Las salas se van a regenerar aleatoriamente y los enemigos también. En ocasiones las recompensas que puedes obtener por hacer los diferentes retos de las salas en cada nivel pueden ser permanentes (principalmente la mejoras de vida). Cuando te mueras conservas dichas mejoras permanentes que recojas a lo largo de las partidas.</p>
+            <p>Algunas recompensas, como las mejoras de vida, son permanentes y se conservan incluso al morir. El objetivo final es llegar hasta el núcleo enemigo y robar la información de The Core.</p>
         </div>
+
         <div class="cerebro">
-            <img src="../images/infocerebro.png" alt="Cerebro pixelado" class="cerebro-img">
+            <img src="../images/infocerebro.png" alt="Cerebro pixelado" id="griditem1">
+            <img src="../images/imagenadrenalina.png" alt="Cerebro pixelado" id="griditem2">
+            <img src="../images/imageningenio.png" alt="Cerebro pixelado" id="griditem3">
+            <img src="../images/imagenpresion.png" alt="Cerebro pixelado" id="griditem4">
+            <img src="../images/imagendesafio.png" alt="Cerebro pixelado" id="griditem5">
+            <img src="../images/imagenpoder.png" alt="Cerebro pixelado" id="griditem6">
         </div>
+
         <script>
             const menuButton = document.getElementById('menuButton');
             const dropdownMenu = document.getElementById('dropdownMenu');
 
-            menuButton.onclick = function () {
-                if(dropdownMenu.style.display === 'block'){
-            dropdownMenu.style.display = 'none';
-            } 
-                else{
+            menuButton.onclick = function (e) {
+            if (dropdownMenu.style.display === 'block') {
+                dropdownMenu.style.display = 'none';
+            } else {
                 dropdownMenu.style.display = 'block';
             }
             };
 
             document.onclick = function (e) {
-                if(e.target !== menuButton && e.target.parentNode !== dropdownMenu){
+                if (!menuButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
                     dropdownMenu.style.display = 'none';
                 }
             };
     
-            // Tu función main del juego
             main();
         </script>
     </body>

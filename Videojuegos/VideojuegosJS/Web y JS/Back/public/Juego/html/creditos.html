@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="UTF-8">
         <title>The Final Hack - Creditos</title>
         <link rel="stylesheet" href="../css/creditos.css">
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     </head>
 
     <body>
@@ -11,9 +13,11 @@
                 <img src="../images/creditostitulo.png" alt="Créditos">
             </div>
             <div id="menu">
-                <button id="menuButton">&#9776;</button>
+                <button id="menuButton">
+                    <img src="../images/imagenboton.png" alt="Menú" />
+                </button>
                 <div id="dropdownMenu">
-                    <a href="prueba.html">Inicio</a>
+                    <a href="../html/prueba.html">Inicio</a>
                     <a href="../html/videojuego.html">Videojuego</a>
                     <a href="../html/estadisticas.html">Estadisticas</a>
                     <a href="../html/Info.html">Acerca de</a>
@@ -22,25 +26,24 @@
         </div>
 
         <img id="hackercreditos" src="../images/creditosimagen.png" alt="Hacker con espada azul">
-
         <script>
             const menuButton = document.getElementById('menuButton');
             const dropdownMenu = document.getElementById('dropdownMenu');
 
-            menuButton.onclick = function () {
-                if(dropdownMenu.style.display === 'block'){
-            dropdownMenu.style.display = 'none';
-            } 
-                else{
+            menuButton.onclick = function (e) {
+            if (dropdownMenu.style.display === 'block') {
+                dropdownMenu.style.display = 'none';
+            } else {
                 dropdownMenu.style.display = 'block';
             }
             };
 
             document.onclick = function (e) {
-                if(e.target !== menuButton && e.target.parentNode !== dropdownMenu){
+                if (!menuButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
                     dropdownMenu.style.display = 'none';
                 }
             };
+    
             main();
         </script>
     </body>
