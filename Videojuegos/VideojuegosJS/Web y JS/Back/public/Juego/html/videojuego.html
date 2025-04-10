@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="UTF-8">
         <title>The Final Hack</title>
         <link rel="stylesheet" href="../css/videojuego.css">
         <script src="../js/game_classes.js"></script>
@@ -17,13 +18,16 @@
         <script src="../js/classes/cable.js"></script>
         <script src="../js/levels.js"></script>
         <script src="../js/topDown.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     </head>
 
     <body>
         <div id="headerContainer">
             <img src=../images/infotitulo.png width="400" margin-top="50px;" >
             <div id="menu">
-                <button id="menuButton">&#9776;</button>
+                <button id="menuButton">
+                    <img src="../images/imagenboton.png" alt="Menú" />
+                </button>
                 <div id="dropdownMenu">
                     <a href="../html/prueba.html">Inicio</a>
                     <a href="../html/creditos.html">Creditos</a>
@@ -37,20 +41,20 @@
             const menuButton = document.getElementById('menuButton');
             const dropdownMenu = document.getElementById('dropdownMenu');
 
-            menuButton.onclick = function () {
-                if(dropdownMenu.style.display === 'block'){
-            dropdownMenu.style.display = 'none';
-            } 
-                else{
+            menuButton.onclick = function (e) {
+            if (dropdownMenu.style.display === 'block') {
+                dropdownMenu.style.display = 'none';
+            } else {
                 dropdownMenu.style.display = 'block';
             }
             };
 
             document.onclick = function (e) {
-                if(e.target !== menuButton && e.target.parentNode !== dropdownMenu){
+                if (!menuButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
                     dropdownMenu.style.display = 'none';
                 }
             };
+    
             main();
         </script>
     </body>

@@ -1,60 +1,46 @@
 <!DOCTYPE html>
 <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>The Final Hack</title>
+        <link rel="stylesheet" href="../css/prueba.css">
+    </head>
+    <body>
+        <audio autoplay loop id="musicaFondo">
+            <source src="../images/songinicio.mp3" type="audio/mpeg">
+        </audio>     
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Final Hack</title>
-    <link rel="stylesheet" href="Juego/css/prueba.css">
-    <script src="../../js/funciones.js"></script>
-    <link rel="icon" href="Juego/images/logopantallainicio.png" type="image/x-icon">
-</head>
+        <video autoplay muted loop id="videoFondo">
+            <source src="../images/hackercode.mp4" type="video/mp4">
+        </video>
 
-<body>
-    <audio autoplay loop id="musicaFondo">
-        <source src="Juego/images/songinicio.mp3" type="audio/mpeg">
-    </audio>
-
-    <video autoplay muted loop id="videoFondo">
-        <source src="Juego/images/hackercode.mp4" type="video/mp4">
-    </video>
-
-    <div id="contenedor-logo">
-        <img src="Juego/images/logopantallainicio.png" alt="Logo The Final Hack">
-        <br>
-        <button id="btnAcerca" class="botonInicio">Acerca de</button>
-        <button id="btnJugar" class="botonInicio">Jugar</button>
-        <button id="btnCreditos" class="botonInicio">Creditos</button>
-        <button id="btnSesion" class="botonInicio" onclick="mostrarLogin()">Iniciar Sesion</button>
-    </div>
-    <form id="popupLogin" class="popup" style="display: none;">
-        <div class="popup-contenido">
-            <h2>Iniciar Sesión</h2>
-            <input type="text" name="email" id='emailLogin' placeholder="Type your jugador email">
-            <input type="password" name="contrasena" id='contrasenaLogin' placeholder="Type your password">
-            <button type="button" onclick="cerrarLogin()">Enviar</button>
-            <p id="getResultsID"></p>
-            <p>¿No tienes cuenta?
-                <a href="#" onclick="mostrarRegistro()"><button type="button">Regístrate aquí</button></a>
-            </p>
+        <div id="contenedor-logo">
+            <img src="../images/logopantallainicio.png" alt="Logo The Final Hack">
+            <br>
+            <button id="btnAcerca" class="botonInicio">Acerca de</button>
+            <button id="btnJugar" class="botonInicio">Jugar</button>
+            <button id="btnCreditos" class="botonInicio">Creditos</button>
+            <button id="btnSesion" class="botonInicio">Iniciar Sesion</button>
         </div>
-    </form>
-    
-    <form id="popupRegistro" class="popup" style="display: none;">
-        <div class="popup-contenido">
-            <h2>Registro</h2>
-            <input type="text" name="nombre" id="nombreRegistro" placeholder="Type your first name">
-            <input type="text" name="email" id="emailRegistro" placeholder="Type your Email">
-            <input type="password" name="contrasena" id="contrasenaRegistro" placeholder="Type your password">
-            <button type="button" onclick="cerrarRegistro()">Registrar</button>
-            <p id="postResults"></p>
+
+        <div id="popupLogin" class="popup" style="display: none;">
+            <div class="popup-contenido">
+                <h2>Iniciar Sesión</h2>
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre"><br>
+                <label for="email">Email:</label>
+                <input type="email" id="email"><br>
+                <label for="contrasena">Contraseña:</label>
+                <input type="password" id="contrasena"><br>
+                <button onclick="cerrarPopup()">Enviar</button>
+                <p id="postResults"></p>
+            </div>
         </div>
-    </form>
 
-    <footer>
-        <p>The Bit Guardians © 2025</p>
-    </footer>
-    </footer>
-</body>
-
+        <footer>
+            <p>The Bit Guardians © 2025</p>
+        </footer>
+        <script src="../../js/funciones.js"></script>
+    </body>
 </html>
