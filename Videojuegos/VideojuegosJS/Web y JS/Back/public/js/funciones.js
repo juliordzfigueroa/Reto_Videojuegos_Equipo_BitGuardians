@@ -7,15 +7,15 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("click", activarMusica);
 
     document.getElementById("btnAcerca").addEventListener("click", () => {
-        window.location.href = "Juego/html/Info.html";
+        window.location.href = "Info.html";
     });
 
     document.getElementById("btnJugar").addEventListener("click", () => {
-        window.location.href = "Juego/html/videojuego.html";
+        window.location.href = "videojuego.html";
     });
 
     document.getElementById("btnCreditos").addEventListener("click", () => {
-        window.location.href = "Juego/html/creditos.html";
+        window.location.href = "creditos.html";
     });
 });
 
