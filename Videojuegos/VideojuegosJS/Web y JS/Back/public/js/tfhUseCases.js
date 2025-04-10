@@ -5,8 +5,9 @@ function main() {
         const data = new FormData(formSelectUser)
         const dataObj = Object.fromEntries(data.entries())
 
-        let response = await fetch(`http://localhost:3000/api/jugador/${dataObj['userID']}`, {
+        let response = await fetch(`http://localhost:3000/api/jugador/${dataObj['email']}`, {
             method: 'GET'
+
         })
 
         if (response.ok) {
