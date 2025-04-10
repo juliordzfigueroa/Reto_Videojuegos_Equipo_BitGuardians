@@ -7,15 +7,15 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("click", activarMusica);
 
     document.getElementById("btnAcerca").addEventListener("click", () => {
-        window.location.href = "Juego/html/Info.html";
+        window.location.href = "Info.html";
     });
 
     document.getElementById("btnJugar").addEventListener("click", () => {
-        window.location.href = "Juego/html/videojuego.html";
+        window.location.href = "videojuego.html";
     });
 
     document.getElementById("btnCreditos").addEventListener("click", () => {
-        window.location.href = "Juego/html/creditos.html";
+        window.location.href = "creditos.html";
     });
 });
 
@@ -49,7 +49,8 @@ async function cerrarLogin(e) {
             console.log("Usuario autenticado:");
             console.log(`Id: ${results[0].id_jugador} \n` + 
                         `Nombre: ${results[0].nombre} \n` + 
-                        `Email: ${results[0].email} \n`);
+                        `Email: ${results[0].email} \n` +
+                        `Edad: ${results[0].edad} \n`);
         } else {
             alert("Credenciales incorrectas. Intente de nuevo.");
         }
