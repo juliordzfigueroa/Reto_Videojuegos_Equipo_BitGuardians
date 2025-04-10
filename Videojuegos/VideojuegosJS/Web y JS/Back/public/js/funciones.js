@@ -52,7 +52,6 @@ async function cerrarPopup(e) {
     else {
         postResults.innerHTML = response.status
     }
-    popupLogin.style.display = "none";
 }
 
 window.onclick = function (event) {
