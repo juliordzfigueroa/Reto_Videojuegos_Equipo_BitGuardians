@@ -58,13 +58,14 @@ app.get('/api/jugador', async (request, response) => {
 })
 
 // Get a specific user from the database and return it as a JSON object
-app.get('/api/jugador/:id', async (request, response) => {
+app.post('/api/login', async (request, response) => {
     let connection = null
 
     try {
         connection = await connectToDB()
+        console.log(request.body);
 
-        const [results_user, _] = await connection.query('select * from jugador where id_jugador= ?', [request.params.id])
+        const [results_user, _] = await connection.query('select * from jugador where email = ? and contrasena = ?', [request.body ['email'], request.body['contrasena']])
 
         console.log(`${results_user.length} rows returned`)
         response.json(results_user)

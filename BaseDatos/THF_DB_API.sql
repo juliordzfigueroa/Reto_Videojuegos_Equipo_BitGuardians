@@ -29,3 +29,5 @@ INSERT INTO Jugador VALUES
 (10, 'Jugador10', 24, 'jugador10@correo.com', 'H', 31, 87, 3.98, 81);
 
 select * from jugador;
+select * from jugador where email = 'jugador1@correo.com' and contrasena = 'H';
+

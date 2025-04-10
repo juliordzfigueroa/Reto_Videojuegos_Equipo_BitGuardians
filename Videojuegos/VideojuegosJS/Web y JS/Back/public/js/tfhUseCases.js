@@ -5,8 +5,9 @@ function main() {
         const data = new FormData(formSelectUser)
         const dataObj = Object.fromEntries(data.entries())
 
-        let response = await fetch(`http://localhost:5000/api/jugador/${dataObj['userID']}`, {
+        let response = await fetch(`http://localhost:3000/api/jugador/${dataObj['email']}`, {
             method: 'GET'
+
         })
 
         if (response.ok) {
@@ -55,7 +56,7 @@ function main() {
         const data = new FormData(formInsert)
         const dataObj = Object.fromEntries(data.entries())
 
-        let response = await fetch('http://localhost:5000/api/jugador', {
+        let response = await fetch('http://localhost:3000/api/jugador', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dataObj)
@@ -78,7 +79,7 @@ function main() {
     //     const data = new FormData(formUpdate)
     //     const dataObj = Object.fromEntries(data.entries())
 
-    //     let response = await fetch('http://localhost:5000/api/jugador', {
+    //     let response = await fetch('http://localhost:3000/api/jugador', {
     //         method: 'PUT',
     //         headers: { 'Content-Type': 'application/json' },
     //         body: JSON.stringify(dataObj)
@@ -101,7 +102,7 @@ function main() {
         const data = new FormData(formDelete)
         const dataObj = Object.fromEntries(data.entries())
 
-        let response = await fetch(`http://localhost:5000/api/jugador/${dataObj['userID']}`, {
+        let response = await fetch(`http://localhost:3000/api/jugador/${dataObj['userID']}`, {
             method: 'DELETE'
         })
 

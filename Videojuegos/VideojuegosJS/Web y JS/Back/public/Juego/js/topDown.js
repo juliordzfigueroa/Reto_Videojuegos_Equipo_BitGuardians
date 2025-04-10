@@ -147,6 +147,7 @@ class Game {
                 } 
                 else if (powerup.type === "empBomb") {
                     this.player.hasEMP = true; // El jugador obtiene una bomba EMP.
+                    this.player.emp = powerup; // Se guarda para ser usado como imagen
                     powerup.isCollected = true;
                 }
                 else {
@@ -155,10 +156,7 @@ class Game {
                 }
             }
         }
-
-        // Update player stats bars
-        drawBar(this.player.hp, this.player.max_hp, 'green', 40, 480);
-        drawBar(this.player.shield, this.player.max_shield, 'blue', 40, 510);
+        
         // El método filter devuelve un nuevo arreglo con las balas que no han sido destruidas. Recuperado de: https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
         this.enemyBullets = this.enemyBullets.filter(bullet => !bullet.destroy); // Función filter para borrar las balas que han sido marcadas como destruidas
         this.playerBullets = this.playerBullets.filter(bullet => !bullet.destroy); // Función filter para borrar las balas que han sido marcadas como destruidas
@@ -486,32 +484,25 @@ function drawBar(stat, max_stat, color, barX, barY){ // Función para dibujar la
     
 }
 
-function drawHUD(ctx, player, scale) {
-    const currentWeaponX = canvasWidth - 450;
-    const currentWeaponY = 480;
-    ctx.font = "14px Arial";
-    ctx.fillStyle = "white";
+function drawHUD(ctx, player, scale) { // Función que dibuja el las armas y las estadiscas del jugador en tiempo real.
+    const currentWeaponX = canvasWidth - 270;
+    const currentWeaponY = 470;
+    // Variables usadas para los marcos de las armas y la bomba EMP
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "grey";
+    ctx.strokeRect(currentWeaponX, currentWeaponY, 100, 100);
+    ctx.strokeRect(currentWeaponX + 120, currentWeaponY, 100, 100);
+    drawBar(game.player.hp, game.player.max_hp, 'green', 60, 500);
+    drawBar(game.player.shield, game.player.max_shield, 'blue', 60, 530);
     if (player.weapon) {
       if (player.weapon.spriteImage && player.weapon.spriteRect) {
-        ctx.drawImage(
-          player.weapon.spriteImage,
-          player.weapon.spriteRect.x * player.weapon.spriteRect.width,
-          player.weapon.spriteRect.y * player.weapon.spriteRect.height,
-          player.weapon.spriteRect.width,
-          player.weapon.spriteRect.height,
-          currentWeaponX,
-          currentWeaponY,
-          player.weapon.spriteRect.width,
-          player.weapon.spriteRect.height
-        );
-      } else {
-        ctx.fillStyle = "purple";
-        ctx.fillRect(currentWeaponX, currentWeaponY, 50, 50);
-        ctx.fillStyle = "white";
-        ctx.fillText("Arma Actual: " + player.weapon.wtype, currentWeaponX, currentWeaponY - 5);
-      }
+        ctx.drawImage(player.weapon.spriteImage, currentWeaponX, currentWeaponY, 100, 100);
+      } 
     }
-  }
+    if (player.hasEMP && player.emp) {
+        ctx.drawImage(player.emp.spriteImage, currentWeaponX + 120, currentWeaponY, 100, 100);
+    }
+}
 
 function drawPuzzleOverlay(ctx) {
    ctx.fillStyle = "rgba(0,0,0,0.8)"; // Dibuja un overlay semitransparente 
