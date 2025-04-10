@@ -7,6 +7,7 @@
     <title>The Final Hack</title>
     <link rel="stylesheet" href="Juego/css/prueba.css">
     <script src="../../js/funciones.js"></script>
+    <link rel="icon" href="Juego/images/logopantallainicio.png" type="image/x-icon">
 </head>
 
 <body>
@@ -29,10 +30,10 @@
     <form id="popupLogin" class="popup" style="display: none;">
         <div class="popup-contenido">
             <h2>Iniciar Sesión</h2>
-            <input type="text" name="email" placeholder="Type your jugador email">
-            <input type="password" name="contrasena" placeholder="Type your password">
+            <input type="text" name="email" id='emailLogin' placeholder="Type your jugador email">
+            <input type="password" name="contrasena" id='contrasenaLogin' placeholder="Type your password">
             <button type="button" onclick="cerrarLogin()">Enviar</button>
-            <p id="postResults"></p>
+            <p id="getResultsID"></p>
             <p>¿No tienes cuenta?
                 <a href="#" onclick="mostrarRegistro()"><button type="button">Regístrate aquí</button></a>
             </p>
@@ -42,10 +43,11 @@
     <form id="popupRegistro" class="popup" style="display: none;">
         <div class="popup-contenido">
             <h2>Registro</h2>
-            <input type="text" name="nombre" id="nombre" placeholder="Type your first name">
-            <input type="text" name="email" id="email" placeholder="Type your Email">
-            <input type="password" name="contrasena" id="contrasena" placeholder="Type your password">
+            <input type="text" name="nombre" id="nombreRegistro" placeholder="Type your first name">
+            <input type="text" name="email" id="emailRegistro" placeholder="Type your Email">
+            <input type="password" name="contrasena" id="contrasenaRegistro" placeholder="Type your password">
             <button type="button" onclick="cerrarRegistro()">Registrar</button>
+            <p id="postResults"></p>
         </div>
     </form>
 
