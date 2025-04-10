@@ -64,7 +64,7 @@ app.get('/api/jugador/:id', async (request, response) => {
     try {
         connection = await connectToDB()
 
-        const [results_user, _] = await connection.query('select * from jugador where id_jugador= ?', [request.params.id])
+        const [results_user, _] = await connection.query('select * from jugador where email = ? and contrasena = ?', [request.params.id])
 
         console.log(`${results_user.length} rows returned`)
         response.json(results_user)
