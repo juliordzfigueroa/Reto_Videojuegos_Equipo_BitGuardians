@@ -21,6 +21,7 @@ class Player extends AnimatedObject {
         this.state = "idle"; 
         this.totalHP = this.hp + this.shield; // Atributo de vida total del jugador, el cual será la suma de la vida y el escudo del jugador
         this.hasEMP = false; // Atributo de si el jugador tiene un EMP o no
+        this.emp = null; // Atributo del powerup EMP del jugador, el será solo usado para imagen del hub
         // Variables de la entrada de y salida al entrar a una puerta.
         this.exitPosition = undefined;
         this.enterPosition = undefined;
@@ -34,8 +35,6 @@ class Player extends AnimatedObject {
         this.touchedCable = false;
 
         this.weapon = getRandomInitWeapon(); // Arma inicial del jugador, aleatoria al inicio
-
-        this.previousWeapon = null; // Arma anterior del jugador, la cual se guardará al cambiar de arma
 
         // Movimientos del jugador
         this.movement = {
