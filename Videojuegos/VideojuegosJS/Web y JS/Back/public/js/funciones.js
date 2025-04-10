@@ -49,7 +49,8 @@ async function cerrarLogin(e) {
             console.log("Usuario autenticado:");
             console.log(`Id: ${results[0].id_jugador} \n` + 
                         `Nombre: ${results[0].nombre} \n` + 
-                        `Email: ${results[0].email} \n`);
+                        `Email: ${results[0].email} \n` +
+                        `Edad: ${results[0].edad} \n`);
         } else {
             alert("Credenciales incorrectas. Intente de nuevo.");
         }
