@@ -5,7 +5,7 @@
 
 */
 
-let stunDuration = 2000; // Atributo de duración del aturdimiento del enemigo 2 segundos
+const stunDuration = 2000; // Atributo de duración del aturdimiento del enemigo 2 segundos
 
 class Enemy extends AnimatedObject {
     constructor(color, width, height, x, y, type, hp, damage, speed, stunTime) {
@@ -20,6 +20,7 @@ class Enemy extends AnimatedObject {
         this.speed = speed; // Velocidad del enemigo
         this.stunTime = 0; // Tiempo de aturdimiento del enemigo por defecto
         this.speed = speed; // Velocidad máxima del enemigo por defecto
+        this.baseSpeed = speed; // Velocidad base del enemigo por defecto
         this.destroyed = false; // Estado de destrucción del enemigo por defecto
     }
 

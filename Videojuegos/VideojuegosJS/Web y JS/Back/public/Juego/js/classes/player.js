@@ -114,10 +114,6 @@ class Player extends AnimatedObject {
             this.currentAttackHitbox.drawHitBox(ctx, scale);
         }
 
-        if (this.weaponChangeCooldown > 0) {
-            this.weaponChangeCooldown -= deltaTime;
-        }
-
         this.cableDamageTimer += deltaTime; // Aumentar el timer del daño del cable
     }
 
@@ -233,6 +229,11 @@ class Player extends AnimatedObject {
 
     }
 
+    stunEnemy(enemy) {
+        enemy.stunTime = stunDuration;  // Asigna 2000 ms de aturdimiento
+        enemy.state = "stunned";         // Cambia el estado a "stunned"
+    }
+
     // Método para que el jugador reciba daño
     takeDamage(damage){
         if (this.shield > 0) // Si el jugador tiene escudo, este recibe el daño.
@@ -253,12 +254,6 @@ class Player extends AnimatedObject {
     // Método para que el jugador pueda hacer daño (temporal aquí hasta definir la clase donde corresponde)
     doDamage(enemy){
         enemy.takeDamage(this.weapon.damage);
-    }
-
-    stunEnemy(enemy){
-        if (this.hasEMP == true)
-        enemy.stunTime = stunDuration; // Aturdir al enemigo por 2 segundos
-        enemy.state = "stunned"; // Cambiar el estado del enemigo a aturdido
     }
 }
 

@@ -8,7 +8,7 @@
 class Dron extends Enemy {
     constructor(color, width, height, x, y, type) {
         super("blue", width * 2, height * 2, x, y, "dron", 50, 5, 0.025, 1500);
-        this.hitBox = new HitBox(this.position.x, this.position.y, this.size.x*0.6, this.size.y*0.8); // Hitbox del enemigo robot
+        this.hitBox = new HitBox(this.position.x, this.position.y, this.size.x*0.6, this.size.y*0.6); // Hitbox del enemigo robot
         this.direction = 1; // Dirección del enemigo, 1 = abajo, -1 = arriba
         this.state = "movementpattern"; // Estado del enemigo, puede ser "movementpattern" o "shooting"
         this.shootCooldown = 0; // Tiempo de recarga del disparo del enemigo
@@ -39,13 +39,13 @@ class Dron extends Enemy {
     update(level, deltaTime) {
         //Verificar el estado del enemigo
         if (this.state == "stunned") {
-            // El enemigo se queda quieto mientras aturdido
-            this.velocity = new Vec(0, 0);
-            this.stunTime -= deltaTime; // Reducir el tiempo de aturdimiento
-            if (this.stunTime <= 0) {
-                this.state = "idle"; // Cambiar al estado idle después del aturdimiento
-                this.stunTime = stunDuration; // Reiniciar el tiempo de aturdimiento
-            }
+             // El enemigo se queda quieto mientras está aturdido
+             this.velocity = new Vec(0, 0);
+             this.stunTime -= deltaTime;
+             if (this.stunTime <= 0) {
+                 this.state = "movementpattern"; // Cambia el estado a "movementpattern" cuando se acaba el tiempo de aturdimiento
+                 this.stunTime = this.stunDuration; // Reinicia el tiempo de aturdimiento
+             }
         }
         else {
             this.state = "movementpattern";
@@ -88,8 +88,8 @@ class Dron extends Enemy {
             this.speed = this.max_speed;
         }
         
-        this.hitBox.position.x = this.position.x + 0.4; // Actualizar la posición del hitbox del enemigo
-        this.hitBox.position.y = this.position.y + 0.2; // Actualizar la posición del hitbox del enemigo
+        this.hitBox.position.x = this.position.x + 0.47; // Actualizar la posición del hitbox del enemigo
+        this.hitBox.position.y = this.position.y + 0.4; // Actualizar la posición del hitbox del enemigo
         this.hitBox.update(); // Actualizar el hitbox del enemigo
         
         this.updateFrame(deltaTime);
