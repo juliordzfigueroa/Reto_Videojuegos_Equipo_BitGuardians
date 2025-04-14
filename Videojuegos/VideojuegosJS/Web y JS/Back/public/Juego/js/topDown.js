@@ -47,7 +47,32 @@ class Game {
     }
     
     moveToLevel(newRoom) {
+        // Guarda el nivel previo
         lastRoom = currentRoom;
+
+        // --- Caso especial: desde "main" usando la puerta del jefe ---
+        if (currentRoom === "main" && lastDoorChar && ["1", "2", "3"].includes(lastDoorChar)) {
+            if (!areAllRoomsCompleted()) {
+            console.log("La puerta del jefe permanece cerrada: aún faltan salas por completar.");
+            return; // Abortamos la transición si no se han completado todas las salas secundarias
+            } else {
+            // Si se han completado, se dirige al BossRoom
+            newRoom = "BossRoom";
+            }
+        }
+        
+        // --- Caso especial: desde BossRoom completada se pasa a secondLevel ---
+        if (currentRoom === "BossRoom" && GAME_LEVELS[currentRoom].statusCompleted === true) {
+            newRoom = "secondLevel";
+        }
+
+        currentRoom = newRoom;
+        
+        // Creamos el nuevo nivel a partir del layout correspondiente
+        this.level = new Level(GAME_LEVELS[currentRoom].layout);
+        // Reutilizamos al jugador existente
+        this.level.player = this.player;
+        
         currentRoom = newRoom;
         this.level = new Level(GAME_LEVELS[currentRoom].layout);
 
@@ -350,16 +375,14 @@ function restartGame() {
     currentRoom = "main";
     lastRoom = null;
     lastDoorChar = null;
-    
+    // Reiniciamos los cuartos de cada nivel
     for (let room in GAME_LEVELS) {
         GAME_LEVELS[room].statusCompleted = false;
         GAME_LEVELS[room].roomPowerUp = null;
         GAME_LEVELS[room].powerupSpawned = false;
     }
+    // Reiniciamos el juego creando un objeto nuevo de la clase GAME
     game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
-    
-    puzzleActive = false;
-    pauseActive = false;
 }
 
 function setEventListeners() {
@@ -698,7 +721,7 @@ function overlapPlayer(player, actors) {
 
 function areAllRoomsCompleted() {
     for (let level in GAME_LEVELS) {
-        if (level !== "main" && level !== "BossRoom" && !GAME_LEVELS[level].statusCompleted) {
+        if (level !== "main" && level !== "BossRoom" && !GAME_LEVELS[level].statusCompleted && level != "secondLevel") {
             return false;
         }
     }
