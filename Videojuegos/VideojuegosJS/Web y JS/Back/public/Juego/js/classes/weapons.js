@@ -9,7 +9,7 @@
 
 class PowerUp extends GameObject {
     constructor(color, width, height, x, y, type, effectN, rarity) {
-        super(color, 1, 1, x, y, type); // Width y height fijos para todos los powerups por el tamaño de los sprites
+        super(color, 1.8, 2, x, y, type); // Width y height fijos para todos los powerups por el tamaño de los sprites
         this.effectN = effectN; // Nombre del efecto que tendrá cada powerup.
         this.isCollected = false; // Variable para saber si el powerup fue recogido tras completar la sala.
         this.rarity = rarity; // Variable para saber la rareza de cada powerup.
@@ -78,12 +78,6 @@ class EMPBomb extends PowerUp {
         super("yellow", x, y, type, "empBomb", "Legendary");
         this.type = "empBomb";
         this.setSprite("../assets/sprites/powerUps/empBomb_asset.png", new Rect(0, 0, 26, 32)); 
-    }
-    
-    effect() {
-        for (let enemy in game.enemies){
-            enemy.state = "stunned"; // Cambia el estado de todos los enemigos a aturdido.
-        }
     }
 }
 

@@ -346,13 +346,20 @@ function gameStart() {
     updateCanvas(document.timeline.currentTime);
 }
 
-function restartGame() { // Función para reiniciar el juego tras un gameover
-    currentRoom = "main"; // Reinicia el nivel a la sala principal
-    lastRoom = null; // Reinicia la sala anterior
-    for (let level in GAME_LEVELS) {
-        GAME_LEVELS[level].statusCompleted = false; // Reinicia el estado de los niveles
+function restartGame() {
+    currentRoom = "main";
+    lastRoom = null;
+    lastDoorChar = null;
+    
+    for (let room in GAME_LEVELS) {
+        GAME_LEVELS[room].statusCompleted = false;
+        GAME_LEVELS[room].roomPowerUp = null;
+        GAME_LEVELS[room].powerupSpawned = false;
     }
-    gameStart();    
+    game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
+    
+    puzzleActive = false;
+    pauseActive = false;
 }
 
 function setEventListeners() {
@@ -413,7 +420,8 @@ function setEventListeners() {
         if (event.key === 'e') {
             if (game.player.hasEMP) {
                 for (let enemy of game.enemies) {
-                    enemy.state = "stunned"; // Cambia el estado de todos los enemigos a aturdido.
+                    enemy.stunTime = stunDuration;
+                    enemy.state = "stunned"; // Cambia el estado del enemigo a aturdido
                 }
                 game.player.hasEMP = false; // Marca como usado la bombaEMP
             }
