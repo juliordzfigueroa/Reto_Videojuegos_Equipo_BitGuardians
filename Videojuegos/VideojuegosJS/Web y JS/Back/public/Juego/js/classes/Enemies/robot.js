@@ -111,11 +111,18 @@ class Robot extends Enemy {
             if (this.stunTime <= 0) {
                 this.state = "idle";
             }
+            if (this.currentDirection) {
+                this.stopMovement(this.currentDirection);
+
+            }
         }
     
 
         if (this.state == "idle") {
             this.velocity = new Vec(0.0, 0.0);
+            if (this.currentDirection) {
+                this.stopMovement(this.currentDirection);
+            }
         }
 
         if (this.speed > this.max_speed) { // Si la velocidad del enemigo supera la velocidad máxima, se iguala a esta.

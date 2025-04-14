@@ -20,7 +20,7 @@ class Player extends AnimatedObject {
         this.hitBox = new HitBox(this.position.x, this.position.y, this.size.x*0.7, this.size.y*0.9); // Hitbox del jugador
         this.state = "idle"; 
         this.totalHP = this.hp + this.shield; // Atributo de vida total del jugador, el cual será la suma de la vida y el escudo del jugador
-        this.hasEMP = false; // Atributo de si el jugador tiene un EMP o no
+        this.hasEMP = true; // Atributo de si el jugador tiene un EMP o no
         this.emp = null; // Atributo del powerup EMP del jugador, el será solo usado para imagen del hub
         // Variables de la entrada de y salida al entrar a una puerta.
         this.exitPosition = undefined;
