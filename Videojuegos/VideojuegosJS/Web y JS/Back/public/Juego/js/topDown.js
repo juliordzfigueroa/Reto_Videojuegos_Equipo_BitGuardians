@@ -44,50 +44,26 @@ class Game {
         this.enemyBullets = level.enemyBullets;
         this.playerBullets = level.playerBullets;
         levelPuzzle = new Puzzle(canvasWidth, canvasHeight);
+        this.cLevel = 0; // Variable que guarda los niveles completados de la partida
     }
     
     moveToLevel(newRoom) {
         // Guarda el nivel previo
-        lastRoom = currentRoom;
-
-        // --- Caso especial: desde "main" usando la puerta del jefe ---
-        if (currentRoom === "main" && lastDoorChar && ["1", "2", "3"].includes(lastDoorChar)) {
-            if (!areAllRoomsCompleted()) {
-            console.log("La puerta del jefe permanece cerrada: aún faltan salas por completar.");
-            return; // Abortamos la transición si no se han completado todas las salas secundarias
-            } else {
-            // Si se han completado, se dirige al BossRoom
-            newRoom = "BossRoom";
-            }
-        }
-        
-        // --- Caso especial: desde BossRoom completada se pasa a secondLevel ---
-        if (currentRoom === "BossRoom" && GAME_LEVELS[currentRoom].statusCompleted === true) {
-            newRoom = "secondLevel";
-        }
-
+        lastRoom = currentRoom; 
         currentRoom = newRoom;
-        
-        // Creamos el nuevo nivel a partir del layout correspondiente
-        this.level = new Level(GAME_LEVELS[currentRoom].layout);
-        // Reutilizamos al jugador existente
-        this.level.player = this.player;
-        
-        currentRoom = newRoom;
-        this.level = new Level(GAME_LEVELS[currentRoom].layout);
+        this.level = new Level(GAME_LEVELS[currentRoom].layout, this.player);
 
         // Reutilizar el jugador existente
         this.level.player = this.player;
 
         if (!GAME_LEVELS[currentRoom].statusCompleted) {
-            this.level = new Level(GAME_LEVELS[currentRoom].layout);
+            this.level = new Level(GAME_LEVELS[currentRoom].layout, this.player);
             this.enemies = this.level.enemies;
             this.actors = this.level.actors;
         } else {
             this.enemies = [];
             this.actors = this.level.actors;
             if (GAME_LEVELS[currentRoom].roomPowerUp) {
-                console.log("PowerUp: " + GAME_LEVELS[currentRoom].roomPowerUp.type);
                 this.level.levelPowerUps.push(GAME_LEVELS[currentRoom].roomPowerUp);
             }
         }
@@ -199,13 +175,23 @@ class Game {
             this.level.setupDoors(); // Actualiza la puerta
         }
 
-        if (GAME_LEVELS[currentRoom].statusCompleted == true && currentRoom != "BossRoom") {
+        if (GAME_LEVELS[currentRoom].statusCompleted == true && currentRoom != "BossRoom" && currentRoom != "secondLevel") {
             if (!GAME_LEVELS[currentRoom].powerupSpawned) { 
                 let powerup = getRandomPowerUp();
                 powerup.position = new Vec(Math.floor(levelWidth / 2), Math.floor(levelHeight / 2));
                 this.level.levelPowerUps.push(powerup);
                 GAME_LEVELS[currentRoom].powerupSpawned = true;
                 GAME_LEVELS[currentRoom].roomPowerUp = powerup; // Guarda el powerup en el nivel
+            }
+        }
+
+        if (currentRoom == "BossRoom") {
+            if (GAME_LEVELS[currentRoom].statusCompleted === true) {
+                this.moveToLevel("main");
+                this.cLevel++;
+                console.log("Niveles completados: " + this.cLevel);
+                resetRoomStats();
+                this.level.setupDoors(); // Actualiza la puerta
             }
         }
         
@@ -376,11 +362,7 @@ function restartGame() {
     lastRoom = null;
     lastDoorChar = null;
     // Reiniciamos los cuartos de cada nivel
-    for (let room in GAME_LEVELS) {
-        GAME_LEVELS[room].statusCompleted = false;
-        GAME_LEVELS[room].roomPowerUp = null;
-        GAME_LEVELS[room].powerupSpawned = false;
-    }
+    resetRoomStats();
     // Reiniciamos el juego creando un objeto nuevo de la clase GAME
     game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
 }
@@ -726,6 +708,16 @@ function areAllRoomsCompleted() {
         }
     }
     return true;
+}
+
+function resetRoomStats(){ // Función que reinicia los stats de las habitaciones del juego para reutilizarlas en el futuro
+    for (let room in GAME_LEVELS) {
+        GAME_LEVELS[room].statusCompleted = false;
+        GAME_LEVELS[room].roomPowerUp = null;
+        GAME_LEVELS[room].powerupSpawned = false;
+    }
+    levelPuzzle = new Puzzle(canvasWidth, canvasHeight);; // Reinicia el puzzle
+    levelPuzzle.puzzleCompleated == true
 }
 
 // Call the start function to initiate the game
