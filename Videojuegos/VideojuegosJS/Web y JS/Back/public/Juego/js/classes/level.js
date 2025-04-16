@@ -6,8 +6,9 @@
 */
 
 class Level {
-    constructor(plan) {
+    constructor(plan, existingPlayer = null) { // Constructor de la clase Level con el jugador inicial vacío
         // Split the plan string into a matrix of strings
+        this.existingPlayer = existingPlayer; // Guardar el jugador existente si se proporciona
         let rows = plan.trim().split('\n').map(l => [...l]);
         this.height = rows.length;
         this.width = rows[0].length;
@@ -37,11 +38,18 @@ class Level {
         let cellType = item.label;
 
         if (actor.type === "player") {
-            this.addBackgroundFloor(x, y);
-            actor.setSprite(item.sprite, item.rect);
-            actor.sheetCols = item.sheetCols;
-            actor.setAnimation(...item.startFrame, true, 100);
-            this.player = actor;
+            if (this.existingPlayer !== null) {
+                this.addBackgroundFloor(x, y);
+                this.player = this.existingPlayer;
+                this.player.position.x = x;
+                this.player.position.y = y;
+            } else {
+                this.addBackgroundFloor(x, y);
+                actor.setSprite(item.sprite, item.rect);
+                actor.sheetCols = item.sheetCols;
+                actor.setAnimation(...item.startFrame, true, 100);
+                this.player = actor;
+            }
             cellType = "empty";
         } else if (actor.type === "robot" || actor.type === "dron" || actor.type === "boss") {
             this.addBackgroundFloor(x, y);
@@ -75,6 +83,7 @@ class Level {
             if (item.char !== undefined) actor.char = item.char;
             this.actors.push(actor);
         } else if (actor.type === "puzzle") {
+            this.addBackgroundFloor(x, y);
             actor.setSprite(item.sprite, item.rect);
             this.actors.push(actor);
             cellType = "empty";
