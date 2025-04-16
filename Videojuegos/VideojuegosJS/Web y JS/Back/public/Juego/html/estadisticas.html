@@ -17,7 +17,7 @@
                     <img src="../images/imagenboton.png" alt="Menú" />
                 </button>
                 <div id="dropdownMenu">
-                    <a href="../html/prueba.html">Inicio</a>
+                    <a href="/">Inicio</a>
                     <a href="../html/videojuego.html">Videojuego</a>
                     <a href="../html/creditos.html">Creditos</a>
                     <a href="../html/Info.html">Acerca de</a>
@@ -36,28 +36,8 @@
                 <div class="tituloEstadisticas">
                     <img src="../images/partidasestadisticas.png" alt="Partida Estadísticas">
                 </div>
-               
             </div>
         </div>
-        <script>
-            const menuButton = document.getElementById('menuButton');
-            const dropdownMenu = document.getElementById('dropdownMenu');
-
-            menuButton.onclick = function (e) {
-            if (dropdownMenu.style.display === 'block') {
-                dropdownMenu.style.display = 'none';
-            } else {
-                dropdownMenu.style.display = 'block';
-            }
-            };
-
-            document.onclick = function (e) {
-                if (!menuButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
-                    dropdownMenu.style.display = 'none';
-                }
-            };
-    
-            main();
-        </script>
+        <script src="../../js/menu.js"></script>
     </body>
 </html>
