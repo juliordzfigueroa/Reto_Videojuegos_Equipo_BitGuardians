@@ -104,9 +104,9 @@ class Weapon extends PowerUp {
 
 function getRandomInitWeapon(){ // Método para obtener un arma aleatoria de la lista de armas al comenzar una partida.
     const weapons = [ 
-        new Weapon("purple", 30, 30, 0, 0, "weapon", "sword", 100, "Epic", attackAnimations.sword),
-        new Weapon("purple", 30, 30, 0, 0, "weapon", "gun", 100, "Epic", attackAnimations.gun),
-        new Weapon("purple", 30, 30, 0, 0, "weapon", "taser", 150, "Epic", attackAnimations.taser),
+        new Weapon("purple", 30, 30, 0, 0, "weapon", "sword", 20, "Epic", attackAnimations.sword),
+        new Weapon("purple", 30, 30, 0, 0, "weapon", "gun", 10, "Epic", attackAnimations.gun),
+        new Weapon("purple", 30, 30, 0, 0, "weapon", "taser", 15, "Epic", attackAnimations.taser),
     ];
     let randomIndex = Math.floor(Math.random() * weapons.length);
     return weapons[randomIndex]; // Devuelve un arma aleatoria de la lista de armas.
@@ -117,9 +117,9 @@ function getRandomPowerUp() { // Método para obtener un powerup aleatorio de la
         new Heal("red", 30, 30, 0, 0, "heal", "Uncommon"),
         new Shield("blue", 30, 30, 0, 0, "shield", "Uncommon"),
         new HealthIncrease("green", 30, 30, 0, 0, "healthIncrease", "Rare"),
-        new Weapon("purple", 30, 30, 0, 0, "weapon", "sword", 100, "Epic", attackAnimations.sword),
-        new Weapon("purple", 30, 30, 0, 0, "weapon", "gun", 100, "Epic", attackAnimations.gun),
-        new Weapon("purple", 30, 30, 0, 0, "weapon", "taser", 150, "Epic", attackAnimations.taser),
+        new Weapon("purple", 30, 30, 0, 0, "weapon", "sword", 20, "Epic", attackAnimations.sword),
+        new Weapon("purple", 30, 30, 0, 0, "weapon", "gun", 10, "Epic", attackAnimations.gun),
+        new Weapon("purple", 30, 30, 0, 0, "weapon", "taser", 15, "Epic", attackAnimations.taser),
         new EMPBomb("yellow", 30, 30, 0, 0, "empBomb", "Legendary"),
     ];
 

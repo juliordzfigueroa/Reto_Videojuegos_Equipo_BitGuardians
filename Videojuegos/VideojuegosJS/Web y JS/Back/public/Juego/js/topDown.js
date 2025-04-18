@@ -96,9 +96,14 @@ class Game {
 
     update(deltaTime) {
         this.player.update(this.level, deltaTime);
-        if (this.player.previousWeapon) {
-            console.log(this.player.previousWeapon.wtype);
+
+        if (game.player.isDefeated) { // Si el jugador ha sido derrotado
+            if (!this.player.repeat && this.player.frame === this.player.maxFrame) { // Se revisa si ya se terimnó la animación de muerte
+                restartGame();
+            }
+            return;
         }
+
         for (let enemy of this.enemies) {
             enemy.update(this.level, deltaTime);
         }
@@ -110,7 +115,7 @@ class Game {
 
         // Evitar que los enemigos se sobrepongan entre sí
         overLapEnemies(this.enemies, currentActors);
-        //Verificar si el jugador toca un cable, puerta o pared
+        // Verificar si el jugador toca un cable, puerta o pared
         overlapPlayer(this.player, currentActors);
 
 
@@ -135,26 +140,8 @@ class Game {
         for (let i = this.level.levelPowerUps.length - 1; i >= 0; i--) {
             let powerup = this.level.levelPowerUps[i];
             if (overlapRectangles(powerup, this.player)) {
-                if (powerup.type === "weapon") {
-                    let revertWeapon = this.player.weapon;
-                    this.player.weapon = powerup;
-                    powerup.isCollected = true;
-                    let droppedWeapon = new Weapon("purple", 30, 30, revertWeapon.position.x, revertWeapon.position.y, "weapon", revertWeapon.wtype, revertWeapon.damage, "Epic", revertWeapon.animations);
-                    droppedWeapon.position = new Vec(powerup.position.x + 1, powerup.position.y);
-                    this.level.levelPowerUps.push(droppedWeapon);
-                    GAME_LEVELS[currentRoom].roomPowerUp = droppedWeapon;
-                    this.player.powerupCooldown = 1000;
-                    break;
-                } 
-                else if (powerup.type === "empBomb") {
-                    this.player.hasEMP = true; // El jugador obtiene una bomba EMP.
-                    this.player.emp = powerup; // Se guarda para ser usado como imagen
-                    powerup.isCollected = true;
-                }
-                else {
-                    powerup.effect(this.player);
-                    powerup.isCollected = true;
-                }
+                this.player.powerupEffect(powerup); // Aplica el efecto del powerup al jugador
+                break;
             }
         }
         
@@ -193,11 +180,6 @@ class Game {
                 resetRoomStats();
                 this.level.setupDoors(); // Actualiza la puerta
             }
-        }
-        
-        if (game.player.hp <= 0) {
-            console.log("Game Over");
-            restartGame();
         }
     }
 
@@ -717,7 +699,7 @@ function resetRoomStats(){ // Función que reinicia los stats de las habitacione
         GAME_LEVELS[room].powerupSpawned = false;
     }
     levelPuzzle = new Puzzle(canvasWidth, canvasHeight);; // Reinicia el puzzle
-    levelPuzzle.puzzleCompleated == true
+    levelPuzzle.puzzleCompleated == false;
 }
 
 // Call the start function to initiate the game
