@@ -7,12 +7,26 @@ CREATE TABLE Jugador(
     id_jugador INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
     edad INT NOT NULL DEFAULT 18,
-    email VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
     contrasena VARCHAR(100) NOT NULL,
 	pos_x INT NOT NULL DEFAULT 13,
     pos_y INT NOT NULL DEFAULT 7,
     velocidad FLOAT NOT NULL DEFAULT 0.005,
     vida INT NOT NULL DEFAULT 100
+);
+
+CREATE TABLE Estadisticas(
+    id_estadisticas INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_jugador INT UNSIGNED,
+    enemigos_derrotados INT DEFAULT 0,
+    muertes INT DEFAULT 0,
+    dano_total_recibido INT DEFAULT 0,
+    power_ups_utilizados INT DEFAULT 0,
+    salas_completadas INT DEFAULT 0,
+    jefes_derrotados INT DEFAULT 0,
+    puzzles_resueltos INT DEFAULT 0,
+    arma_favorita VARCHAR(20) NOT NULL DEFAULT 'Pistola',
+    FOREIGN KEY (id_jugador) REFERENCES Jugador(id_jugador)
 );
 
 SET AUTOCOMMIT=1;
@@ -30,4 +44,8 @@ INSERT INTO Jugador VALUES
 
 select * from jugador;
 select * from jugador where email = 'jugador1@correo.com' and contrasena = 'H';
+select * from Estadisticas where id_jugador = 2;
+select * from Estadisticas;
 
+
+insert into estadisticas values(1, 2, 1, 1, 1, 1, 1, 1, 1, 'Espada');

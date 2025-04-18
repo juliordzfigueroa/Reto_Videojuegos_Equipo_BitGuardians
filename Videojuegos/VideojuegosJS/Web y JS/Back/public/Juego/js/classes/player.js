@@ -36,6 +36,12 @@ class Player extends AnimatedObject {
 
         this.weapon = getRandomInitWeapon(); // Arma inicial del jugador, aleatoria al inicio
 
+        // Variable para guardar cuanto daño ha recibido el jugador por enemigos
+        this.danoTotalRecibido = 0;
+        this.enemigosDerrotados = 0;
+        this.salasCompletadas = 0;
+        this.puzzlesResueltos = 0;
+        this.jefesDerrotados = 0;
         // Movimientos del jugador
         this.movement = {
             down: {
@@ -236,6 +242,7 @@ class Player extends AnimatedObject {
 
     // Método para que el jugador reciba daño
     takeDamage(damage){
+        this.danoTotalRecibido += damage; // Aumentar el daño total recibido por el jugador
         if (this.shield > 0) // Si el jugador tiene escudo, este recibe el daño.
             {
                 this.shield -= damage;

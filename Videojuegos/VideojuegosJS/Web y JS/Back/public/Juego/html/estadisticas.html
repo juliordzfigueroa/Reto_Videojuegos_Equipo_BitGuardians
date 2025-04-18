@@ -29,15 +29,34 @@
             <div class="cuadroEstadistica">
                 <div class="tituloEstadisticas">
                     <img src="../images/jugadorestadisticas.png" alt="Jugador Estadísticas">
+                    <p id="nombreStats"> </p>
+                    <p id="emailStats">Email: </p>
+                    <p id="edadStats">Nombre: </p>
+                    
                 </div>
            
             </div>
             <div class="cuadroEstadistica">
                 <div class="tituloEstadisticas">
                     <img src="../images/partidasestadisticas.png" alt="Partida Estadísticas">
+                    <p id="enemigosDerrotados"></p>
+                    <p id="danoTotalRecibido"></p>
+                    <p id="powerUpsUtilizados"></p>
+                    <p id="salasCompletadas"></p>
+                    <p id="puzzlesResueltos"></p>
+                    <p id="armaFavorita"></p>
                 </div>
             </div>
         </div>
         <script src="../../js/menu.js"></script>
+        <script src="../../js/funciones.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                // Llama a la función mostrarStatsJugador al cargar la página
+                mostarStatsJugador();
+                // Llama a la función mostrarStatsPartida al cargar la página
+                mostrarStatsPartida();
+            });
+        </script>
     </body>
 </html>

@@ -14,10 +14,6 @@ body {
   justify-content: center;
   align-items: start;
   justify-items: center;
-  /*background-image: url('../images/fondoestadisticas.png');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;*/
 }
 
 /* Imagen del título */
@@ -129,4 +125,11 @@ body {
   width: 100%;         /* ajusta según lo que te guste más */
   max-height: 120px;
   object-fit: contain;
+}
+
+.tituloEstadisticas p {
+  font-family: 'Press Start 2P', cursive, monospace;
+  color: white;
+  font-size: 12px;
+  padding: 10px;
 }
