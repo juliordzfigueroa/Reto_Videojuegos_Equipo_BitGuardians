@@ -35,7 +35,7 @@ class Player extends AnimatedObject {
         this.touchedCable = false;
 
         this.weapon = getRandomInitWeapon(); // Arma inicial del jugador, aleatoria al inicio
-
+      
         this.sfx = { // Sonidos del jugador
             damage: new Audio("../assets/sfx/Sound_Effects/cipher_impact.mp3"),
             shoot: new Audio("../assets/sfx/Sound_Effects/laser_gun.mp3"),
@@ -53,6 +53,13 @@ class Player extends AnimatedObject {
         this.sfx.blade.volume = 0.5; // Volumen del sonido de espada
         this.sfx.taser.volume = 0.5; // Volumen del sonido de taser
 
+        // Variable para guardar cuanto daño ha recibido el jugador por enemigos
+        this.danoTotalRecibido = 0;
+        this.enemigosDerrotados = 0;
+        this.salasCompletadas = 0;
+        this.puzzlesResueltos = 0;
+        this.jefesDerrotados = 0;
+      
         // Movimientos del jugador
         this.movement = {
             down: {
@@ -304,6 +311,9 @@ class Player extends AnimatedObject {
     takeDamage(damage){
         this.sfx.damage.currentTime = 0; // reinicia si ya estaba sonando
         this.sfx.damage.play();
+      
+        this.danoTotalRecibido += damage; // Aumentar el daño total recibido por el jugador
+      
         if (this.shield > 0) // Si el jugador tiene escudo, este recibe el daño.
             {
                 this.shield -= damage;

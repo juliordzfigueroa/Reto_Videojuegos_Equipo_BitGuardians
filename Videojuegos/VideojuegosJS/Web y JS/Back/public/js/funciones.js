@@ -6,17 +6,26 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     document.addEventListener("click", activarMusica);
 
-    document.getElementById("btnAcerca").addEventListener("click", () => {
-        window.location.href = "Info.html";
-    });
+    const btnAcerca = document.getElementById("btnAcerca");
+    if (btnAcerca) {
+        btnAcerca.addEventListener("click", () => {
+            window.location.href = "Juego/html/Info.html";
+        });
+    }
 
-    document.getElementById("btnJugar").addEventListener("click", () => {
-        window.location.href = "videojuego.html";
-    });
+    const btnJugar = document.getElementById("btnJugar");
+    if (btnJugar) {
+        btnJugar.addEventListener("click", () => {
+            window.location.href = "Juego/html/videojuego.html";
+        });
+    }
 
-    document.getElementById("btnCreditos").addEventListener("click", () => {
-        window.location.href = "creditos.html";
-    });
+    const btnCreditos = document.getElementById("btnCreditos");
+    if (btnCreditos) {
+        btnCreditos.addEventListener("click", () => {
+            window.location.href = "Juego/html/creditos.html";
+        });
+    }
 });
 
 
@@ -46,11 +55,12 @@ async function cerrarLogin(e) {
 
         if (results.length > 0) {
             alert("Sesión iniciada correctamente.");
+            //Guardar el ID para poder usarlo en los stats o otras partes del juego.
+            localStorage.setItem('jugador_id', results[0].id_jugador);
             console.log("Usuario autenticado:");
             console.log(`Id: ${results[0].id_jugador} \n` + 
                         `Nombre: ${results[0].nombre} \n` + 
-                        `Email: ${results[0].email} \n` +
-                        `Edad: ${results[0].edad} \n`);
+                        `Email: ${results[0].email} \n`);
         } else {
             alert("Credenciales incorrectas. Intente de nuevo.");
         }
@@ -101,3 +111,56 @@ window.onclick = function (event) {
         popupRegistro.style.display = "none";
     }
 };
+
+//STATS
+async function mostarStatsJugador() {
+    console.log("Called function mostarStatsJugador()")
+    const currentUserId = localStorage.getItem('jugador_id');
+    const Nombre = document.getElementById("nombreStats");
+    const Email = document.getElementById("emailStats");
+    const Edad = document.getElementById("edadStats");
+
+    let response = await fetch('http://localhost:3000/api/jugador/stats', {
+        method: 'Post',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id_jugador: currentUserId })
+    })
+
+    if (response.ok) {
+        let results = await response.json()
+        console.log(results)
+        Nombre.innerHTML = `Nombre: ${results[0].nombre}`;
+        Email.innerHTML = `Email: ${results[0].email}`;
+        Edad.innerHTML = `Edad: ${results[0].edad}`;
+    }
+}
+
+async function mostrarStatsPartida() {
+    console.log("Called function mostarStatsPartida()")
+    const currentUserId = localStorage.getItem('jugador_id');
+    const enemigosDerrotados = document.getElementById("enemigosDerrotados");
+    const danoTotalRecibido = document.getElementById("danoTotalRecibido");
+    const powerUpsUtilizados = document.getElementById("powerUpsUtilizados");
+    const salasCompletadas = document.getElementById("salasCompletadas");
+    const puzzlesResueltos = document.getElementById("puzzlesResueltos");
+    const armaFavorita = document.getElementById("armaFavorita");
+
+
+    let response = await fetch('http://localhost:3000/api/jugador/stats/partida', {
+        method: 'Post',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id_jugador: currentUserId })
+    })
+
+    if (response.ok) {
+        let results = await response.json()
+        console.log(results)
+        enemigosDerrotados.innerHTML = `Enemigos Derrotados: ${results[0].enemigos_derrotados}`;
+        danoTotalRecibido.innerHTML = `Daño Total Recibido: ${results[0].dano_total_recibido}`;
+        powerUpsUtilizados.innerHTML = `Power Ups Utilizados: ${results[0].power_ups_utilizados}`;
+        salasCompletadas.innerHTML = `Salas Completadas: ${results[0].salas_completadas}`;
+        puzzlesResueltos.innerHTML = `Puzzles Resueltos: ${results[0].puzzles_resueltos}`;
+        armaFavorita.innerHTML = `Arma Favorita: ${results[0].arma_favorita}`;
+    }
+}
+

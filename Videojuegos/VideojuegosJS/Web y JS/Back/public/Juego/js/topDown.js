@@ -117,6 +117,15 @@ class Game {
         }
     }
 
+    marcarSalaComoCompletada() {
+        if (!GAME_LEVELS[currentRoom].statusCompleted) {
+            game.player.salasCompletadas += 1;
+            GAME_LEVELS[currentRoom].statusCompleted = true;
+            console.log("Salas completadas: " + game.player.salasCompletadas);
+        }
+        this.level.setupDoors();
+    }
+
     update(deltaTime) {
         this.player.update(this.level, deltaTime);
 
@@ -155,6 +164,10 @@ class Game {
             for (let enemy of this.enemies) {
                 if(overlapRectangles(bullet, enemy.hitBox)){
                     enemy.takeDamage(bullet.damage); // Aplica daño al enemigo
+                    if (enemy.destroyed) {
+                        game.player.enemigosDerrotados += 1;  // Incrementa enemigosDerrotados
+                        console.log("Enemigos derrotados: " + game.player.enemigosDerrotados);
+                    }
                     bullet.destroy = true;
                 }
             }
@@ -177,13 +190,13 @@ class Game {
 
         this.level.enemies = this.enemies; //Actualiza la lista de enemigos en el nivel
         if(currentRoom == "puzzleRoom" && levelPuzzle.puzzleCompleated == true && this.enemies.length == 0) {
-            GAME_LEVELS[currentRoom].statusCompleted = true; // Marca el nivel como completado
-            this.level.setupDoors(); // Actualiza la puerta
+            this.marcarSalaComoCompletada(); // Marca la sala como completada si el puzzle se ha completado y no hay enemigos
         }
+        
         if (this.enemies.length == 0 && currentRoom != "main" && currentRoom != "puzzleRoom") {
-            GAME_LEVELS[currentRoom].statusCompleted = true; // Marca el nivel como completado
-            this.level.setupDoors(); // Actualiza la puerta
+            this.marcarSalaComoCompletada(); // Marca la sala como completada si no hay enemigos
         }
+        
 
         if (GAME_LEVELS[currentRoom].statusCompleted == true && currentRoom != "BossRoom" && currentRoom != "secondLevel") {
             if (!GAME_LEVELS[currentRoom].powerupSpawned) { 
@@ -197,12 +210,46 @@ class Game {
 
         if (currentRoom == "BossRoom") {
             if (GAME_LEVELS[currentRoom].statusCompleted === true) {
+                game.player.jefesDerrotados++; // Se aumenta en uno la cuenta
                 this.moveToLevel("main");
                 this.cLevel++;
                 console.log("Niveles completados: " + this.cLevel);
                 resetRoomStats();
                 this.level.setupDoors(); // Actualiza la puerta
             }
+        }
+        
+        if (game.player.hp <= 0) {
+            console.log("Game Over");
+            const stats = {
+                id_jugador: localStorage.getItem('jugador_id'),
+                enemigos_derrotados: game.player.enemigosDerrotados,
+                dano_total_recibido: game.player.danoTotalRecibido,
+                salas_completadas: game.player.salasCompletadas,
+                jefes_derrotados: game.player.jefesDerrotados,
+                puzzles_resueltos: game.player.puzzlesResueltos,
+            };
+            console.log(stats);
+            console.log("Enviando estadísticas:", stats);
+
+            // Enviar las estadísticas al servidor
+            fetch('http://localhost:3000/api/jugador/stats/partida/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(stats),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("Estadísticas enviadas correctamente.");
+                    } else {
+                        console.error("Error al enviar estadísticas:", response.status);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error en la solicitud:", error);
+                });
+            // Enviar los stats al servidor
+            restartGame();
         }
     }
 
@@ -228,6 +275,7 @@ class Game {
         drawHUD(ctx, this.player, scale); // Dibuja el HUD del jugador
     }
 }
+
 
 function createWallTile(x) {
     //Function to create a wall tile with the specified sprite
@@ -803,7 +851,8 @@ function resetRoomStats(){ // Función que reinicia los stats de las habitacione
         GAME_LEVELS[room].powerupSpawned = false;
     }
     levelPuzzle = new Puzzle(canvasWidth, canvasHeight);; // Reinicia el puzzle
-    levelPuzzle.puzzleCompleated == false;
+    levelPuzzle.puzzleCompleated == true;
+    game.player.puzzlesResueltos = 0;
 }
 
 // Call the start function to initiate the game
