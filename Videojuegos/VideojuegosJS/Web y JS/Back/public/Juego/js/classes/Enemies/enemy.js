@@ -22,6 +22,11 @@ class Enemy extends AnimatedObject {
         this.speed = speed; // Velocidad máxima del enemigo por defecto
         this.baseSpeed = speed; // Velocidad base del enemigo por defecto
         this.destroyed = false; // Estado de destrucción del enemigo por defecto
+        this.sfx ={
+            shoot: new Audio("../assets/sfx/Sound_Effects/laser_gun.mp3"), // Sonido de disparo del enemigo
+            hit: new Audio("../assets/sfx/Sound_Effects/Enemy_hit.wav"), // Sonido de golpe del enemigo
+            death: new Audio("../assets/sfx/Sound_Effects/Enemy_defeated.wav") // Sonido de muerte del enemigo
+        }
     }
 
     update() {
@@ -51,8 +56,12 @@ class Enemy extends AnimatedObject {
 
     // Métodos temporales para hacer pruebas
     takeDamage(damage) { // Método para aplicar daño al enemigo
+        this.sfx.hit.currentTime = 0; // reinicia si ya estaba sonando
+        this.sfx.hit.play(); // Sonido de golpe del enemigo
         this.hp -= damage; // Se le resta el daño a la vida del enemigo
         if (this.hp <= 0) { // Si la vida del enemigo es menor o igual a 0, se destruye el enemigo
+            this.sfx.death.currentTime = 0; // reinicia si ya estaba sonando
+            this.sfx.death.play(); // Sonido de muerte del enemigo
             this.destroyed = true; // Atributo que inidca si el enemigo ha sido destruido
         }
     }

@@ -36,6 +36,23 @@ class Player extends AnimatedObject {
 
         this.weapon = getRandomInitWeapon(); // Arma inicial del jugador, aleatoria al inicio
 
+        this.sfx = { // Sonidos del jugador
+            damage: new Audio("../assets/sfx/Sound_Effects/cipher_impact.mp3"),
+            shoot: new Audio("../assets/sfx/Sound_Effects/laser_gun.mp3"),
+            defeated: new Audio("../assets/sfx/Sound_Effects/Player_defeated.wav"),
+            powerup: new Audio("../assets/sfx/Sound_Effects/power_up_grab.wav"),
+            blade: new Audio("../assets/sfx/Sound_Effects/Blade.mp3"),
+            taser: new Audio("../assets/sfx/Sound_Effects/taser_gun.mp3"),
+        };
+
+        // Configuración de los sonidos del jugador
+        this.sfx.damage.volume = 0.5; // Volumen del sonido de daño
+        this.sfx.powerup.volume = 0.5; // Volumen del sonido de powerup
+        this.sfx.shoot.volume = 0.5; // Volumen del sonido de disparo
+        this.sfx.defeated.volume = 0.5; // Volumen del sonido de derrota
+        this.sfx.blade.volume = 0.5; // Volumen del sonido de espada
+        this.sfx.taser.volume = 0.5; // Volumen del sonido de taser
+
         // Movimientos del jugador
         this.movement = {
             down: {
@@ -206,6 +223,15 @@ class Player extends AnimatedObject {
             break;
         }
         
+        if (this.weapon.wtype === "sword") {
+            this.sfx.blade.currentTime = 0; // reinicia si ya estaba sonando
+            this.sfx.blade.play(); // Sonido de ataque con espada
+        }
+        else if (this.weapon.wtype === "taser") {
+            this.sfx.taser.currentTime = 0; // reinicia si ya estaba sonando
+            this.sfx.taser.play(); // Sonido de ataque con taser
+        }
+
         // Se define la hitbox temporal del ataque del jugador
         this.currentAttackHitbox = new HitBox(attackX, attackY, attackWidth, attackHeight);
 
@@ -243,6 +269,8 @@ class Player extends AnimatedObject {
                 break;
         }
         this.shootCooldown = 1800; // Reiniciar el tiempo de recarga del disparo
+        this.sfx.shoot.currentTime = 0; // reinicia si ya estaba sonando
+        this.sfx.shoot.play(); // Sonido de disparo
         let bullet = new Bullet(this.position.x + 0.6, this.position.y + 0.8, 0.7, 0.25, "blue", bdirection.x, bdirection.y, this.weapon.damage); // Crear la bala
         game.playerBullets.push(bullet); // Añadir la bala al array de balas del enemigo
     }
@@ -274,6 +302,8 @@ class Player extends AnimatedObject {
 
     // Método para que el jugador reciba daño
     takeDamage(damage){
+        this.sfx.damage.currentTime = 0; // reinicia si ya estaba sonando
+        this.sfx.damage.play();
         if (this.shield > 0) // Si el jugador tiene escudo, este recibe el daño.
             {
                 this.shield -= damage;
@@ -292,11 +322,15 @@ class Player extends AnimatedObject {
 
         if (this.hp <= 0) {
             this.isDefeated = true; // Cambia el estado del jugador a derrotado
+            this.sfx.defeated.currentTime = 0; // reinicia si ya estaba sonando
+            this.sfx.defeated.play(); // Sonido de derrota
             this.setAnimation(stateAnimations.defeated.moveFrames[0], stateAnimations.defeated.moveFrames[1], false, stateAnimations.defeated.duration);
         }
     }
 
     powerupEffect(powerup){ // Método para aplicar el efecto del powerup al jugador
+        this.sfx.powerup.currentTime = 0; // reinicia si ya estaba sonando
+        this.sfx.powerup.play(); // Sonido de recogida de powerup
         if (powerup.type === "weapon") {
             this.setAnimation(stateAnimations.powerup.moveFrames[0], stateAnimations.powerup.moveFrames[1], false, stateAnimations.powerup.duration);
             let revertWeapon = this.weapon;
@@ -434,8 +468,8 @@ const stateAnimations = {
     defeated:{ 
         status: false,
         repeat: false,
-        duration: 900,
-        moveFrames: [161, 167], 
+        duration: 800,
+        moveFrames: [163, 167], 
         idleFrames: [0, 4]
     }
 };
