@@ -97,6 +97,47 @@ class GameObject {
     }
 }
 
+class Button extends GameObject { // Clase para crear botones en el juego
+    constructor(x, y, width, height, text, onClick = () => {}) {
+      super("#000", width, height, x, y, "button");
+      this.text     = text;
+      this.onClick  = onClick;
+      this.isHover  = false;
+      this.font     = "24px Arial";
+      this.textColor= "#fff";
+      this.bg       = "#000";
+      this.hoverBg  = "#333";
+    }
+  
+    draw(ctx, scale) {
+      ctx.fillStyle = this.isHover ? this.hoverBg : this.bg;
+      ctx.fillRect(
+        this.position.x * scale,
+        this.position.y * scale,
+        this.size.x     * scale,
+        this.size.y     * scale
+      );
+      ctx.font = this.font;
+      ctx.fillStyle    = this.textColor;
+      ctx.textAlign    = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(
+        this.text,
+        (this.position.x + this.size.x/2) * scale,
+        (this.position.y + this.size.y/2) * scale
+      );
+    }
+  
+    // Comprueba si un punto (en coords de mundo) está dentro del botón
+    contains(worldX, worldY) {
+      return  worldX >= this.position.x
+           && worldX <= this.position.x + this.size.x
+           && worldY >= this.position.y
+           && worldY <= this.position.y + this.size.y;
+    }
+  }
+  
+
 class HitBox extends GameObject { // Clase para crear las hitbox de cada ojeto
     constructor(x, y, width, height) {
         super(null , width, height, x, y, "hitbox"); // Indicamos que el color que posea el objeto sea nulo por defecto

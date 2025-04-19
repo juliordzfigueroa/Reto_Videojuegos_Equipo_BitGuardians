@@ -207,28 +207,16 @@ class Puzzle {
     return -1;
    }
 
-   mouseControl(event, canvas) {
-    // Obtener las coordenadas del clic en el canvas
-    const rect = canvas.getBoundingClientRect();
-    const mouseX = event.clientX - rect.left;
-    const mouseY = event.clientY - rect.top;
+   mouseControl(event, canvas, mouseX, mouseY) {
+    // Calcular la columna y fila en la que se hizo clic
+    let col = Math.floor((mouseX - this.puzzleX) / this.tileSize);
+    let row = Math.floor((mouseY - this.puzzleY) / this.tileSize);
+    let index = row * this.boardSize + col;
+    let tileNumber = this.board[index];
 
-    if (
-      mouseX >= this.puzzleX &&
-      mouseX <= this.puzzleX + this.boardSize * this.tileSize &&
-      mouseY >= this.puzzleY &&
-      mouseY <= this.puzzleY + this.boardSize * this.tileSize
-    ) {
-      // Calcular la columna y fila en la que se hizo clic
-      let col = Math.floor((mouseX - this.puzzleX) / this.tileSize);
-      let row = Math.floor((mouseY - this.puzzleY) / this.tileSize);
-      let index = row * this.boardSize + col;
-      let tileNumber = this.board[index];
-
-      // Si se hizo clic en una ficha (no en el espacio vacío)
-      if (tileNumber !== 0) {
-        this.moveTile(tileNumber);
-      }
+    // Si se hizo clic en una ficha (no en el espacio vacío)
+    if (tileNumber !== 0) {
+      this.moveTile(tileNumber);
     }
   }
 

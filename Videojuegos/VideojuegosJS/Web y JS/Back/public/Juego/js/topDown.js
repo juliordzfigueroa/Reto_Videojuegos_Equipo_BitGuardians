@@ -29,10 +29,25 @@ const levelWidth = Math.floor(canvasWidth / scale);
 const levelHeight = Math.floor(canvasHeight / scale);
 
 let puzzleActive = false;
+let levelPuzzle; // Puzzle no definido para el nivel
+
+// Para invertir los controles de ataque y movimiento del jugador
+let invertControls = false; 
+
+// Para el menú principal
+let mainMenuActive = true;
+let mainMenuButtons = []; // Arreglo de botones del menú principal
+
+// Para el menú de pausa
 let pauseActive = false; // Booleano creado para pausar el juego
 const pauseOptions = ["Continuar", "Reiniciar", "Controles"];
 let pauseIndex = 0;
-let levelPuzzle; // Puzzle no definido para el nivel
+
+const gameMusic = { // Objeto que contiene la música de fondo del juego
+    backgrpound1: new Audio("../assets/sfx/music/UndertaleOST_ 051_AnotherMedium.mp3"),
+    backgrpound2: new Audio("../assets/sfx/music/UndertaleOST_ 065_CORE.mp3"),
+    bossRoom: new Audio("../assets/sfx/music/UndertaleOST_ 009_Enemy_Approaching.mp3"),
+}
 
 class Game {
     constructor(state, level) {
@@ -45,6 +60,14 @@ class Game {
         this.playerBullets = level.playerBullets;
         levelPuzzle = new Puzzle(canvasWidth, canvasHeight);
         this.cLevel = 0; // Variable que guarda los niveles completados de la partida
+
+        this.gameEfects = {
+            puzzleSuccess: new Audio("../assets/sfx/Sound_Effects/Puzzle_success.wav"),
+            puzzleFail: new Audio("../assets/sfx/Sound_Effects/Puzzle_fail.wav"),
+            levelComplete: new Audio("../assets/sfx/Sound_Effects/level_cleared.wav"),
+            gameOver: new Audio("../assets/sfx/Sound_Effects/game_over.wav"),
+            emp: new Audio("../assets/sfx/Sound_Effects/Emp_bomb.wav"),
+        }
     }
     
     moveToLevel(newRoom) {
@@ -105,9 +128,14 @@ class Game {
 
     update(deltaTime) {
         this.player.update(this.level, deltaTime);
-        if (this.player.previousWeapon) {
-            console.log(this.player.previousWeapon.wtype);
+
+        if (game.player.isDefeated) { // Si el jugador ha sido derrotado
+            if (!this.player.repeat && this.player.frame === this.player.maxFrame) { // Se revisa si ya se terimnó la animación de muerte
+                restartGame();
+            }
+            return;
         }
+
         for (let enemy of this.enemies) {
             enemy.update(this.level, deltaTime);
         }
@@ -119,7 +147,7 @@ class Game {
 
         // Evitar que los enemigos se sobrepongan entre sí
         overLapEnemies(this.enemies, currentActors);
-        //Verificar si el jugador toca un cable, puerta o pared
+        // Verificar si el jugador toca un cable, puerta o pared
         overlapPlayer(this.player, currentActors);
 
 
@@ -148,26 +176,8 @@ class Game {
         for (let i = this.level.levelPowerUps.length - 1; i >= 0; i--) {
             let powerup = this.level.levelPowerUps[i];
             if (overlapRectangles(powerup, this.player)) {
-                if (powerup.type === "weapon") {
-                    let revertWeapon = this.player.weapon;
-                    this.player.weapon = powerup;
-                    powerup.isCollected = true;
-                    let droppedWeapon = new Weapon("purple", 30, 30, revertWeapon.position.x, revertWeapon.position.y, "weapon", revertWeapon.wtype, revertWeapon.damage, "Epic", revertWeapon.animations);
-                    droppedWeapon.position = new Vec(powerup.position.x + 1, powerup.position.y);
-                    this.level.levelPowerUps.push(droppedWeapon);
-                    GAME_LEVELS[currentRoom].roomPowerUp = droppedWeapon;
-                    this.player.powerupCooldown = 1000;
-                    break;
-                } 
-                else if (powerup.type === "empBomb") {
-                    this.player.hasEMP = true; // El jugador obtiene una bomba EMP.
-                    this.player.emp = powerup; // Se guarda para ser usado como imagen
-                    powerup.isCollected = true;
-                }
-                else {
-                    powerup.effect(this.player);
-                    powerup.isCollected = true;
-                }
+                this.player.powerupEffect(powerup); // Aplica el efecto del powerup al jugador
+                break;
             }
         }
         
@@ -288,8 +298,7 @@ function createDoorTile(x, y, char) {
 }
 
 
-// Object with the characters that appear in the level description strings
-// and their corresponding objects
+// Object with the characters that appear in the level description strings and their corresponding objects
 const levelChars = {
     // Rect defined as offset from the first tile, and size of the tiles
     ".": {
@@ -392,10 +401,21 @@ function init() {
     canvas.height = canvasHeight;
     ctx = canvas.getContext('2d');
     setEventListeners();
-    gameStart();
+
+    mainMenuButtons = [
+        new Button(4, 5, 8, 2, "Start", () => {
+          mainMenuActive = false;
+          gameStart();
+        }),
+        new Button(4, 8, 8, 2, "Options", () => {
+          // Aquí tu lógica de opciones...
+        })
+    ];
+    requestAnimationFrame(updateCanvas);
 }
 
 function gameStart() {
+    levelbgMusic(); // Reproduce la música de fondo del nivel
     game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
     updateCanvas(document.timeline.currentTime);
 }
@@ -410,8 +430,19 @@ function restartGame() {
     game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
 }
 
+function levelbgMusic(){
+    let currentBGMusic;
+    const bgTracks = [gameMusic.backgrpound1, gameMusic.backgrpound2];
+    let nextTrack = Math.floor(Math.random() * bgTracks.length);
+    currentBGMusic = bgTracks[nextTrack];
+    currentBGMusic.loop = true; // Reproduce la música en bucle
+    currentBGMusic.volume = 0.4; // Ajusta el volumen de la música
+    currentBGMusic.play(); // Reproduce la música
+}
+
 function setEventListeners() {
     window.addEventListener("keydown", event => {
+        // Teclado
         if (pauseActive){
             if (event.key == "ArrowUp"){
                 pauseIndex = (pauseIndex - 1 + pauseOptions.length) % pauseOptions.length;
@@ -474,32 +505,74 @@ function setEventListeners() {
                 game.player.hasEMP = false; // Marca como usado la bombaEMP
             }
         }
-
-        if (event.key === 'w') game.player.startMovement("up");
-        if (event.key === 'a') game.player.startMovement("left");
-        if (event.key === 's') game.player.startMovement("down");
-        if (event.key === 'd') game.player.startMovement("right");
-        if (event.key === 'ArrowUp') game.player.startAttack("up");
-        if (event.key === 'ArrowLeft') game.player.startAttack("left");
-        if (event.key === 'ArrowDown') game.player.startAttack("down");
-        if (event.key === 'ArrowRight') game.player.startAttack("right");
+        if (invertControls){ // Si los controles están invertidos
+            if (event.key === 'w') game.player.startAttack("up");
+            if (event.key === 'a') game.player.startAttack("left");
+            if (event.key === 's') game.player.startAttack("down");
+            if (event.key === 'd') game.player.startAttack("right");
+            if (event.key === 'ArrowUp') game.player.startMovement("up");
+            if (event.key === 'ArrowLeft') game.player.startMovement("left");
+            if (event.key === 'ArrowDown') game.player.startMovement("down");
+            if (event.key === 'ArrowRight') game.player.startMovement("right");
+        }
+        else{
+            if (event.key === 'w') game.player.startMovement("up");
+            if (event.key === 'a') game.player.startMovement("left");
+            if (event.key === 's') game.player.startMovement("down");
+            if (event.key === 'd') game.player.startMovement("right");
+            if (event.key === 'ArrowUp') game.player.startAttack("up");
+            if (event.key === 'ArrowLeft') game.player.startAttack("left");
+            if (event.key === 'ArrowDown') game.player.startAttack("down");
+            if (event.key === 'ArrowRight') game.player.startAttack("right");
+        }
     });
 
     window.addEventListener("keyup", event => {
-        if (event.key == 'w') game.player.stopMovement("up");
-        if (event.key == 'a') game.player.stopMovement("left");
-        if (event.key == 's') game.player.stopMovement("down");
-        if (event.key == 'd') game.player.stopMovement("right");
-        if (event.key === 'ArrowUp') game.player.stopAttack("up");
-        if (event.key === 'ArrowLeft') game.player.stopAttack("left");
-        if (event.key === 'ArrowDown') game.player.stopAttack("down");
-        if (event.key === 'ArrowRight') game.player.stopAttack("right");
+        if (invertControls){ // Si los controles están invertidos
+            if (event.key == 'w') game.player.stopAttack("up");
+            if (event.key == 'a') game.player.stopAttack("left");
+            if (event.key == 's') game.player.stopAttack("down");
+            if (event.key == 'd') game.player.stopAttack("right");
+            if (event.key === 'ArrowUp') game.player.stopMovement("up");
+            if (event.key === 'ArrowLeft') game.player.stopMovement("left");
+            if (event.key === 'ArrowDown') game.player.stopMovement("down");
+            if (event.key === 'ArrowRight') game.player.stopMovement("right");
+        }
+        else{
+            if (event.key == 'w') game.player.stopMovement("up");
+            if (event.key == 'a') game.player.stopMovement("left");
+            if (event.key == 's') game.player.stopMovement("down");
+            if (event.key == 'd') game.player.stopMovement("right");
+            if (event.key === 'ArrowUp') game.player.stopAttack("up");
+            if (event.key === 'ArrowLeft') game.player.stopAttack("left");
+            if (event.key === 'ArrowDown') game.player.stopAttack("down");
+            if (event.key === 'ArrowRight') game.player.stopAttack("right");
+        }
     });
   
     const canvas = document.getElementById('canvas');
+    canvas.addEventListener("mousemove", e => {
+        const rect = canvas.getBoundingClientRect();
+        const mx = (e.clientX - rect.left)  / scale;
+        const my = (e.clientY - rect.top )  / scale;
+    
+        if (mainMenuActive) {
+          mainMenuButtons.forEach(b => b.isHover = b.contains(mx, my));
+        }
+      });
     canvas.addEventListener("click", (event) => {
-        if (puzzleActive == true && levelPuzzle != null) {
-            levelPuzzle.mouseControl(event, canvas);
+        // Obtener las coordenadas del clic en el canvas para el manejo de los menus y del overlay del puzzle
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+
+        if (mainMenuActive) {
+        for (let b of mainMenuButtons) {
+            b.onClick();
+        }
+        }
+        if (puzzleActive == true && levelPuzzle != null) { // Si el puzzle está activo y existe
+            levelPuzzle.mouseControl(event, canvas, mouseX, mouseY); // Llama a la función de control del mouse del puzzle
         }
     });
 }
@@ -560,7 +633,7 @@ function drawHUD(ctx, player, scale) { // Función que dibuja el las armas y las
     }
 }
 
-function drawPuzzleOverlay(ctx) {
+function drawPuzzleOverlay(ctx) { // Dibuja el overlay del puzzle cuando sea activado 
    ctx.fillStyle = "rgba(0,0,0,0.8)"; // Dibuja un overlay semitransparente 
    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
    if (puzzleActive) { // Si el puzzle está activo
@@ -568,7 +641,7 @@ function drawPuzzleOverlay(ctx) {
    }
 }
 
-function drawPauseMenu(ctx) {
+function drawPauseMenu(ctx) { // Dibuja el menú de pausa
     ctx.fillStyle = "rgba(0, 0, 0, 0.7)"; // Dibuja un overlay semitransparente 
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
@@ -590,6 +663,15 @@ function drawPauseMenu(ctx) {
     }
 }
 
+function drawMainMenu() { // Dibuja el menú principal
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    ctx.fillStyle = "#222";
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    for (let boton of mainMenuButtons) {
+        boton.draw(ctx, scale);  
+    }
+}
+
 function isPuzzleNear() { // Función que verifica si el puzzle está cerca del jugador
   const max_d = 2; // Variable usada como umbral como máxima distancia al puzzle
   for (let actor of game.actors) {
@@ -605,31 +687,36 @@ function isPuzzleNear() { // Función que verifica si el puzzle está cerca del 
 
 // Function that will be called for the game loop
 function updateCanvas(frameTime) {
-    if (frameStart === undefined) {
+    if (mainMenuActive) {
+        drawMainMenu();
+    }
+    else{
+        if (frameStart === undefined) {
+            frameStart = frameTime;
+        }
+        let deltaTime = frameTime - frameStart;
+    
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    
+        if (puzzleActive) {
+            // Mientras el puzzle esté activo, se muestra el overlay y se desactivan otros controles
+            game.draw(ctx, scale);
+            drawPuzzleOverlay(ctx);
+        } else if (pauseActive){
+            game.draw(ctx, scale);
+            drawPauseMenu(ctx);
+        } else {  
+            game.draw(ctx, scale);  
+            game.update(deltaTime);
+        }
+    
+        // Update time for the next frame
         frameStart = frameTime;
     }
-    let deltaTime = frameTime - frameStart;
-
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
-    if (puzzleActive == true) {
-        // Mientras el puzzle esté activo, se muestra el overlay y se desactivan otros controles
-        game.draw(ctx, scale);
-        drawPuzzleOverlay(ctx);
-    } else if (pauseActive){
-        game.draw(ctx, scale);
-        drawPauseMenu(ctx);
-    } else {  
-        game.draw(ctx, scale);  
-        game.update(deltaTime);
-    }
-
-    // Update time for the next frame
-    frameStart = frameTime;
     requestAnimationFrame(updateCanvas);
 }
-
-function overLapEnemies(enemies, actors) {
+ 
+function overLapEnemies(enemies, actors) { 
     for (let i = 0; i < enemies.length; i++) {
         const enemyA = enemies[i];
 
@@ -671,6 +758,10 @@ function overLapEnemies(enemies, actors) {
                         enemyA.velocity.x *= -1;
                         enemyA.velocity.y *= -1;
                     }
+                }
+                if (actor.type === 'door') { // Si los enemigos chocan con una puerta
+                    enemyA.velocity.x *= -1;
+                    enemyA.velocity.y *= -1;
                 }
             }
         }
