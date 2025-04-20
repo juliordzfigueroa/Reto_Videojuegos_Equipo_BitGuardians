@@ -133,14 +133,12 @@ class Button extends GameObject { // Clase para crear botones en el juego
         }
     }
 
-    click(mx, my) {
-        return (
-          mx >= this.position.x &&
-          mx <= this.position.x + this.size.x &&
-          my >= this.position.y &&
-          my <= this.position.y + this.size.y
-        );
-      }
+    click(mx, my) { // Método para saber si el mouse está dentro del botón y si se hace click
+        return mx >= this.position.x && 
+        mx <= this.position.x + this.size.x && 
+        my >= this.position.y && 
+        my <= this.position.y + this.size.y; // Si el mouse está dentro del botón, devuelve true
+    }
 }
   
 
