@@ -40,37 +40,37 @@ let currentMenu = "main"; // Variable que guarda el menú actual
 let mainMenuActive = true;
 let gamelogo = new GameObject(); // Crea un objeto para el logo del juego
 const mainMenuButtons = [
-    new Button(9.5, 12, 8, 2, "Start"),
-    new Button(3.5, 15, 8, 2, "Options"),
+    new Button(9.5, 12, 8, 2, "Nueva Partida"),
+    new Button(3.5, 15, 8, 2, "Opciones"),
     new Button(15.5, 15, 8, 2, "Controles")
 ]; // Arreglo de botones del menú principal
 
 // Para el menú de pausa
 let pauseActive = false; // Booleano creado para pausar el juego
 const pauseOptions = [
-    new Button(4, 3, 8, 2, "Continuar"),
-    new Button(4, 6, 8, 2, "Reiniciar"),
-    new Button(4, 9, 8, 2, "Controles"),
-    new Button(4, 12, 8, 2, "Opciones"),
-    new Button(4, 15, 8, 2, "Salir")
+    new Button(9.5, 4, 8, 2, "Continuar"),
+    new Button(9.5, 7, 8, 2, "Reiniciar"),
+    new Button(9.5, 10, 8, 2, "Controles"),
+    new Button(9.5, 13, 8, 2, "Opciones"),
+    new Button(9.5, 16, 8, 2, "Salir")
 ]; // Arreglo de opciones del menú de pausa
 
 let optionsActive = false; // Booleano creado para pausar el juego
 const optionsButtons = [
-    new Button(4, 3, 8, 2, "Back"),
+    new Button(0.3, 1.5, 8, 2, "<=="),
 ];
 
 let controlsLayout = new GameObject(); // Crea un objeto para el layout de controles
 let controlsActive = false; // Booleano creado para pausar el juego
 const controlsButtons = [
-    new Button(4, 3, 8, 2, "Back"),
-    new Button(4, 6, 8, 2, "Invertir controles"),
+    new Button(0.3, 1.5, 8, 2, "<=="),
+    new Button(16, 1.5, 8, 2, "Invertir controles"),
 ];
 
 const gameMusic = { // Objeto que contiene la música de fondo del juego
-    backgrpound1: new Audio("../assets/sfx/music/UndertaleOST_ 051_AnotherMedium.mp3"),
-    backgrpound2: new Audio("../assets/sfx/music/UndertaleOST_ 065_CORE.mp3"),
-    bossRoom: new Audio("../assets/sfx/music/UndertaleOST_ 009_Enemy_Approaching.mp3"),
+    backgrpound1: new Audio("../assets/sfx/music/UndertaleOST_051_AnotherMedium.mp3"),
+    backgrpound2: new Audio("../assets/sfx/music/UndertaleOST_065_CORE.mp3"),
+    bossRoom: new Audio("../assets/sfx/music/UndertaleOST_009_Enemy_Approaching.mp3"),
 }
 
 class Game {
@@ -578,12 +578,12 @@ function setEventListeners() {
         if (mainMenuActive) {
             for (let boton of mainMenuButtons) {
                 if (boton.click(mXScale, mYScale)) { // Verifica si el mouse está sobre el botón
-                    if (boton.textString === "Start") {
+                    if (boton.textString === "Nueva Partida") {
                         mainMenuActive = false;
                         currentMenu = "pause";
                         gameStart();
                     }
-                    if (boton.textString === "Options") {
+                    if (boton.textString === "Opciones") {
                         mainMenuActive = false; // Desactiva el menú principal
                         optionsActive = true; // Activa el menú de opciones
                         drawOptionsMenu();
@@ -631,7 +631,7 @@ function setEventListeners() {
         if (optionsActive) {
             for (let boton of optionsButtons) {
                 if (boton.click(mXScale, mYScale)) {
-                    if (boton.textString === "Back") {
+                    if (boton.textString === "<==") {
                         optionsActive = false; // Desactiva el menú de opciones
                         if (currentMenu === "main") {
                             mainMenuActive = true; // Activa el menú principal
@@ -649,7 +649,7 @@ function setEventListeners() {
         if (controlsActive) {
             for (let boton of controlsButtons) {
                 if (boton.click(mXScale, mYScale)) {
-                    if (boton.textString === "Back") {
+                    if (boton.textString === "<==") {
                         controlsActive = false; // Desactiva el menú de controles
                         if (currentMenu === "main") {
                             mainMenuActive = true; // Activa el menú principal
@@ -745,7 +745,7 @@ function drawPauseMenu(ctx) { // Dibuja el menú de pausa
     ctx.font = "32px monospace";
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
-    ctx.fillText("PAUSA", canvasWidth / 2, canvasHeight / 2 - 100);
+    ctx.fillText("PAUSA", canvasWidth / 2, 60);
 
     ctx.font = "24px monospace";
     for (let boton of pauseOptions) {
