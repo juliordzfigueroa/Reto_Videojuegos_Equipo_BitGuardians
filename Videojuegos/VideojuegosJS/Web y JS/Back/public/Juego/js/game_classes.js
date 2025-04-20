@@ -98,44 +98,50 @@ class GameObject {
 }
 
 class Button extends GameObject { // Clase para crear botones en el juego
-    constructor(x, y, width, height, text, onClick = () => {}) {
-      super("#000", width, height, x, y, "button");
-      this.text     = text;
-      this.onClick  = onClick;
-      this.isHover  = false;
-      this.font     = "24px Arial";
-      this.textColor= "#fff";
-      this.bg       = "#000";
-      this.hoverBg  = "#333";
+    constructor(x, y, width, height, text) {
+      super(null, width, height, x, y, "button");
+      this.textString = text; // Texto del botón
+      this.textLabel = new TextLabel(x, y, "24px Arial", "#fff"); // Texto del botón
+      this.isOver = false; // Variable para saber si el mouse está sobre el botón
+      this.bg = null; // Color de fondo del botón
     }
   
-    draw(ctx, scale) {
-      ctx.fillStyle = this.isHover ? this.hoverBg : this.bg;
-      ctx.fillRect(
-        this.position.x * scale,
-        this.position.y * scale,
-        this.size.x     * scale,
-        this.size.y     * scale
-      );
-      ctx.font = this.font;
-      ctx.fillStyle    = this.textColor;
-      ctx.textAlign    = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(
-        this.text,
-        (this.position.x + this.size.x/2) * scale,
-        (this.position.y + this.size.y/2) * scale
-      );
+    draw(ctx, scale, overBg) {
+        let defaultBg = this.bg; // Color de fondo por defecto
+        if (this.isOver) {
+            this.bg = overBg;
+        } 
+        else {
+            this.bg = defaultBg;
+        }
+        ctx.fillStyle = this.bg;
+        ctx.fillRect(this.position.x * scale, this.position.y * scale, this.size.x * scale, this.size.y * scale);
+        // Dibujar el texto en el botón
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        this.textLabel.x = (this.position.x + this.size.x / 2) * scale;
+        this.textLabel.y = (this.position.y + this.size.y / 2) * scale;
+        this.textLabel.draw(ctx, this.textString);
     }
-  
-    // Comprueba si un punto (en coords de mundo) está dentro del botón
-    contains(worldX, worldY) {
-      return  worldX >= this.position.x
-           && worldX <= this.position.x + this.size.x
-           && worldY >= this.position.y
-           && worldY <= this.position.y + this.size.y;
+
+    isOnButton(x, y) { // Método para saber si el mouse está sobre el botón
+        if (x >= this.position.x && x <= this.position.x + this.size.x && y >= this.position.y && y <= this.position.y + this.size.y){
+            this.isOver = true; // Si el punto está dentro del botón, devuelve true
+        }
+        else{
+            this.isOver = false; // Si el punto no está dentro del botón, devuelve false
+        }
     }
-  }
+
+    click(mx, my) {
+        return (
+          mx >= this.position.x &&
+          mx <= this.position.x + this.size.x &&
+          my >= this.position.y &&
+          my <= this.position.y + this.size.y
+        );
+      }
+}
   
 
 class HitBox extends GameObject { // Clase para crear las hitbox de cada ojeto

@@ -34,14 +34,38 @@ let levelPuzzle; // Puzzle no definido para el nivel
 // Para invertir los controles de ataque y movimiento del jugador
 let invertControls = false; 
 
+let currentMenu = "main"; // Variable que guarda el menú actual
+
 // Para el menú principal
 let mainMenuActive = true;
-let mainMenuButtons = []; // Arreglo de botones del menú principal
+let gamelogo = new GameObject(); // Crea un objeto para el logo del juego
+const mainMenuButtons = [
+    new Button(9.5, 12, 8, 2, "Start"),
+    new Button(3.5, 15, 8, 2, "Options"),
+    new Button(15.5, 15, 8, 2, "Controles")
+]; // Arreglo de botones del menú principal
 
 // Para el menú de pausa
 let pauseActive = false; // Booleano creado para pausar el juego
-const pauseOptions = ["Continuar", "Reiniciar", "Controles"];
-let pauseIndex = 0;
+const pauseOptions = [
+    new Button(4, 3, 8, 2, "Continuar"),
+    new Button(4, 6, 8, 2, "Reiniciar"),
+    new Button(4, 9, 8, 2, "Controles"),
+    new Button(4, 12, 8, 2, "Opciones"),
+    new Button(4, 15, 8, 2, "Salir")
+]; // Arreglo de opciones del menú de pausa
+
+let optionsActive = false; // Booleano creado para pausar el juego
+const optionsButtons = [
+    new Button(4, 3, 8, 2, "Back"),
+];
+
+let controlsLayout = new GameObject(); // Crea un objeto para el layout de controles
+let controlsActive = false; // Booleano creado para pausar el juego
+const controlsButtons = [
+    new Button(4, 3, 8, 2, "Back"),
+    new Button(4, 6, 8, 2, "Invertir controles"),
+];
 
 const gameMusic = { // Objeto que contiene la música de fondo del juego
     backgrpound1: new Audio("../assets/sfx/music/UndertaleOST_ 051_AnotherMedium.mp3"),
@@ -131,6 +155,35 @@ class Game {
 
         if (game.player.isDefeated) { // Si el jugador ha sido derrotado
             if (!this.player.repeat && this.player.frame === this.player.maxFrame) { // Se revisa si ya se terimnó la animación de muerte
+                console.log("Game Over");
+                const stats = {
+                    id_jugador: localStorage.getItem('jugador_id'),
+                    enemigos_derrotados: game.player.enemigosDerrotados,
+                    dano_total_recibido: game.player.danoTotalRecibido,
+                    salas_completadas: game.player.salasCompletadas,
+                    jefes_derrotados: game.player.jefesDerrotados,
+                    puzzles_resueltos: game.player.puzzlesResueltos,
+                };
+                console.log(stats);
+                console.log("Enviando estadísticas:", stats);
+
+                // Enviar las estadísticas al servidor
+                fetch('http://localhost:3000/api/jugador/stats/partida/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(stats),
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log("Estadísticas enviadas correctamente.");
+                        } else {
+                            console.error("Error al enviar estadísticas:", response.status);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error en la solicitud:", error);
+                    });
+                // Enviar los stats al servidor
                 restartGame();
             }
             return;
@@ -218,39 +271,6 @@ class Game {
                 this.level.setupDoors(); // Actualiza la puerta
             }
         }
-        
-        if (game.player.hp <= 0) {
-            console.log("Game Over");
-            const stats = {
-                id_jugador: localStorage.getItem('jugador_id'),
-                enemigos_derrotados: game.player.enemigosDerrotados,
-                dano_total_recibido: game.player.danoTotalRecibido,
-                salas_completadas: game.player.salasCompletadas,
-                jefes_derrotados: game.player.jefesDerrotados,
-                puzzles_resueltos: game.player.puzzlesResueltos,
-            };
-            console.log(stats);
-            console.log("Enviando estadísticas:", stats);
-
-            // Enviar las estadísticas al servidor
-            fetch('http://localhost:3000/api/jugador/stats/partida/update', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(stats),
-            })
-                .then(response => {
-                    if (response.ok) {
-                        console.log("Estadísticas enviadas correctamente.");
-                    } else {
-                        console.error("Error al enviar estadísticas:", response.status);
-                    }
-                })
-                .catch(error => {
-                    console.error("Error en la solicitud:", error);
-                });
-            // Enviar los stats al servidor
-            restartGame();
-        }
     }
 
     draw(ctx, scale) {
@@ -275,7 +295,6 @@ class Game {
         drawHUD(ctx, this.player, scale); // Dibuja el HUD del jugador
     }
 }
-
 
 function createWallTile(x) {
     //Function to create a wall tile with the specified sprite
@@ -402,15 +421,6 @@ function init() {
     ctx = canvas.getContext('2d');
     setEventListeners();
 
-    mainMenuButtons = [
-        new Button(4, 5, 8, 2, "Start", () => {
-          mainMenuActive = false;
-          gameStart();
-        }),
-        new Button(4, 8, 8, 2, "Options", () => {
-          // Aquí tu lógica de opciones...
-        })
-    ];
     requestAnimationFrame(updateCanvas);
 }
 
@@ -443,28 +453,6 @@ function levelbgMusic(){
 function setEventListeners() {
     window.addEventListener("keydown", event => {
         // Teclado
-        if (pauseActive){
-            if (event.key == "ArrowUp"){
-                pauseIndex = (pauseIndex - 1 + pauseOptions.length) % pauseOptions.length;
-            }
-            else if (event.key == "ArrowDown"){
-                pauseIndex = (pauseIndex + 1) % pauseOptions.length;
-            }
-            else if (event.key == "Enter"){
-                if (pauseOptions[pauseIndex] == "Continuar"){
-                    pauseActive = false;
-                }
-                else if (pauseOptions[pauseIndex] == "Reiniciar"){
-                    pauseActive = false;
-                    restartGame();
-                }
-                else if (pauseOptions[pauseIndex] == "Controles"){
-                    // funcion para cambiar controles y sonido
-                }
-                return;
-            }
-            return;
-        }
 
         if (event.key === "Escape") {
             if (puzzleActive){ // Si el puzzle está activo
@@ -551,13 +539,31 @@ function setEventListeners() {
     });
   
     const canvas = document.getElementById('canvas');
-    canvas.addEventListener("mousemove", e => {
+    canvas.addEventListener("mousemove", event => {
+        // Aspecto visual para cuando el mouse está sobre el botón
         const rect = canvas.getBoundingClientRect();
-        const mx = (e.clientX - rect.left)  / scale;
-        const my = (e.clientY - rect.top )  / scale;
-    
+        const mx = (event.clientX - rect.left) / scale;
+        const my = (event.clientY - rect.top) / scale;
+        
         if (mainMenuActive) {
-          mainMenuButtons.forEach(b => b.isHover = b.contains(mx, my));
+            for (let boton of mainMenuButtons) {
+                boton.isOnButton(mx, my); // Verifica si el mouse está sobre el botón
+            }
+        }
+        if (pauseActive) {
+            for (let boton of pauseOptions) {
+                boton.isOnButton(mx, my); // Verifica si el mouse está sobre el botón
+            }
+        }
+        if (optionsActive) {
+            for (let boton of optionsButtons) {
+                boton.isOnButton(mx, my); // Verifica si el mouse está sobre el botón
+            }
+        }
+        if (controlsActive) {
+            for (let boton of controlsButtons) {
+                boton.isOnButton(mx, my); // Verifica si el mouse está sobre el botón
+            }
         }
       });
     canvas.addEventListener("click", (event) => {
@@ -566,11 +572,102 @@ function setEventListeners() {
         const mouseX = event.clientX - rect.left;
         const mouseY = event.clientY - rect.top;
 
+        const mXScale = mouseX / scale; // Coordenada X del mouse escalada
+        const mYScale = mouseY / scale; // Coordenada Y del mouse escalada
+
         if (mainMenuActive) {
-        for (let b of mainMenuButtons) {
-            b.onClick();
+            for (let boton of mainMenuButtons) {
+                if (boton.click(mXScale, mYScale)) { // Verifica si el mouse está sobre el botón
+                    if (boton.textString === "Start") {
+                        mainMenuActive = false;
+                        currentMenu = "pause";
+                        gameStart();
+                    }
+                    if (boton.textString === "Options") {
+                        mainMenuActive = false; // Desactiva el menú principal
+                        optionsActive = true; // Activa el menú de opciones
+                        drawOptionsMenu();
+                    }
+                    if (boton.textString === "Controles") {
+                        mainMenuActive = false; // Desactiva el menú principal
+                        controlsActive = true; // Activa el menú de controles
+                        drawControlsLayout(); // Dibuja el layout de controles
+                    }
+                  break;
+                }
+            }
         }
+        if (pauseActive){
+            for (let boton of pauseOptions) {
+                if (boton.click(mXScale, mYScale)) {
+                    if (boton.textString === "Continuar") {
+                        pauseActive = false; // Desactiva el menú de pausa
+                    }
+                    if (boton.textString === "Reiniciar") {
+                        pauseActive = false; // Desactiva el menú de pausa
+                        restartGame(); // Reinicia el juego
+                    }
+                    if (boton.textString === "Controles") {
+                        pauseActive = false; // Desactiva el menú de pausa
+                        controlsActive = true; // Activa el menú de controles
+                        drawControlsLayout(); // Dibuja el layout de controles
+                    }
+                    if (boton.textString === "Opciones") {
+                        pauseActive = false; // Desactiva el menú de pausa
+                        optionsActive = true; // Activa el menú de opciones
+                        drawOptionsMenu();
+                    }
+                    if (boton.textString === "Salir") {
+                        mainMenuActive = true; // Activa el menú principal
+                        pauseActive = false; // Desactiva el menú de pausa
+                        currentMenu = "main"; // Cambia el menú actual a "main"
+                        drawMainMenu(); // Dibuja el menú principal
+                    }
+                    break;
+                }
+            }
         }
+
+        if (optionsActive) {
+            for (let boton of optionsButtons) {
+                if (boton.click(mXScale, mYScale)) {
+                    if (boton.textString === "Back") {
+                        optionsActive = false; // Desactiva el menú de opciones
+                        if (currentMenu === "main") {
+                            mainMenuActive = true; // Activa el menú principal
+                            drawMainMenu(); // Dibuja el menú principal
+                        }
+                        if (currentMenu === "pause") {
+                            pauseActive = true; // Activa el menú de pausa
+                            drawPauseMenu(ctx); // Dibuja el menú de pausa
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        if (controlsActive) {
+            for (let boton of controlsButtons) {
+                if (boton.click(mXScale, mYScale)) {
+                    if (boton.textString === "Back") {
+                        controlsActive = false; // Desactiva el menú de controles
+                        if (currentMenu === "main") {
+                            mainMenuActive = true; // Activa el menú principal
+                            drawMainMenu(); // Dibuja el menú principal
+                        }
+                        if (currentMenu === "pause") {
+                            pauseActive = true; // Activa el menú de pausa
+                            drawPauseMenu(ctx); // Dibuja el menú de pausa
+                        }
+                    }
+                    if (boton.textString === "Invertir controles") {
+                        invertControls = !invertControls; // Cambia el estado de los controles invertidos
+                    }
+                    break;
+                }
+            }
+        }
+
         if (puzzleActive == true && levelPuzzle != null) { // Si el puzzle está activo y existe
             levelPuzzle.mouseControl(event, canvas, mouseX, mouseY); // Llama a la función de control del mouse del puzzle
         }
@@ -634,7 +731,7 @@ function drawHUD(ctx, player, scale) { // Función que dibuja el las armas y las
 }
 
 function drawPuzzleOverlay(ctx) { // Dibuja el overlay del puzzle cuando sea activado 
-   ctx.fillStyle = "rgba(0,0,0,0.8)"; // Dibuja un overlay semitransparente 
+   ctx.fillStyle = "rgba(0, 0, 0, 0.8)"; // Dibuja un overlay semitransparente 
    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
    if (puzzleActive) { // Si el puzzle está activo
         levelPuzzle.draw(ctx);
@@ -651,24 +748,59 @@ function drawPauseMenu(ctx) { // Dibuja el menú de pausa
     ctx.fillText("PAUSA", canvasWidth / 2, canvasHeight / 2 - 100);
 
     ctx.font = "24px monospace";
-    for (let i = 0; i < pauseOptions.length; i++){
-        if (i == pauseIndex){
-            ctx.fillStyle = "cyan";
-            ctx.fillText("> " + pauseOptions[i], canvasWidth / 2, canvasHeight / 2 + i * 40);
-        } 
-        else{
-            ctx.fillStyle = "white";
-            ctx.fillText("  " + pauseOptions[i], canvasWidth / 2, canvasHeight / 2 + i * 40);
-        }
+    for (let boton of pauseOptions) {
+        boton.bg = "rgba(0, 0, 0, 0.1)";
+        boton.textLabel.font = "24px monospace";
+        boton.textLabel.color = "cyan";
+        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.4)"); // Dibuja los botones del menú de pausa
     }
 }
 
 function drawMainMenu() { // Dibuja el menú principal
+    gamelogo.position = new Vec(9.3, 2);
+    gamelogo.size     = new Vec(9, 9);
+    gamelogo.setSprite('../assets/sprites/escenarios/TFH_logo1.1.png');
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    ctx.fillStyle = "#222";
+    ctx.fillStyle = "#000";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    gamelogo.draw(ctx, scale); // Dibuja el logo del juego
     for (let boton of mainMenuButtons) {
-        boton.draw(ctx, scale);  
+        boton.bg = "#222";
+        boton.textLabel.font = "32px monospace";
+        boton.textLabel.color = "cyan";
+        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.3)"); // Dibuja los botones del menú principal
+    }
+}
+
+function drawOptionsMenu() { // Dibuja el menú de opciones
+    ctx.fillStyle = "rgba(0, 0, 0, 0.7)"; // Dibuja un overlay semitransparente 
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+    ctx.font = "32px monospace";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+
+    ctx.font = "24px monospace";
+    for (let boton of optionsButtons) {
+        boton.bg = "rgba(0, 0, 0, 0.1)";
+        boton.textLabel.font = "24px monospace";
+        boton.textLabel.color = "cyan";
+        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.4)"); // Dibuja los botones del menú de opciones
+    }
+}
+
+function drawControlsLayout() { // Dibuja el menú de controles
+    ctx.fillStyle = "rgba(0, 0, 0, 0.7)"; // Dibuja un overlay semitransparente
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    ctx.font = "32px monospace";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.fillText("CONTROLES", canvasWidth / 2, canvasHeight / 2 - 100);
+    for (let boton of controlsButtons) {
+        boton.bg = "rgba(0, 0, 0, 0.1)";
+        boton.textLabel.font = "24px monospace";
+        boton.textLabel.color = "cyan";
+        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.4)"); // Dibuja los botones del menú de controles
     }
 }
 
@@ -690,6 +822,12 @@ function updateCanvas(frameTime) {
     if (mainMenuActive) {
         drawMainMenu();
     }
+    else if (optionsActive) {
+        drawOptionsMenu();
+    }
+    else if (controlsActive) {
+        drawControlsLayout();
+    }
     else{
         if (frameStart === undefined) {
             frameStart = frameTime;
@@ -702,10 +840,18 @@ function updateCanvas(frameTime) {
             // Mientras el puzzle esté activo, se muestra el overlay y se desactivan otros controles
             game.draw(ctx, scale);
             drawPuzzleOverlay(ctx);
-        } else if (pauseActive){
+        } 
+        else if (pauseActive){
             game.draw(ctx, scale);
             drawPauseMenu(ctx);
-        } else {  
+        } 
+        else if (optionsActive) {
+            drawOptionsMenu();
+        }
+        else if (controlsActive) {
+            drawControlsLayout();
+        }
+        else {  
             game.draw(ctx, scale);  
             game.update(deltaTime);
         }
