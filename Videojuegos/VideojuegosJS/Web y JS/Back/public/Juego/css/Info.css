@@ -3,7 +3,6 @@ body {
     background-color: #ffffff;
     color: #1a1a1a;
     margin: 0;
-    padding: 0 20px;
     line-height: 1.7;
 }
 
@@ -60,36 +59,40 @@ em {
 
 
 .gameplayinfo {
-    color: white;
-    border-left: none;
-    border-right: none;
-    border-top: 2px solid white;
-    border-bottom: 2px solid white;
-    border-radius: 0;
-    padding: 25px 0;
-    max-width: none;
-    text-align: left;
-    width: 100%;
-    margin: 40px 0;
-    background-image: url('../images/fondoresumen.png'); /* cambia por tu ruta */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+  width: 1320px; 
+  height: 700px;
+  padding: 60px;
+  background-image: url('../images/fondoresumen.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative; 
+  overflow: hidden;  
+}
+
+.gameplayinfo h2 {
+  text-align: center;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 35px;
+  color: white;
+  margin-top: 0;
+  margin-bottom: 30px;
 }
 
 .gameplayinfo p {
-  font-family: 'Exo 2', sans-serif;
-  font-size: 35px;
-    padding: 0 20px;
-    text-align: left;
-    margin: 0;
-    max-width: none;
+  background-color: rgba(0, 0, 0, 0.4); 
+  color: white;
+  padding: 20px 40px;
+  margin: 20px 0;      
+  font-size: 18px;
+  line-height: 1.6;
+  max-width: 800px;
+  border-radius: 10px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px; 
+  line-height: 2;
+  text-align: justify;
 }
-
-
-
-
-
 
 
 /* Menú desplegable */
@@ -145,13 +148,7 @@ em {
     color: cyan; /* color llamativo al pasar el mouse */
 }
 
-
-
-
-
-
-
-  .cerebro {
+.cerebro {
     height: 100%;
     display: grid;
   
@@ -178,26 +175,30 @@ em {
 #griditem1 {
   grid-column: 2;
   grid-row: 2;
+  width: 500px;
 }
 
 #griditem2 {
   grid-column: 1;
   grid-row: 1;
-
+  align-self: end;
   width: 400px;
+  margin-left: 50px; 
 }
 
 #griditem3 {
   grid-column: 3;
   grid-row: 2;
-
   width: 400px;
+  align-self: center;
 }
 
 #griditem4 {
   grid-column: 1;
   grid-row: 2;
   width: 400px;
+  align-self: center;
+  margin-left: 50px; 
 }
 
 #griditem5 {
@@ -206,6 +207,7 @@ em {
   justify-self: center;
   align-self: center;
   width: 400px;
+  margin-bottom: 50px;
 }
 
 #griditem6 {
@@ -214,3 +216,50 @@ em {
   width: 400px;
 }
 
+.resumeninfocontenedor {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  gap: 80px;
+}
+
+.resumeninfo {
+  background-color: #071b1f; 
+  color: white;              
+  padding: 30px 40px;
+  border-radius: 10px;
+  max-width: 600px;
+  text-align: left;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  margin-bottom: 40px;
+  border: none;             
+}
+
+.resumeninfo p {
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 20px 0;
+  line-height: 2; 
+  text-align: justify;
+}
+
+.resumeninfo h2 {
+  text-align: center;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 35px;
+  margin-top: 0;
+  margin-bottom: 30px;
+}
+
+.resumeninfoimagen {
+  padding: 0;
+  margin: 0;
+}
+
+.resumeninfoimagen img {
+  width: 600px;
+  display: block;       
+  margin-bottom: 0;      
+  padding-bottom: 0;
+}
