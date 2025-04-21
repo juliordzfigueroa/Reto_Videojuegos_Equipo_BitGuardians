@@ -199,19 +199,26 @@ app.post('/api/jugador/stats/partida/update', async (request, response) => {
             // Actualizar si existe
             const [updateResults] = await connection.query(
                 `UPDATE Estadisticas 
-                 SET enemigos_derrotados = enemigos_derrotados + ?, 
-                     dano_total_recibido = dano_total_recibido + ?, 
-                     salas_completadas = salas_completadas + ?, 
-                     jefes_derrotados = jefes_derrotados + ?, 
-                     puzzles_resueltos = puzzles_resueltos + ? 
-                 WHERE id_jugador = ?`,
+                SET enemigos_derrotados = enemigos_derrotados + ?, 
+                    dano_total_recibido = dano_total_recibido + ?, 
+                    power_ups_utilizados = power_ups_utilizados + ?,
+                    salas_completadas = salas_completadas + ?, 
+                    jefes_derrotados = jefes_derrotados + ?, 
+                    puzzles_resueltos = puzzles_resueltos + ?, 
+                    partidas_jugadas = partidas_jugadas + ?,
+                    partidas_ganadas = partidas_ganadas + ?
+                WHERE id_jugador = ?`,
                 [
                     request.body.enemigos_derrotados,
                     request.body.dano_total_recibido,
+                    request.body.power_ups_utilizados,
                     request.body.salas_completadas,
                     request.body.jefes_derrotados,
                     request.body.puzzles_resueltos,
+                    request.body.partidas_jugadas,
+                    request.body.partidas_ganadas,
                     request.body.id_jugador
+
                 ]
             );
 

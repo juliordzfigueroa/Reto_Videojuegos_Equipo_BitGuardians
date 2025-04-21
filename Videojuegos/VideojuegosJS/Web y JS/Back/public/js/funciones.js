@@ -143,7 +143,8 @@ async function mostrarStatsPartida() {
     const powerUpsUtilizados = document.getElementById("powerUpsUtilizados");
     const salasCompletadas = document.getElementById("salasCompletadas");
     const puzzlesResueltos = document.getElementById("puzzlesResueltos");
-    const armaFavorita = document.getElementById("armaFavorita");
+    const partidasJugadas = document.getElementById("partidasJugadas");
+    const partidasGanadas = document.getElementById("partidasGanadas");
 
 
     let response = await fetch('http://localhost:3000/api/jugador/stats/partida', {
@@ -160,7 +161,8 @@ async function mostrarStatsPartida() {
         powerUpsUtilizados.innerHTML = `Power Ups Utilizados: ${results[0].power_ups_utilizados}`;
         salasCompletadas.innerHTML = `Salas Completadas: ${results[0].salas_completadas}`;
         puzzlesResueltos.innerHTML = `Puzzles Resueltos: ${results[0].puzzles_resueltos}`;
-        armaFavorita.innerHTML = `Arma Favorita: ${results[0].arma_favorita}`;
+        partidasJugadas.innerHTML = `Partidas Jugadas: ${results[0].partidas_jugadas}`;
+        partidasGanadas.innerHTML = `Partidas Ganadas: ${results[0].partidas_ganadas}`;
     }
 }
 

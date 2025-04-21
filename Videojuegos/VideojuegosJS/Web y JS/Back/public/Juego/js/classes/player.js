@@ -19,7 +19,7 @@ class Player extends AnimatedObject {
         this.max_shield = this.max_hp*0.1; // Atributo de escudo máximo del jugador, el cual podrá ser incrementado con powerups, el escudo será del 10% de la vida del jugador
         this.hitBox = new HitBox(this.position.x, this.position.y, this.size.x*0.7, this.size.y*0.9); // Hitbox del jugador
         this.totalHP = this.hp + this.shield; // Atributo de vida total del jugador, el cual será la suma de la vida y el escudo del jugador
-        this.hasEMP = true; // Atributo de si el jugador tiene un EMP o no
+        this.hasEMP = false; // Atributo de si el jugador tiene un EMP o no
         this.emp = null; // Atributo del powerup EMP del jugador, el será solo usado para imagen del hub
         this.isDefeated = false; // Atributo de si el jugador fue derrotado o no
         // Variables de la entrada de y salida al entrar a una puerta.
@@ -53,12 +53,15 @@ class Player extends AnimatedObject {
         this.sfx.blade.volume = 0.5; // Volumen del sonido de espada
         this.sfx.taser.volume = 0.5; // Volumen del sonido de taser
 
-        // Variable para guardar cuanto daño ha recibido el jugador por enemigos
-        this.danoTotalRecibido = 0;
-        this.enemigosDerrotados = 0;
-        this.salasCompletadas = 0;
-        this.puzzlesResueltos = 0;
-        this.jefesDerrotados = 0;
+        // Variable para guardar en las estadisticas
+        this.danoTotalRecibido = 0; // Atributo de daño total recibido por el jugador\
+        this.powerUpsUtilizados = 0;
+        this.enemigosDerrotados = 0; // Atributo de enemigos derrotados por el jugador
+        this.salasCompletadas = 0; // Atributo de salas completadas por el jugador
+        this.puzzlesResueltos = 0; // Atributo de puzzles resueltos por el jugador
+        this.jefesDerrotados = 0; // Atributo de jefes derrotados por el jugador
+        this.partidasJugadas = 0; // Atributo de partidas jugadas por el jugador
+        this.partidasGanadas = 0; // Atributo de partidas ganadas por el jugador
       
         // Movimientos del jugador
         this.movement = {
@@ -347,7 +350,7 @@ class Player extends AnimatedObject {
             this.weapon = powerup;
             powerup.isCollected = true;
             let droppedWeapon = new Weapon("purple", 30, 30, revertWeapon.position.x, revertWeapon.position.y, "weapon", revertWeapon.wtype, revertWeapon.damage, "Epic", revertWeapon.animations);
-            droppedWeapon.position = new Vec(powerup.position.x + 1, powerup.position.y);
+            droppedWeapon.position = new Vec(powerup.position.x + 5, powerup.position.y);
             game.level.levelPowerUps.push(droppedWeapon);
             GAME_LEVELS[currentRoom].roomPowerUp = droppedWeapon;
         } 

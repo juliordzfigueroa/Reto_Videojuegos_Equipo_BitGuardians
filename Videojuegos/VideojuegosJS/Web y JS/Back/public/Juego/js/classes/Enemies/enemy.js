@@ -63,6 +63,9 @@ class Enemy extends AnimatedObject {
             this.sfx.death.currentTime = 0; // reinicia si ya estaba sonando
             this.sfx.death.play(); // Sonido de muerte del enemigo
             this.destroyed = true; // Atributo que inidca si el enemigo ha sido destruido
+            // Se le suma 1 al contador de enemigos derrotados del jugador
+            game.player.enemigosDerrotados += 1;
+            console.log("Enemigo derrotado. Total:", game.player.enemigosDerrotados);
         }
     }
 }
