@@ -55,7 +55,7 @@ class Dron extends Enemy {
             let dir = game.player.position.minus(this.position).unit_V(); // Normalizar la dirección hacia el jugador
             if (this.xOrY < 0.5) {
                 for (let actor of level.actors) {
-                    if (actor.type === "wall" && overlapRectangles(this.hitBox, actor)) {
+                    if (actor.type === "wall" && overlapRectangles(this.hitBox, actor) || actor.type === "door" && overlapRectangles(this.hitBox, actor)) {
                         // Al detectar colisión, se invierte la dirección
                         this.direction *= -1;
                         break; // Rompe el bucle tras encontrar un muro
@@ -65,7 +65,7 @@ class Dron extends Enemy {
             } 
             else {
                 for (let actor of level.actors) {
-                    if (actor.type === "wall" && overlapRectangles(this.hitBox, actor)) {
+                    if (actor.type === "wall" && overlapRectangles(this.hitBox, actor) || actor.type === "door" && overlapRectangles(this.hitBox, actor)) {
                         // Al detectar colisión, se invierte la dirección
                         this.direction *= -1;
                         break; // Rompe el bucle tras encontrar un muro

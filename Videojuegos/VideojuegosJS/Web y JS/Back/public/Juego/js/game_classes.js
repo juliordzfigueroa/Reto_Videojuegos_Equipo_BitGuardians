@@ -99,20 +99,23 @@ class GameObject {
 
 class Button extends GameObject { // Clase para crear botones en el juego
     constructor(x, y, width, height, text) {
-      super(null, width, height, x, y, "button");
-      this.textString = text; // Texto del botón
-      this.textLabel = new TextLabel(x, y, "24px Arial", "#fff"); // Texto del botón
-      this.isOver = false; // Variable para saber si el mouse está sobre el botón
-      this.bg = null; // Color de fondo del botón
+        super(null, width, height, x, y, "button");
+        this.textString = text; // Texto del botón
+        this.textLabel = new TextLabel(x, y, "24px Arial", "#fff"); // Texto del botón
+        this.isOver = false; // Variable para saber si el mouse está sobre el botón
+        this.bg = null; // Color de fondo del botón
     }
   
-    draw(ctx, scale, overBg) {
+    draw(ctx, scale, overBg, colorFont) {
         let defaultBg = this.bg; // Color de fondo por defecto
+        let defaultFColor = this.textLabel.color; // Color de texto por defecto
         if (this.isOver) {
             this.bg = overBg;
+            this.textLabel.color = colorFont; // Cambiamos el color del texto al pasar el mouse por encima
         } 
         else {
             this.bg = defaultBg;
+            this.textLabel.color = defaultFColor; // Cambiamos el color del texto al pasar el mouse por encima
         }
         ctx.fillStyle = this.bg;
         ctx.fillRect(this.position.x * scale, this.position.y * scale, this.size.x * scale, this.size.y * scale);

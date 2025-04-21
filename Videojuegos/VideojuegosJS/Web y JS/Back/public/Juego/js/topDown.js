@@ -70,7 +70,7 @@ const controlsButtons = [
 let gameOverActive = false; // Booleano creado para pausar el juego
 const gameOverButtons = [
     new Button(9.5, 12, 8, 2, "Reiniciar"),
-    new Button(3.5, 15, 8, 2, "Pantlla de Inicio"),
+    new Button(9.5, 15, 8, 2, "Pantlla de Inicio"),
 ];
 
 const gameMusic = { // Objeto que contiene la música de fondo del juego
@@ -812,7 +812,7 @@ function drawPauseMenu(ctx) { // Dibuja el menú de pausa
         boton.bg = "rgba(0, 0, 0, 0.1)";
         boton.textLabel.font = "24px monospace";
         boton.textLabel.color = "cyan";
-        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.4)"); // Dibuja los botones del menú de pausa
+        boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de pausa
     }
 }
 
@@ -826,9 +826,9 @@ function drawMainMenu(ctx) { // Dibuja el menú principal
     gamelogo.draw(ctx, scale); // Dibuja el logo del juego
     for (let boton of mainMenuButtons) {
         boton.bg = "#222";
-        boton.textLabel.font = "32px monospace";
+        boton.textLabel.font = "24px monospace";
         boton.textLabel.color = "cyan";
-        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.3)"); // Dibuja los botones del menú principal
+        boton.draw(ctx, scale, boton.textLabel.color, boton.bg); // Dibuja los botones del menú principal
     }
 }
 
@@ -845,7 +845,7 @@ function drawOptionsMenu(ctx) { // Dibuja el menú de opciones
         boton.bg = "rgba(0, 0, 0, 0.1)";
         boton.textLabel.font = "24px monospace";
         boton.textLabel.color = "cyan";
-        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.4)"); // Dibuja los botones del menú de opciones
+        boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de opciones
     }
 }
 
@@ -879,7 +879,7 @@ function drawControlsLayout(ctx) { // Dibuja el menú de controles
         boton.bg = "rgba(0, 0, 0, 0.1)";
         boton.textLabel.font = "24px monospace";
         boton.textLabel.color = "cyan";
-        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.4)"); // Dibuja los botones del menú de controles
+        boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de controles
     }
 }
 
@@ -896,7 +896,7 @@ function drawGameOver(ctx){
         boton.bg = "rgba(0, 0, 0, 0.1)";
         boton.textLabel.font = "24px monospace";
         boton.textLabel.color = "cyan";
-        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.4)"); // Dibuja los botones del menú de controles
+        boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de controles
     }
 }
 
