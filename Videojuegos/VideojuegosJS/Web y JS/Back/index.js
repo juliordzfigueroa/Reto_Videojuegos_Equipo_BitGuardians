@@ -204,7 +204,9 @@ app.post('/api/jugador/stats/partida/update', async (request, response) => {
                     power_ups_utilizados = power_ups_utilizados + ?,
                     salas_completadas = salas_completadas + ?, 
                     jefes_derrotados = jefes_derrotados + ?, 
-                    puzzles_resueltos = puzzles_resueltos + ? 
+                    puzzles_resueltos = puzzles_resueltos + ?, 
+                    partidas_jugadas = partidas_jugadas + ?,
+                    partidas_ganadas = partidas_ganadas + ?
                 WHERE id_jugador = ?`,
                 [
                     request.body.enemigos_derrotados,
@@ -213,7 +215,10 @@ app.post('/api/jugador/stats/partida/update', async (request, response) => {
                     request.body.salas_completadas,
                     request.body.jefes_derrotados,
                     request.body.puzzles_resueltos,
+                    request.body.partidas_jugadas,
+                    request.body.partidas_ganadas,
                     request.body.id_jugador
+
                 ]
             );
 
