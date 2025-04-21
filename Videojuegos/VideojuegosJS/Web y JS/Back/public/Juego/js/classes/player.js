@@ -53,12 +53,13 @@ class Player extends AnimatedObject {
         this.sfx.blade.volume = 0.5; // Volumen del sonido de espada
         this.sfx.taser.volume = 0.5; // Volumen del sonido de taser
 
-        // Variable para guardar cuanto daño ha recibido el jugador por enemigos
-        this.danoTotalRecibido = 0;
-        this.enemigosDerrotados = 0;
-        this.salasCompletadas = 0;
-        this.puzzlesResueltos = 0;
-        this.jefesDerrotados = 0;
+        // Variable para guardar en las estadisticas
+        this.danoTotalRecibido = 0; // Atributo de daño total recibido por el jugador\
+        this.powerUpsUtilizados = 0;
+        this.enemigosDerrotados = 0; // Atributo de enemigos derrotados por el jugador
+        this.salasCompletadas = 0; // Atributo de salas completadas por el jugador
+        this.puzzlesResueltos = 0; // Atributo de puzzles resueltos por el jugador
+        this.jefesDerrotados = 0; // Atributo de jefes derrotados por el jugador
       
         // Movimientos del jugador
         this.movement = {
@@ -347,7 +348,7 @@ class Player extends AnimatedObject {
             this.weapon = powerup;
             powerup.isCollected = true;
             let droppedWeapon = new Weapon("purple", 30, 30, revertWeapon.position.x, revertWeapon.position.y, "weapon", revertWeapon.wtype, revertWeapon.damage, "Epic", revertWeapon.animations);
-            droppedWeapon.position = new Vec(powerup.position.x + 1, powerup.position.y);
+            droppedWeapon.position = new Vec(powerup.position.x + 5, powerup.position.y);
             game.level.levelPowerUps.push(droppedWeapon);
             GAME_LEVELS[currentRoom].roomPowerUp = droppedWeapon;
         } 
