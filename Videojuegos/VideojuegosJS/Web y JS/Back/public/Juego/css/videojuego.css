@@ -38,8 +38,13 @@ canvas {
     /* height: 75vh; */
     border: 2px solid black;
     background-color: white;
+<<<<<<< HEAD
     width: 810px; 
     height: 600px;
+=======
+    /* width: 800px; 
+    height: 500px;  */
+>>>>>>> 7b285b29461c102cf8e77dffdb5ae629aaf4d48a
 }
 
 #canvas {
@@ -54,7 +59,7 @@ canvas {
 }
 
 #backButton {
-    margin: 10px;
+  margin: 10px;
 }
 
 #uiContainer {
@@ -70,10 +75,10 @@ canvas {
   border: 1px solid turquoise;
 
   text-shadow:
-   -1px -1px 0 #FFF,
+    -1px -1px 0 #FFF,
     1px -1px 0 #FFF,
     -1px 1px 0 #FFF,
-     1px 1px 0 #FFF;
+    1px 1px 0 #FFF;
 }
 #ui {
   opacity: 0.8;

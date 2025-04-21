@@ -111,11 +111,19 @@ class Button extends GameObject { // Clase para crear botones en el juego
         let defaultFColor = this.textLabel.color; // Color de texto por defecto
         if (this.isOver) {
             this.bg = overBg;
+<<<<<<< HEAD
             this.textLabel.color = colorFont; // Cambiamos el color del texto al pasar el mouse por encima
         } 
         else {
             this.bg = defaultBg;
             this.textLabel.color = defaultFColor; // Cambiamos el color del texto al pasar el mouse por encima
+=======
+            this.textLabel.color = colorFont; // Cambia el color del texto al pasar el mouse por encima
+        } 
+        else {
+            this.bg = defaultBg;
+            this.textLabel.color = defaultFColor; // Cambia el color del texto al pasar el mouse por encima
+>>>>>>> 7b285b29461c102cf8e77dffdb5ae629aaf4d48a
         }
         ctx.fillStyle = this.bg;
         ctx.fillRect(this.position.x * scale, this.position.y * scale, this.size.x * scale, this.size.y * scale);

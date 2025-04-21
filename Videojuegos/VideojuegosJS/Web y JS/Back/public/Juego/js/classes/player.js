@@ -60,6 +60,8 @@ class Player extends AnimatedObject {
         this.salasCompletadas = 0; // Atributo de salas completadas por el jugador
         this.puzzlesResueltos = 0; // Atributo de puzzles resueltos por el jugador
         this.jefesDerrotados = 0; // Atributo de jefes derrotados por el jugador
+        this.partidasJugadas = 0; // Atributo de partidas jugadas por el jugador
+        this.partidasGanadas = 0; // Atributo de partidas ganadas por el jugador
       
         // Movimientos del jugador
         this.movement = {
