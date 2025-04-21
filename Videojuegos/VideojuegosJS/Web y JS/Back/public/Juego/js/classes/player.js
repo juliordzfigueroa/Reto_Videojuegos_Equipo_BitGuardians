@@ -19,7 +19,7 @@ class Player extends AnimatedObject {
         this.max_shield = this.max_hp*0.1; // Atributo de escudo máximo del jugador, el cual podrá ser incrementado con powerups, el escudo será del 10% de la vida del jugador
         this.hitBox = new HitBox(this.position.x, this.position.y, this.size.x*0.7, this.size.y*0.9); // Hitbox del jugador
         this.totalHP = this.hp + this.shield; // Atributo de vida total del jugador, el cual será la suma de la vida y el escudo del jugador
-        this.hasEMP = true; // Atributo de si el jugador tiene un EMP o no
+        this.hasEMP = false; // Atributo de si el jugador tiene un EMP o no
         this.emp = null; // Atributo del powerup EMP del jugador, el será solo usado para imagen del hub
         this.isDefeated = false; // Atributo de si el jugador fue derrotado o no
         // Variables de la entrada de y salida al entrar a una puerta.
@@ -60,6 +60,8 @@ class Player extends AnimatedObject {
         this.salasCompletadas = 0; // Atributo de salas completadas por el jugador
         this.puzzlesResueltos = 0; // Atributo de puzzles resueltos por el jugador
         this.jefesDerrotados = 0; // Atributo de jefes derrotados por el jugador
+        this.partidasJugadas = 0; // Atributo de partidas jugadas por el jugador
+        this.partidasGanadas = 0; // Atributo de partidas ganadas por el jugador
       
         // Movimientos del jugador
         this.movement = {
