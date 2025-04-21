@@ -13,7 +13,7 @@ class Robot extends Enemy {
                 repeat: true,
                 duration: 100,
                 moveFrames: [20, 26],
-                idleFrames: [17, 17]
+                idleFrames: [0, 9]
             },
             left: {
                 status: false,
@@ -22,7 +22,7 @@ class Robot extends Enemy {
                 repeat: true,
                 duration: 100,
                 moveFrames: [30, 36],
-                idleFrames: [17, 17]
+                idleFrames: [0, 9]
             },
             up: {
                 status: false,
@@ -31,7 +31,7 @@ class Robot extends Enemy {
                 repeat: true,
                 duration: 100,
                 moveFrames: [40, 45],
-                idleFrames: [17, 17]
+                idleFrames: [0, 9]
             },
             down: {
                 status: false,
@@ -40,7 +40,7 @@ class Robot extends Enemy {
                 repeat: true,
                 duration: 100,
                 moveFrames: [40, 45],
-                idleFrames: [17, 17]
+                idleFrames: [0, 9]
             }
         };
     }
@@ -105,18 +105,24 @@ class Robot extends Enemy {
         }
 
         if (this.state === "stunned") {
-            // El enemigo se queda quieto mientras aturdido
+            // Se mantiene aturdido
             this.velocity = new Vec(0, 0);
-            this.stunTime -= deltaTime; // Reducir el tiempo de aturdimiento
+            this.stunTime -= deltaTime;
             if (this.stunTime <= 0) {
-                this.state = "idle"; // Cambiar al estado idle después del aturdimiento
-                this.stunTime = stunDuration; // Reiniciar el tiempo de aturdimiento
+                this.state = "idle";
+            }
+            if (this.currentDirection) {
+                this.stopMovement(this.currentDirection);
+
             }
         }
     
 
         if (this.state == "idle") {
             this.velocity = new Vec(0.0, 0.0);
+            if (this.currentDirection) {
+                this.stopMovement(this.currentDirection);
+            }
         }
 
         if (this.speed > this.max_speed) { // Si la velocidad del enemigo supera la velocidad máxima, se iguala a esta.

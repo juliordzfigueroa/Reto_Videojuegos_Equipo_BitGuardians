@@ -18,10 +18,10 @@ class Player extends AnimatedObject {
         this.shield = 0; // Atributo de escudo del jugador
         this.max_shield = this.max_hp*0.1; // Atributo de escudo máximo del jugador, el cual podrá ser incrementado con powerups, el escudo será del 10% de la vida del jugador
         this.hitBox = new HitBox(this.position.x, this.position.y, this.size.x*0.7, this.size.y*0.9); // Hitbox del jugador
-        this.state = "idle"; 
         this.totalHP = this.hp + this.shield; // Atributo de vida total del jugador, el cual será la suma de la vida y el escudo del jugador
-        this.hasEMP = false; // Atributo de si el jugador tiene un EMP o no
+        this.hasEMP = true; // Atributo de si el jugador tiene un EMP o no
         this.emp = null; // Atributo del powerup EMP del jugador, el será solo usado para imagen del hub
+        this.isDefeated = false; // Atributo de si el jugador fue derrotado o no
         // Variables de la entrada de y salida al entrar a una puerta.
         this.exitPosition = undefined;
         this.enterPosition = undefined;
@@ -35,7 +35,31 @@ class Player extends AnimatedObject {
         this.touchedCable = false;
 
         this.weapon = getRandomInitWeapon(); // Arma inicial del jugador, aleatoria al inicio
+      
+        this.sfx = { // Sonidos del jugador
+            damage: new Audio("../assets/sfx/Sound_Effects/cipher_impact.mp3"),
+            shoot: new Audio("../assets/sfx/Sound_Effects/laser_gun.mp3"),
+            defeated: new Audio("../assets/sfx/Sound_Effects/Player_defeated.wav"),
+            powerup: new Audio("../assets/sfx/Sound_Effects/power_up_grab.wav"),
+            blade: new Audio("../assets/sfx/Sound_Effects/Blade.mp3"),
+            taser: new Audio("../assets/sfx/Sound_Effects/taser_gun.mp3"),
+        };
 
+        // Configuración de los sonidos del jugador
+        this.sfx.damage.volume = 0.5; // Volumen del sonido de daño
+        this.sfx.powerup.volume = 0.5; // Volumen del sonido de powerup
+        this.sfx.shoot.volume = 0.5; // Volumen del sonido de disparo
+        this.sfx.defeated.volume = 0.5; // Volumen del sonido de derrota
+        this.sfx.blade.volume = 0.5; // Volumen del sonido de espada
+        this.sfx.taser.volume = 0.5; // Volumen del sonido de taser
+
+        // Variable para guardar cuanto daño ha recibido el jugador por enemigos
+        this.danoTotalRecibido = 0;
+        this.enemigosDerrotados = 0;
+        this.salasCompletadas = 0;
+        this.puzzlesResueltos = 0;
+        this.jefesDerrotados = 0;
+      
         // Movimientos del jugador
         this.movement = {
             down: {
@@ -80,6 +104,12 @@ class Player extends AnimatedObject {
 
     update(level, deltaTime) {
         // Determinar donde termina el jugador después de que se mueve
+        if (this.isDefeated) { // Si el jugador fue derrotado, no se mueve
+            this.velocity = new Vec(0, 0);
+            this.updateFrame(deltaTime);
+            return;
+        }
+
         let newPosition = this.position.plus(this.velocity.times(deltaTime));
 
         // Moverse si el jugador no toca una pared
@@ -114,14 +144,11 @@ class Player extends AnimatedObject {
             this.currentAttackHitbox.drawHitBox(ctx, scale);
         }
 
-        if (this.weaponChangeCooldown > 0) {
-            this.weaponChangeCooldown -= deltaTime;
-        }
-
         this.cableDamageTimer += deltaTime; // Aumentar el timer del daño del cable
     }
 
     startMovement(direction) {
+        if (this.isDefeated) return; // Si el jugador fue derrotado, no puede moverse
         const dirData = this.movement[direction];
         if (!dirData.status) {
             dirData.status = true;
@@ -131,45 +158,87 @@ class Player extends AnimatedObject {
     }
 
     stopMovement(direction) {
+        if (this.isDefeated) return; // Si el jugador fue derrotado, no puede moverse
         const dirData = this.movement[direction];
         dirData.status = false;
         this.velocity[dirData.axis] = 0;
         this.setAnimation(...dirData.idleFrames, dirData.repeat, dirData.duration);
     }
 
-    // Métodos de ataque hechos para cada arma
+    // Métodos de ataque hechos para cada tipo de arma, en este caso espada/taser y pistola.
 
     // Método para realizar el ataque de la espada
-    swordAttack(direction) {
+    meleeAttack(direction) {
         let attackWidth, attackHeight, attackX, attackY; // Variables para la hitbox del ataque
         // Según la dirección, posiciona la hitbox en frente del jugador
         switch (direction) {
         case "up":
-            attackWidth = this.size.x * 1;
-            attackHeight = this.size.y * 0.4;
-            attackX = this.position.x; 
-            attackY = this.position.y - attackHeight;
+            if (this.weapon.wtype === "taser") {
+                attackWidth = this.size.x * 0.6;
+                attackHeight = this.size.y * 0.5;
+                attackX = this.position.x + this.size.x*0.19; 
+                attackY = this.position.y - attackHeight;
+            }
+            else if (this.weapon.wtype === "sword") {
+                attackWidth = this.size.x * 1;
+                attackHeight = this.size.y * 0.4;
+                attackX = this.position.x; 
+                attackY = this.position.y - attackHeight;
+            }
             break;
         case "down":
-            attackWidth = this.size.x * 1;
-            attackHeight = this.size.y * 0.4;
-            attackX = this.position.x; 
-            attackY = this.position.y + this.size.y;
+            if (this.weapon.wtype === "taser") {
+                attackWidth = this.size.x * 0.6;
+                attackHeight = this.size.y * 0.5;
+                attackX = this.position.x + this.size.x*0.19; 
+                attackY = this.position.y + this.size.y;
+            }
+            else if (this.weapon.wtype === "sword") {
+                attackWidth = this.size.x * 1;
+                attackHeight = this.size.y * 0.4;
+                attackX = this.position.x; 
+                attackY = this.position.y + this.size.y;
+            }
             break;
         case "left":
-            attackWidth = this.size.x * 0.4;
-            attackHeight = this.size.y * 1;
-            attackY = this.position.y;
-            attackX = this.position.x - attackWidth;
+            if (this.weapon.wtype === "taser") {
+                attackWidth = this.size.x * 0.5;
+                attackHeight = this.size.y * 0.6;
+                attackY = this.position.y + this.size.y*0.2;
+                attackX = this.position.x - attackWidth;
+            }
+            else if (this.weapon.wtype === "sword") {
+                attackWidth = this.size.x * 0.4;
+                attackHeight = this.size.y * 1;
+                attackY = this.position.y;
+                attackX = this.position.x - attackWidth;
+            }
             break;
         case "right":
-            attackWidth = this.size.x * 0.4;
-            attackHeight = this.size.y * 1;
-            attackY = this.position.y;
-            attackX = this.position.x + this.size.x;
+            if (this.weapon.wtype === "taser") {
+                attackWidth = this.size.x * 0.5;
+                attackHeight = this.size.y * 0.6;
+                attackY = this.position.y + this.size.y*0.2;
+                attackX = this.position.x + this.size.x;
+            }
+            else if (this.weapon.wtype === "sword") {
+                attackWidth = this.size.x * 0.4;
+                attackHeight = this.size.y * 1;
+                attackY = this.position.y;
+                attackX = this.position.x + this.size.x;
+            }
             break;
         }
         
+        if (this.weapon.wtype === "sword") {
+            this.sfx.blade.currentTime = 0; // reinicia si ya estaba sonando
+            this.sfx.blade.play(); // Sonido de ataque con espada
+        }
+        else if (this.weapon.wtype === "taser") {
+            this.sfx.taser.currentTime = 0; // reinicia si ya estaba sonando
+            this.sfx.taser.play(); // Sonido de ataque con taser
+        }
+
         // Se define la hitbox temporal del ataque del jugador
         this.currentAttackHitbox = new HitBox(attackX, attackY, attackWidth, attackHeight);
 
@@ -178,11 +247,16 @@ class Player extends AnimatedObject {
         for (let enemy of game.enemies) {
             if (overlapRectangles(this.currentAttackHitbox, enemy)) {
                 enemy.takeDamage(this.weapon.damage);
+                if (this.weapon.wtype === "taser") {
+                    enemy.stunTime = 1000;
+                    enemy.state = "stunned"; // Cambia el estado del enemigo a aturdido
+                }
             }
         }
 
         this.attackTimer = 1000;
     }
+    
 
     // Método para iniciar el ataque del jugador con la pistola
     shoot(direction) {
@@ -202,29 +276,29 @@ class Player extends AnimatedObject {
                 break;
         }
         this.shootCooldown = 1800; // Reiniciar el tiempo de recarga del disparo
+        this.sfx.shoot.currentTime = 0; // reinicia si ya estaba sonando
+        this.sfx.shoot.play(); // Sonido de disparo
         let bullet = new Bullet(this.position.x + 0.6, this.position.y + 0.8, 0.7, 0.25, "blue", bdirection.x, bdirection.y, this.weapon.damage); // Crear la bala
         game.playerBullets.push(bullet); // Añadir la bala al array de balas del enemigo
     }
 
     startAttack(direction) {
+        if (this.isDefeated) return; // Si el jugador fue derrotado, no se puede atacar
         const dirData = attackAnimations[this.weapon.wtype][direction + "attack"];
         if (!dirData || dirData.status) return;
         dirData.status = true;        
         this.setAnimation(...dirData.moveFrames, true, dirData.duration); // Se cambia a la animación de ataque
         // Ejecuta la acción de ataque según el tipo de arma
-        if (this.weapon.wtype === "sword") {
-            this.swordAttack(direction);
+        if (this.weapon.wtype === "sword" || this.weapon.wtype === "taser") {
+            this.meleeAttack(direction);
         } 
         else if (this.weapon.wtype === "gun") {
             this.shoot(direction);
         }
-        else if (this.weapon.wtype === "taser") {
-            this.swordAttack(direction);
-        } 
-
     }
 
     stopAttack(direction) {
+        if (this.isDefeated) return; // Si el jugador fue derrotado, no se puede atacar
         const dirData = attackAnimations[this.weapon.wtype][direction + "attack"];
         if (!dirData || !dirData.status) return;
         dirData.status = false;
@@ -235,6 +309,11 @@ class Player extends AnimatedObject {
 
     // Método para que el jugador reciba daño
     takeDamage(damage){
+        this.sfx.damage.currentTime = 0; // reinicia si ya estaba sonando
+        this.sfx.damage.play();
+      
+        this.danoTotalRecibido += damage; // Aumentar el daño total recibido por el jugador
+      
         if (this.shield > 0) // Si el jugador tiene escudo, este recibe el daño.
             {
                 this.shield -= damage;
@@ -248,21 +327,45 @@ class Player extends AnimatedObject {
         {
             this.hp -= damage;
         }
+
+        this.setAnimation(stateAnimations.damged.moveFrames[0], stateAnimations.damged.moveFrames[1], false, stateAnimations.damged.duration); // Se cambia a la animación de daño
+
+        if (this.hp <= 0) {
+            this.isDefeated = true; // Cambia el estado del jugador a derrotado
+            this.sfx.defeated.currentTime = 0; // reinicia si ya estaba sonando
+            this.sfx.defeated.play(); // Sonido de derrota
+            this.setAnimation(stateAnimations.defeated.moveFrames[0], stateAnimations.defeated.moveFrames[1], false, stateAnimations.defeated.duration);
+        }
     }
 
-    // Método para que el jugador pueda hacer daño (temporal aquí hasta definir la clase donde corresponde)
-    doDamage(enemy){
-        enemy.takeDamage(this.weapon.damage);
-    }
-
-    stunEnemy(enemy){
-        if (this.hasEMP == true)
-        enemy.stunTime = stunDuration; // Aturdir al enemigo por 2 segundos
-        enemy.state = "stunned"; // Cambiar el estado del enemigo a aturdido
+    powerupEffect(powerup){ // Método para aplicar el efecto del powerup al jugador
+        this.sfx.powerup.currentTime = 0; // reinicia si ya estaba sonando
+        this.sfx.powerup.play(); // Sonido de recogida de powerup
+        if (powerup.type === "weapon") {
+            this.setAnimation(stateAnimations.powerup.moveFrames[0], stateAnimations.powerup.moveFrames[1], false, stateAnimations.powerup.duration);
+            let revertWeapon = this.weapon;
+            this.weapon = powerup;
+            powerup.isCollected = true;
+            let droppedWeapon = new Weapon("purple", 30, 30, revertWeapon.position.x, revertWeapon.position.y, "weapon", revertWeapon.wtype, revertWeapon.damage, "Epic", revertWeapon.animations);
+            droppedWeapon.position = new Vec(powerup.position.x + 1, powerup.position.y);
+            game.level.levelPowerUps.push(droppedWeapon);
+            GAME_LEVELS[currentRoom].roomPowerUp = droppedWeapon;
+        } 
+        else if (powerup.type === "empBomb") {
+            this.hasEMP = true; // El jugador obtiene una bomba EMP.
+            this.emp = powerup; // Se guarda para ser usado como imagen
+            this.setAnimation(stateAnimations.powerup.moveFrames[0], stateAnimations.powerup.moveFrames[1], false, stateAnimations.powerup.duration);
+            powerup.isCollected = true; // Marca el powerup como recogido
+        }
+        else {
+            this.setAnimation(stateAnimations.powerup.moveFrames[0], stateAnimations.powerup.moveFrames[1], false, stateAnimations.powerup.duration);
+            powerup.effect(this);
+            powerup.isCollected = true; // Marca el powerup como recogido
+        }
     }
 }
 
-// Objeto que contiene los diferentes frames de ataque del jugador según el arma que use
+// Variable que contiene los diferentes frames de ataque del jugador según el arma que use
 const attackAnimations = {
     sword: {
         upattack: { 
@@ -353,5 +456,30 @@ const attackAnimations = {
             moveFrames: [150, 153], 
             idleFrames: [150, 150]
         }
+    }
+};
+
+// Variable que contiene los frames de estado del jugador, si este es derrotado, si obtiene un power up o si recibe daño.
+const stateAnimations = {
+    damged:{ 
+        status: false,
+        repeat: false,
+        duration: 50,
+        moveFrames: [55, 58], 
+        idleFrames: [0, 4]
+    },
+    powerup: {
+        status: false,
+        repeat: false,
+        duration: 50,
+        moveFrames: [51, 54], 
+        idleFrames: [0, 4]
+    },
+    defeated:{ 
+        status: false,
+        repeat: false,
+        duration: 800,
+        moveFrames: [163, 167], 
+        idleFrames: [0, 4]
     }
 };

@@ -161,6 +161,109 @@ app.delete('/api/jugador/:id', async (request, response) => {
     }
 })
 
+app.post('/api/jugador/stats', async (request, response) => {
+    let connection = null
+
+    try {
+        console.log(request.body['id_jugador'])
+        connection = await connectToDB()
+        const [results, fields] = await connection.query('select * from jugador where id_jugador = ?', [request.body['id_jugador']])
+
+        console.log(`${results.length} rows returned`)
+        console.log(results)
+        response.json(results)
+    }
+    catch (error) {
+        response.status(500)
+        response.json(error)
+        console.log(error)
+    }
+    finally {
+        if (connection !== null) {
+            connection.end()
+            console.log("Connection closed succesfully!")
+        }
+    }
+})
+
+app.post('/api/jugador/stats/partida/update', async (request, response) => {
+    let connection = null;
+
+    try {
+        console.log('Datos recibidos: ', request.body);
+        connection = await connectToDB();
+
+        const [results, fields] = await connection.query('SELECT * FROM Estadisticas WHERE id_jugador = ?', [request.body['id_jugador']]);
+
+        if (results.length > 0) {
+            // Actualizar si existe
+            const [updateResults] = await connection.query(
+                `UPDATE Estadisticas 
+                 SET enemigos_derrotados = enemigos_derrotados + ?, 
+                     dano_total_recibido = dano_total_recibido + ?, 
+                     salas_completadas = salas_completadas + ?, 
+                     jefes_derrotados = jefes_derrotados + ?, 
+                     puzzles_resueltos = puzzles_resueltos + ? 
+                 WHERE id_jugador = ?`,
+                [
+                    request.body.enemigos_derrotados,
+                    request.body.dano_total_recibido,
+                    request.body.salas_completadas,
+                    request.body.jefes_derrotados,
+                    request.body.puzzles_resueltos,
+                    request.body.id_jugador
+                ]
+            );
+
+            response.json({ message: "Estadísticas actualizadas correctamente." });
+        } else {
+            // Insertar si no existe
+            const [insertResults] = await connection.query(
+                'INSERT INTO Estadisticas SET ?',
+                request.body
+            );
+
+            response.json({ message: "Estadísticas insertadas correctamente." });
+        }
+    } catch (error) {
+        response.status(500)
+        response.json(error)
+        console.log(error)
+    } finally {
+        if (connection) {
+            await connection.end();
+            console.log("Conexión cerrada correctamente.");
+        }
+    }
+});
+
+
+app.post('/api/jugador/stats/partida', async (request, response) => {
+    let connection = null
+
+    try {
+        console.log(request.body['id_jugador'])
+        connection = await connectToDB()
+        const [results, fields] = await connection.query('select * from Estadisticas where id_jugador = ?', [request.body['id_jugador']])
+
+        console.log(`${results.length} rows returned`)
+        console.log(results)
+        response.json(results)
+    }
+    catch (error) {
+        response.status(500)
+        response.json(error)
+        console.log(error)
+    }
+    finally {
+        if (connection !== null) {
+            connection.end()
+            console.log("Connection closed succesfully!")
+        }
+    }
+})
+
+
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`)
 })
