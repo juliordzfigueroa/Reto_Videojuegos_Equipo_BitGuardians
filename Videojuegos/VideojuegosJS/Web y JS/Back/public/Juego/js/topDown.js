@@ -71,6 +71,12 @@ const controlsButtons = [
     new Button(17.5, 1.5, 8, 2, "Invertir controles"),
 ];
 
+let gameOverActive = false; // Booleano creado para pausar el juego
+const gameOverButtons = [
+    new Button(9.5, 12, 8, 2, "Reiniciar"),
+    new Button(3.5, 15, 8, 2, "Pantlla de Inicio"),
+];
+
 const gameMusic = { // Objeto que contiene la música de fondo del juego
     backgrpound1: new Audio("../assets/sfx/music/UndertaleOST_051_AnotherMedium.mp3"),
     backgrpound2: new Audio("../assets/sfx/music/UndertaleOST_065_CORE.mp3"),
@@ -189,7 +195,7 @@ class Game {
                         console.error("Error en la solicitud:", error);
                     });
                 // Enviar los stats al servidor
-                restartGame();
+                gameOverActive = true; // Activa el menú de Game Over
             }
             return;
         }
@@ -605,6 +611,11 @@ function setEventListeners() {
                 boton.isOnButton(mx, my); // Verifica si el mouse está sobre el botón
             }
         }
+        if (gameOverActive) {
+            for (let boton of gameOverButtons) {
+                boton.isOnButton(mx, my); // Verifica si el mouse está sobre el botón
+            }
+        }
       });
     canvas.addEventListener("click", (event) => {
         // Obtener las coordenadas del clic en el canvas para el manejo de los menus y del overlay del puzzle
@@ -703,6 +714,23 @@ function setEventListeners() {
                     if (boton.textString === "Invertir controles") {
                         invertControls = !invertControls; // Cambia el estado de los controles invertidos
                     }
+                    break;
+                }
+            }
+        }
+        if (gameOverActive) {
+            for (let boton of gameOverButtons) {
+                if (boton.click(mXScale, mYScale)) {
+                    if (boton.textString === "Reiniciar") {
+                        gameOverActive = false; // Desactiva el menú de Game Over
+                    }
+                    if (boton.textString === "Pantlla de Inicio") {
+                        gameOverActive = false; // Desactiva el menú de Game Over
+                        mainMenuActive = true; // Activa el menú principal
+                        currentMenu = "main"; // Cambia el menú actual a "main"
+                        drawMainMenu(ctx); // Dibuja el menú principal
+                    }
+                    restartGame(); // Reinicia el juego
                     break;
                 }
             }
@@ -877,6 +905,23 @@ function drawControlsLayout(ctx) { // Dibuja el menú de controles
     }
 }
 
+function drawGameOver(ctx){
+    ctx.fillStyle = "rgba(0, 0, 0, 0.7)"; // Dibuja un overlay semitransparente
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+    ctx.font = "32px monospace";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.fillText("GAME OVER", canvasWidth / 2, 60);
+
+    for (let boton of gameOverButtons) {
+        boton.bg = "rgba(0, 0, 0, 0.1)";
+        boton.textLabel.font = "24px monospace";
+        boton.textLabel.color = "cyan";
+        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.4)"); // Dibuja los botones del menú de controles
+    }
+}
+
 function isPuzzleNear() { // Función que verifica si el puzzle está cerca del jugador
   const max_d = 2; // Variable usada como umbral como máxima distancia al puzzle
   for (let actor of game.actors) {
@@ -907,6 +952,9 @@ function updateCanvas(frameTime) {
             game.draw(ctx, scale); // Dibuja el juego en pausa
         }
         drawControlsLayout(ctx);
+    }
+    else if (gameOverActive) { // Si el jugador ha muerto
+        drawGameOver(ctx); // Dibuja el menú de Game Over
     }
     else{
         if (frameStart === undefined) {
