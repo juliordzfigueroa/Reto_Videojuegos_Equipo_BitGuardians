@@ -34,6 +34,10 @@ let levelPuzzle; // Puzzle no definido para el nivel
 // Para invertir los controles de ataque y movimiento del jugador
 let invertControls = false; 
 
+// Cronómetro 
+let startTime = null; // Tiempo de inicio
+let elapsedTime = 0; // Tiempo transcurrido
+
 let currentMenu = "main"; // Variable que guarda el menú actual
 
 // Para el menú principal
@@ -432,6 +436,7 @@ function init() {
 function gameStart() {
     levelbgMusic(); // Reproduce la música de fondo del nivel
     game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
+    startTime = performance.now(); // Guarda el tiempo de inicio
     updateCanvas(document.timeline.currentTime);
 }
 
@@ -443,6 +448,9 @@ function restartGame() {
     resetRoomStats();
     // Reiniciamos el juego creando un objeto nuevo de la clase GAME
     game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
+    // Reiniciamos el tiempo
+    startTime = performance.now(); // Guarda el tiempo de inicio
+    elapsedTime = 0; // Reinicia el tiempo transcurrido
 }
 
 function levelbgMusic(){
@@ -760,6 +768,20 @@ function drawHUD(ctx, player, scale) { // Función que dibuja el las armas y las
     if (player.hasEMP && player.emp) {
         ctx.drawImage(player.emp.spriteImage, currentWeaponX + 120, currentWeaponY, 100, 100);
     }
+
+    // Dibuja el cronómetro
+    const segundosTotales = Math.floor(elapsedTime / 1000);
+    let minutos = Math.floor(segundosTotales / 60);
+    let segundos = segundosTotales % 60;
+
+    if (minutos < 10) minutos = "0" + minutos;
+    if (segundos < 10) segundos = "0" + segundos;
+
+    ctx.font = "30px monospace";
+    ctx.fillStyle = "#00ff1B";
+    ctx.textAlign = "center";
+    ctx.fillText("Tiempo", canvasWidth / 2, 500); 
+    ctx.fillText(`${minutos}:${segundos}`, canvasWidth / 2, 540); // Muestra el tiempo transcurrido en el juego
 }
 
 function drawPuzzleOverlay(ctx) { // Dibuja el overlay del puzzle cuando sea activado 
@@ -870,7 +892,7 @@ function isPuzzleNear() { // Función que verifica si el puzzle está cerca del 
 
 // Function that will be called for the game loop
 function updateCanvas(frameTime) {
-    console.log(currentMenu)
+    elapsedTime = frameTime - startTime; // Calcula el tiempo transcurrido desde el inicio del juego
     if (mainMenuActive) {
         drawMainMenu(ctx);
     }
