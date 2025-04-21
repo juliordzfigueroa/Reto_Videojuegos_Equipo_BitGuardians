@@ -160,6 +160,7 @@ class Game {
                     id_jugador: localStorage.getItem('jugador_id'),
                     enemigos_derrotados: game.player.enemigosDerrotados,
                     dano_total_recibido: game.player.danoTotalRecibido,
+                    power_ups_utilizados: game.player.powerUpsUtilizados,
                     salas_completadas: game.player.salasCompletadas,
                     jefes_derrotados: game.player.jefesDerrotados,
                     puzzles_resueltos: game.player.puzzlesResueltos,
@@ -217,10 +218,6 @@ class Game {
             for (let enemy of this.enemies) {
                 if(overlapRectangles(bullet, enemy.hitBox)){
                     enemy.takeDamage(bullet.damage); // Aplica daño al enemigo
-                    if (enemy.destroyed) {
-                        game.player.enemigosDerrotados += 1;  // Incrementa enemigosDerrotados
-                        console.log("Enemigos derrotados: " + game.player.enemigosDerrotados);
-                    }
                     bullet.destroy = true;
                 }
             }
@@ -229,6 +226,9 @@ class Game {
         for (let i = this.level.levelPowerUps.length - 1; i >= 0; i--) {
             let powerup = this.level.levelPowerUps[i];
             if (overlapRectangles(powerup, this.player)) {
+                if (powerup.type !== "empBomb"){
+                    this.player.powerUpsUtilizados += 1; // Aumenta el contador de powerups usados
+                }
                 this.player.powerupEffect(powerup); // Aplica el efecto del powerup al jugador
                 break;
             }
@@ -243,6 +243,10 @@ class Game {
 
         this.level.enemies = this.enemies; //Actualiza la lista de enemigos en el nivel
         if(currentRoom == "puzzleRoom" && levelPuzzle.puzzleCompleated == true && this.enemies.length == 0) {
+            if (!GAME_LEVELS[currentRoom].puzzleCounted) {
+                game.player.puzzlesResueltos += 1; // Se aumenta en uno la cuenta de puzzles resueltos
+                GAME_LEVELS[currentRoom].puzzleCounted = true;
+            }
             this.marcarSalaComoCompletada(); // Marca la sala como completada si el puzzle se ha completado y no hay enemigos
         }
         
@@ -491,9 +495,11 @@ function setEventListeners() {
                     enemy.state = "stunned"; // Cambia el estado del enemigo a aturdido
                 }
                 game.player.hasEMP = false; // Marca como usado la bombaEMP
+                //Solo se aumenta el contador hasta que se use
+                game.player.powerUpsUtilizados += 1; // Aumenta el contador de powerups usados
             }
         }
-        if (invertControls){ // Si los controles están invertidos
+        if (invertControls) { // Si los controles están invertidos
             if (event.key === 'w') game.player.startAttack("up");
             if (event.key === 'a') game.player.startAttack("left");
             if (event.key === 's') game.player.startAttack("down");
