@@ -245,6 +245,7 @@ class Game {
         if(currentRoom == "puzzleRoom" && levelPuzzle.puzzleCompleated == true && this.enemies.length == 0) {
             if (!GAME_LEVELS[currentRoom].puzzleCounted) {
                 game.player.puzzlesResueltos += 1; // Se aumenta en uno la cuenta de puzzles resueltos
+                console.log("puzzles resueltos: " + game.player.puzzlesResueltos);
                 GAME_LEVELS[currentRoom].puzzleCounted = true;
             }
             this.marcarSalaComoCompletada(); // Marca la sala como completada si el puzzle se ha completado y no hay enemigos
@@ -1001,10 +1002,10 @@ function resetRoomStats(){ // Función que reinicia los stats de las habitacione
         GAME_LEVELS[room].statusCompleted = false;
         GAME_LEVELS[room].roomPowerUp = null;
         GAME_LEVELS[room].powerupSpawned = false;
+        GAME_LEVELS[room].puzzleCounted = false; // Reinicia el contador de puzzles
     }
     levelPuzzle = new Puzzle(canvasWidth, canvasHeight);; // Reinicia el puzzle
     levelPuzzle.puzzleCompleated == true;
-    game.player.puzzlesResueltos = 0;
 }
 
 // Call the start function to initiate the game
