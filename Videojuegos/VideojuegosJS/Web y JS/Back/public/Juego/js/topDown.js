@@ -64,7 +64,7 @@ let controlsLayout = new GameObject(); // Crea un objeto para el layout de contr
 let controlsActive = false; // Booleano creado para pausar el juego
 const controlsButtons = [
     new Button(0.3, 1.5, 8, 2, "<=="),
-    new Button(16, 1.5, 8, 2, "Invertir controles"),
+    new Button(17.5, 1.5, 8, 2, "Invertir controles"),
 ];
 
 const gameMusic = { // Objeto que contiene la música de fondo del juego
@@ -458,8 +458,33 @@ function setEventListeners() {
             if (puzzleActive){ // Si el puzzle está activo
                 puzzleActive = false;
             }
-            else{
-                pauseActive = !pauseActive;
+            else if (pauseActive){
+                pauseActive = false; // Desactiva el menú de pausa
+            }
+            else if (optionsActive){
+                optionsActive = false; // Desactiva el menú de opciones
+                if (currentMenu === "main") {
+                    mainMenuActive = true; // Activa el menú principal
+                    drawMainMenu(ctx); // Dibuja el menú principal
+                }
+                else if (currentMenu === "pause") {
+                    pauseActive = true; // Activa el menú de pausa
+                    drawPauseMenu(ctx); // Dibuja el menú de pausa
+                }
+            }
+            else if (controlsActive){
+                controlsActive = false; // Desactiva el menú de controles
+                if (currentMenu === "main") {
+                    mainMenuActive = true; // Activa el menú principal
+                    drawMainMenu(ctx); // Dibuja el menú principal
+                }
+                else if (currentMenu === "pause") {
+                    pauseActive = true; // Activa el menú de pausa
+                    drawPauseMenu(ctx); // Dibuja el menú de pausa
+                }
+            }
+            else {
+                pauseActive = true; // Activa el menú de pausa
             }
             return;
         }
@@ -586,12 +611,12 @@ function setEventListeners() {
                     if (boton.textString === "Opciones") {
                         mainMenuActive = false; // Desactiva el menú principal
                         optionsActive = true; // Activa el menú de opciones
-                        drawOptionsMenu();
+                        drawOptionsMenu(ctx);
                     }
                     if (boton.textString === "Controles") {
                         mainMenuActive = false; // Desactiva el menú principal
                         controlsActive = true; // Activa el menú de controles
-                        drawControlsLayout(); // Dibuja el layout de controles
+                        drawControlsLayout(ctx); // Dibuja el layout de controles
                     }
                   break;
                 }
@@ -605,23 +630,23 @@ function setEventListeners() {
                     }
                     if (boton.textString === "Reiniciar") {
                         pauseActive = false; // Desactiva el menú de pausa
-                        restartGame(); // Reinicia el juego
+                        restartGame(ctx); // Reinicia el juego
                     }
                     if (boton.textString === "Controles") {
                         pauseActive = false; // Desactiva el menú de pausa
                         controlsActive = true; // Activa el menú de controles
-                        drawControlsLayout(); // Dibuja el layout de controles
+                        drawControlsLayout(ctx); // Dibuja el layout de controles
                     }
                     if (boton.textString === "Opciones") {
                         pauseActive = false; // Desactiva el menú de pausa
                         optionsActive = true; // Activa el menú de opciones
-                        drawOptionsMenu();
+                        drawOptionsMenu(ctx);
                     }
                     if (boton.textString === "Salir") {
                         mainMenuActive = true; // Activa el menú principal
                         pauseActive = false; // Desactiva el menú de pausa
                         currentMenu = "main"; // Cambia el menú actual a "main"
-                        drawMainMenu(); // Dibuja el menú principal
+                        drawMainMenu(ctx); // Dibuja el menú principal
                     }
                     break;
                 }
@@ -635,7 +660,7 @@ function setEventListeners() {
                         optionsActive = false; // Desactiva el menú de opciones
                         if (currentMenu === "main") {
                             mainMenuActive = true; // Activa el menú principal
-                            drawMainMenu(); // Dibuja el menú principal
+                            drawMainMenu(ctx); // Dibuja el menú principal
                         }
                         if (currentMenu === "pause") {
                             pauseActive = true; // Activa el menú de pausa
@@ -653,7 +678,7 @@ function setEventListeners() {
                         controlsActive = false; // Desactiva el menú de controles
                         if (currentMenu === "main") {
                             mainMenuActive = true; // Activa el menú principal
-                            drawMainMenu(); // Dibuja el menú principal
+                            drawMainMenu(ctx); // Dibuja el menú principal
                         }
                         if (currentMenu === "pause") {
                             pauseActive = true; // Activa el menú de pausa
@@ -756,7 +781,7 @@ function drawPauseMenu(ctx) { // Dibuja el menú de pausa
     }
 }
 
-function drawMainMenu() { // Dibuja el menú principal
+function drawMainMenu(ctx) { // Dibuja el menú principal
     gamelogo.position = new Vec(9.3, 2);
     gamelogo.size     = new Vec(9, 9);
     gamelogo.setSprite('../assets/sprites/escenarios/TFH_logo1.1.png');
@@ -772,8 +797,8 @@ function drawMainMenu() { // Dibuja el menú principal
     }
 }
 
-function drawOptionsMenu() { // Dibuja el menú de opciones
-    ctx.fillStyle = "rgba(0, 0, 0, 0.7)"; // Dibuja un overlay semitransparente 
+function drawOptionsMenu(ctx) { // Dibuja el menú de opciones
+    ctx.fillStyle = "rgba(0,0,0,0.7)";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
     ctx.font = "32px monospace";
@@ -789,13 +814,32 @@ function drawOptionsMenu() { // Dibuja el menú de opciones
     }
 }
 
-function drawControlsLayout() { // Dibuja el menú de controles
+function drawControlsLayout(ctx) { // Dibuja el menú de controles
     ctx.fillStyle = "rgba(0, 0, 0, 0.7)"; // Dibuja un overlay semitransparente
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+    controlsLayout.position = new Vec(-4, 0);
+    controlsLayout.size     = new Vec(35, 25);
+    controlsLayout.setSprite('../assets/sprites/escenarios/ControlesLayOut.png');
+    controlsLayout.draw(ctx, scale); // Dibuja el layout de controles
+
     ctx.font = "32px monospace";
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
-    ctx.fillText("CONTROLES", canvasWidth / 2, canvasHeight / 2 - 100);
+    ctx.fillText("CONTROLES", canvasWidth / 2, 60);
+
+    if (invertControls) {
+        ctx.fillText("Atacar", 225, 165); // Muestra el texto de controles invertidos
+        ctx.fillText("Moverse", 600, 165); // Muestra el texto de controles invertidos
+    }
+    else {
+        ctx.fillText("Moverse", 225, 165); // Muestra el texto de controles normales
+        ctx.fillText("Atacar", 600, 165); // Muestra el texto de controles invertidos
+    }
+    ctx.fillText("Interactuar", 215, 450); // Muestra el texto de controles invertidos
+    ctx.fillText("Reiniciar", 415, 450); // Muestra el texto de controles invertidos
+    ctx.fillText("Bomba EMP", 600, 450); // Muestra el texto de controles invertidos
+
     for (let boton of controlsButtons) {
         boton.bg = "rgba(0, 0, 0, 0.1)";
         boton.textLabel.font = "24px monospace";
@@ -819,14 +863,21 @@ function isPuzzleNear() { // Función que verifica si el puzzle está cerca del 
 
 // Function that will be called for the game loop
 function updateCanvas(frameTime) {
+    console.log(currentMenu)
     if (mainMenuActive) {
-        drawMainMenu();
+        drawMainMenu(ctx);
     }
     else if (optionsActive) {
-        drawOptionsMenu();
+        if  (currentMenu === "pause") {
+            game.draw(ctx, scale); // Dibuja el juego en pausa
+        }
+        drawOptionsMenu(ctx);
     }
     else if (controlsActive) {
-        drawControlsLayout();
+        if  (currentMenu === "pause") {
+            game.draw(ctx, scale); // Dibuja el juego en pausa
+        }
+        drawControlsLayout(ctx);
     }
     else{
         if (frameStart === undefined) {
@@ -844,12 +895,6 @@ function updateCanvas(frameTime) {
         else if (pauseActive){
             game.draw(ctx, scale);
             drawPauseMenu(ctx);
-        } 
-        else if (optionsActive) {
-            drawOptionsMenu();
-        }
-        else if (controlsActive) {
-            drawControlsLayout();
         }
         else {  
             game.draw(ctx, scale);  
