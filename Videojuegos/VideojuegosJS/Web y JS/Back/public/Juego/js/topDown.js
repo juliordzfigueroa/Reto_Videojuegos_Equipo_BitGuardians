@@ -45,18 +45,18 @@ let mainMenuActive = true;
 let gamelogo = new GameObject(); // Crea un objeto para el logo del juego
 const mainMenuButtons = [
     new Button(9.5, 12, 8, 2, "Nueva Partida"),
-    new Button(3.5, 15, 8, 2, "Opciones"),
-    new Button(15.5, 15, 8, 2, "Controles")
+    new Button(4.5, 15, 8, 2, "Opciones"),
+    new Button(14.5, 15, 8, 2, "Controles")
 ]; // Arreglo de botones del menú principal
 
 // Para el menú de pausa
 let pauseActive = false; // Booleano creado para pausar el juego
 const pauseOptions = [
-    new Button(9.5, 4, 8, 2, "Continuar"),
-    new Button(9.5, 7, 8, 2, "Reiniciar"),
-    new Button(9.5, 10, 8, 2, "Controles"),
-    new Button(9.5, 13, 8, 2, "Opciones"),
-    new Button(9.5, 16, 8, 2, "Salir")
+    new Button(10, 4.5, 2, 2.5, "Continuar"),
+    new Button(10, 6.25, 2, 2.5, "Reiniciar"),
+    new Button(10, 8, 2, 2.5, "Controles"),
+    new Button(9.8, 10, 2, 2.5, "Opciones"),
+    new Button(9.2, 12, 2, 2.5, "Salir")
 ]; // Arreglo de opciones del menú de pausa
 
 let optionsActive = false; // Booleano creado para pausar el juego
@@ -74,7 +74,7 @@ const controlsButtons = [
 let gameOverActive = false; // Booleano creado para pausar el juego
 const gameOverButtons = [
     new Button(9.5, 12, 8, 2, "Reiniciar"),
-    new Button(9.5, 15, 8, 2, "Pantlla de Inicio"),
+    new Button(3.5, 15, 8, 2, "Pantlla de Inicio"),
 ];
 
 const gameMusic = { // Objeto que contiene la música de fondo del juego
@@ -174,8 +174,6 @@ class Game {
                     salas_completadas: game.player.salasCompletadas,
                     jefes_derrotados: game.player.jefesDerrotados,
                     puzzles_resueltos: game.player.puzzlesResueltos,
-                    partidas_jugadas: game.player.partidasJugadas,
-                    partidas_ganadas: game.player.partidasGanadas,
                 };
                 console.log(stats);
                 console.log("Enviando estadísticas:", stats);
@@ -425,9 +423,23 @@ const levelChars = {
 
 
 function main() {
-    // Set a callback for when the page is loaded,
-    // so that the canvas can be found
     window.onload = init;
+
+    document.addEventListener("click", activarMusica, { once: true });
+
+    function activarMusica() {
+        if (currentBGMusic) return;
+        const tracks = [
+            "../assets/sfx/music/UndertaleOST_051_AnotherMedium.mp3",
+            "../assets/sfx/music/UndertaleOST_065_CORE.mp3"
+        ];
+        const randomIndex = Math.floor(Math.random() * tracks.length);
+        const audio = new Audio(tracks[randomIndex]);
+        audio.loop = true;
+        audio.volume = 0.2;
+        audio.play();
+        currentBGMusic = audio;
+    }
 }
 
 function init() {
@@ -445,7 +457,6 @@ function gameStart() {
     levelbgMusic(); // Reproduce la música de fondo del nivel
     game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
     startTime = performance.now(); // Guarda el tiempo de inicio
-    game.player.partidasJugadas += 1; // Aumenta el contador de partidas jugadas
     updateCanvas(document.timeline.currentTime);
 }
 
@@ -460,7 +471,6 @@ function restartGame() {
     // Reiniciamos el tiempo
     startTime = performance.now(); // Guarda el tiempo de inicio
     elapsedTime = 0; // Reinicia el tiempo transcurrido
-    game.player.partidasJugadas += 1; // Aumenta el contador de partidas jugadas
 }
 
 function levelbgMusic(){
@@ -828,6 +838,12 @@ function drawPauseMenu(ctx) { // Dibuja el menú de pausa
     ctx.fillStyle = "rgba(0, 0, 0, 0.7)"; // Dibuja un overlay semitransparente 
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
+    gamelogo.position = new Vec(6, 2.5);
+    gamelogo.size     = new Vec(15, 15);
+    gamelogo.setSprite('../images/computadorapausa.png');
+    
+    gamelogo.draw(ctx, scale); // Dibuja el logo del juego
+
     ctx.font = "32px monospace";
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
@@ -838,23 +854,31 @@ function drawPauseMenu(ctx) { // Dibuja el menú de pausa
         boton.bg = "rgba(0, 0, 0, 0.1)";
         boton.textLabel.font = "24px monospace";
         boton.textLabel.color = "cyan";
-        boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de pausa
+        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.4)"); // Dibuja los botones del menú de pausa
     }
 }
 
+let backgroundMenu = document.createElement("video");
+backgroundMenu.src = "../images/hackercode.mp4";
+backgroundMenu.muted = true;
+backgroundMenu.loop = true;
+backgroundMenu.play();
+
 function drawMainMenu(ctx) { // Dibuja el menú principal
+    ctx.drawImage(backgroundMenu, 0, 0, canvasWidth, canvasHeight);
+    ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    
     gamelogo.position = new Vec(9.3, 2);
     gamelogo.size     = new Vec(9, 9);
-    gamelogo.setSprite('../assets/sprites/escenarios/TFH_logo1.1.png');
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    ctx.fillStyle = "#000";
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    gamelogo.setSprite('../images/logopantallainicio.png');
+    
     gamelogo.draw(ctx, scale); // Dibuja el logo del juego
     for (let boton of mainMenuButtons) {
         boton.bg = "#222";
-        boton.textLabel.font = "32px monospace";
-        boton.textLabel.color = "cyan";
-        boton.draw(ctx, scale, boton.textLabel.color, boton.bg); // Dibuja los botones del menú principal
+        boton.textLabel.font = "bold 27px monospace";
+        boton.textLabel.color = "white";
+        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.3)"); // Dibuja los botones del menú principal
     }
 }
 
@@ -871,7 +895,7 @@ function drawOptionsMenu(ctx) { // Dibuja el menú de opciones
         boton.bg = "rgba(0, 0, 0, 0.1)";
         boton.textLabel.font = "24px monospace";
         boton.textLabel.color = "cyan";
-        boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de opciones
+        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.4)"); // Dibuja los botones del menú de opciones
     }
 }
 
@@ -905,7 +929,7 @@ function drawControlsLayout(ctx) { // Dibuja el menú de controles
         boton.bg = "rgba(0, 0, 0, 0.1)";
         boton.textLabel.font = "24px monospace";
         boton.textLabel.color = "cyan";
-        boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de controles
+        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.4)"); // Dibuja los botones del menú de controles
     }
 }
 
@@ -922,7 +946,7 @@ function drawGameOver(ctx){
         boton.bg = "rgba(0, 0, 0, 0.1)";
         boton.textLabel.font = "24px monospace";
         boton.textLabel.color = "cyan";
-        boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de controles
+        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.4)"); // Dibuja los botones del menú de controles
     }
 }
 
