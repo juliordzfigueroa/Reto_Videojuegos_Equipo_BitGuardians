@@ -445,7 +445,6 @@ function gameStart() {
     levelbgMusic(); // Reproduce la música de fondo del nivel
     game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
     startTime = performance.now(); // Guarda el tiempo de inicio
-    game.player.partidasJugadas += 1; // Aumenta el contador de partidas jugadas
     updateCanvas(document.timeline.currentTime);
 }
 
@@ -460,7 +459,6 @@ function restartGame() {
     // Reiniciamos el tiempo
     startTime = performance.now(); // Guarda el tiempo de inicio
     elapsedTime = 0; // Reinicia el tiempo transcurrido
-    game.player.partidasJugadas += 1; // Aumenta el contador de partidas jugadas
 }
 
 function levelbgMusic(){
