@@ -955,6 +955,24 @@ function drawGameOver(ctx){
     }
 }
 
+function drawWinMenu(ctx) { // Dibuja el menú de victoria
+    ctx.fillStyle = "rgba(0, 0, 0, 0.7)"; // Dibuja un overlay semitransparente
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+    ctx.font = "32px monospace";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.fillText("WINNER", canvasWidth / 2, 60);
+
+    // for (let boton of gameOverButtons) {
+    //     boton.bg = "rgba(0, 0, 0, 0.1)";
+    //     boton.textLabel.font = "24px monospace";
+    //     boton.textLabel.color = "cyan";
+    //     boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de controles
+    // }
+}
+
+
 function isPuzzleNear() { // Función que verifica si el puzzle está cerca del jugador
   const max_d = 2; // Variable usada como umbral como máxima distancia al puzzle
   for (let actor of game.actors) {
@@ -999,6 +1017,9 @@ function updateCanvas(frameTime) {
     }
     else if (gameOverActive) { // Si el jugador ha muerto
         drawGameOver(ctx); // Dibuja el menú de Game Over
+    }
+    else if (game.cLevel === 3){ //Cuando acabe el tercer nivel
+        drawWinMenu(ctx); // Dibuja el menú de victoria
     }
     else{
         if (frameStart === undefined) {
