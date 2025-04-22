@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const btnEstadisticas = document.getElementById("btnEstadisticas");
     if (btnEstadisticas) { //Si el jugador ha iniciado sesion, se le mostrara el boton de estadisticas
-        btnEstadisticas.style.display = localStorage.getItem('jugador_id') ? "block" : "none";
+        btnEstadisticas.style.display = localStorage.getItem('jugador_id') ? "block" : "none"; //Si el jugador existe, se le mostrara el boton de estadisticas
     }
 
     const btnSesion = document.getElementById("btnSesion");
