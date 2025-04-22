@@ -76,10 +76,12 @@ function mostrarRegistro() {
 
 async function cerrarRegistro(e) {
     const name = document.getElementById("nombreRegistro");
+    const edad = document.getElementById("edadRegistro");
     const email = document.getElementById("emailRegistro");
     const contrasena = document.getElementById("contrasenaRegistro");
     const data = {
         nombre: name.value,
+        edad: edad.value,
         email: email.value,
         contrasena: contrasena.value
     };
