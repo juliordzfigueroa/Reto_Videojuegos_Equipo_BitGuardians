@@ -95,7 +95,8 @@ let GAME_LEVELS = {
 `,
     statusCompleted: false,
     roomPowerUp: null,
-    powerupSpawned: false
+    powerupSpawned: false,
+    puzleCounted: false
   },
   BossRoom: {
     layout: `

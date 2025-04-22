@@ -97,6 +97,54 @@ class GameObject {
     }
 }
 
+class Button extends GameObject { // Clase para crear botones en el juego
+    constructor(x, y, width, height, text) {
+        super(null, width, height, x, y, "button");
+        this.textString = text; // Texto del botón
+        this.textLabel = new TextLabel(x, y, "24px Arial", "#fff"); // Texto del botón
+        this.isOver = false; // Variable para saber si el mouse está sobre el botón
+        this.bg = null; // Color de fondo del botón
+    }
+  
+    draw(ctx, scale, overBg, colorFont) {
+        let defaultBg = this.bg; // Color de fondo por defecto
+        let defaultFColor = this.textLabel.color; // Color de texto por defecto
+        if (this.isOver) {
+            this.bg = overBg;
+            this.textLabel.color = colorFont; // Cambia el color del texto al pasar el mouse por encima
+        } 
+        else {
+            this.bg = defaultBg;
+            this.textLabel.color = defaultFColor; // Cambia el color del texto al pasar el mouse por encima
+        }
+        ctx.fillStyle = this.bg;
+        ctx.fillRect(this.position.x * scale, this.position.y * scale, this.size.x * scale, this.size.y * scale);
+        // Dibujar el texto en el botón
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        this.textLabel.x = (this.position.x + this.size.x / 2) * scale;
+        this.textLabel.y = (this.position.y + this.size.y / 2) * scale;
+        this.textLabel.draw(ctx, this.textString);
+    }
+
+    isOnButton(x, y) { // Método para saber si el mouse está sobre el botón
+        if (x >= this.position.x && x <= this.position.x + this.size.x && y >= this.position.y && y <= this.position.y + this.size.y){
+            this.isOver = true; // Si el punto está dentro del botón, devuelve true
+        }
+        else{
+            this.isOver = false; // Si el punto no está dentro del botón, devuelve false
+        }
+    }
+
+    click(mx, my) { // Método para saber si el mouse está dentro del botón y si se hace click
+        return mx >= this.position.x && 
+        mx <= this.position.x + this.size.x && 
+        my >= this.position.y && 
+        my <= this.position.y + this.size.y; // Si el mouse está dentro del botón, devuelve true
+    }
+}
+  
+
 class HitBox extends GameObject { // Clase para crear las hitbox de cada ojeto
     constructor(x, y, width, height) {
         super(null , width, height, x, y, "hitbox"); // Indicamos que el color que posea el objeto sea nulo por defecto

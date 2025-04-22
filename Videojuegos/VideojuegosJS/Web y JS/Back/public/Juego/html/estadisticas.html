@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="UTF-8">
         <title>The Final Hack</title>
         <link rel="stylesheet" href="../css/estadisticas.css">
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     </head>
 
     <body>
@@ -11,9 +13,11 @@
                 <img src="../images/estadisticastitulo.png" alt="Estadísticas">
             </div>
             <div id="menu">
-                <button id="menuButton">&#9776;</button>
+                <button id="menuButton">
+                    <img src="../images/imagenboton.png" alt="Menú" />
+                </button>
                 <div id="dropdownMenu">
-                    <a href="../html/prueba.html">Inicio</a>
+                    <a href="/">Inicio</a>
                     <a href="../html/videojuego.html">Videojuego</a>
                     <a href="../html/creditos.html">Creditos</a>
                     <a href="../html/Info.html">Acerca de</a>
@@ -25,36 +29,35 @@
             <div class="cuadroEstadistica">
                 <div class="tituloEstadisticas">
                     <img src="../images/jugadorestadisticas.png" alt="Jugador Estadísticas">
+                    <p id="nombreStats"> </p>
+                    <p id="emailStats">Email: </p>
+                    <p id="edadStats">Nombre: </p>
+                    
                 </div>
            
             </div>
             <div class="cuadroEstadistica">
                 <div class="tituloEstadisticas">
                     <img src="../images/partidasestadisticas.png" alt="Partida Estadísticas">
+                    <p id="enemigosDerrotados"></p>
+                    <p id="danoTotalRecibido"></p>
+                    <p id="powerUpsUtilizados"></p>
+                    <p id="salasCompletadas"></p>
+                    <p id="puzzlesResueltos"></p>
+                    <p id="partidasJugadas"></p>
+                    <p id="partidasGanadas"></p>
                 </div>
-               
             </div>
         </div>
-
+        <script src="../../js/menu.js"></script>
+        <script src="../../js/funciones.js"></script>
         <script>
-            const menuButton = document.getElementById('menuButton');
-            const dropdownMenu = document.getElementById('dropdownMenu');
-
-            menuButton.onclick = function () {
-                if(dropdownMenu.style.display === 'block'){
-            dropdownMenu.style.display = 'none';
-            } 
-                else{
-                dropdownMenu.style.display = 'block';
-            }
-            };
-
-            document.onclick = function (e) {
-                if(e.target !== menuButton && e.target.parentNode !== dropdownMenu){
-                    dropdownMenu.style.display = 'none';
-                }
-            };
-            main();
+            document.addEventListener("DOMContentLoaded", () => {
+                // Llama a la función mostrarStatsJugador al cargar la página
+                mostarStatsJugador();
+                // Llama a la función mostrarStatsPartida al cargar la página
+                mostrarStatsPartida();
+            });
         </script>
     </body>
 </html>

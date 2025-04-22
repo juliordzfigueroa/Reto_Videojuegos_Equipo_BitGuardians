@@ -5,43 +5,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Final Hack</title>
-    <link rel="stylesheet" href="Juego/css/prueba.css">
+    <link rel="stylesheet" href="/Juego/css/prueba.css">
     <script src="../../js/funciones.js"></script>
+    <link rel="icon" href="Juego/images/logopantallainicio.png" type="image/x-icon">
 </head>
 
 <body>
     <audio autoplay loop id="musicaFondo">
-        <source src="Juego/images/songinicio.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
+        <source src="/Juego/images/songinicio.mp3" type="audio/mpeg">
     </audio>
+
     <video autoplay muted loop id="videoFondo">
-        <source src="Juego/images/hackercode.mp4" type="video/mp4">
-        Your browser does not support the video element.
+        <source src="/Juego/images/hackercode.mp4" type="video/mp4">
     </video>
+
     <div id="contenedor-logo">
-        <img src="Juego/images/logopantallainicio.png" alt="Logo The Final Hack">
-
-        <nav id="menu">
-            <a href="videojuego.html" class="boton">Jugar</a>
-            <a href="estadisticas.html" class="boton">Estadísticas</a>
-            <a href="creditos.html" class="boton">Créditos</a>
-            <a href="#" class="boton" onclick="mostrarPopup()">Iniciar sesión</a>
-        </nav>
+        <img src="/Juego/images/logopantallainicio.png" alt="Logo The Final Hack">
+        <br>
+        <button id="btnAcerca" class="botonInicio">ACERCA DE</button>
+        <button id="btnJugar" class="botonInicio">JUGAR</button>
+        <button id="btnCreditos" class="botonInicio">CREDITOS</button>
+        <button id="btnEstadisticas" class="botonInicio" style="display: none;"
+            onclick="window.location.href='/Juego/html/estadisticas.html';">ESTADÍSTICAS</button>
+        <button id="btnSesion" class="botonInicio">INICIAR SESIÓN</button>
     </div>
-
-    <div id="popupLogin" class="popup">
+    <form id="popupLogin" class="popup" style="display: none;">
         <div class="popup-contenido">
-            <span class="cerrar" onclick="cerrarPopup()">&times;</span>
-            <h2>Iniciar sesión</h2>
-            <input type="nombre" placeholder="Ingresa tu nombre" id="nombre">
-            <input type="email" placeholder="Ingresa tu email" id="email">
-            <input type="password" placeholder="Ingresa tu contraseña" id="contrasena">
-            <button onclick="cerrarPopup()">Iniciar sesión</button>
+            <h2>Iniciar Sesión</h2>
+            <input type="text" name="email" id='emailLogin' placeholder="Type your jugador email">
+            <input type="password" name="contrasena" id='contrasenaLogin' placeholder="Type your password">
+            <button type="button" onclick="cerrarLogin()">Enviar</button>
+            <p id="getResultsID"></p>
+            <p>¿No tienes cuenta?
+                <a href="#" onclick="mostrarRegistro()"><button type="button">Regístrate aquí</button></a>
+            </p>
         </div>
-    </div>
+    </form>
+    
+    <form id="popupRegistro" class="popup" style="display: none;">
+        <div class="popup-contenido">
+            <h2>Registro</h2>
+            <input type="text" name="nombre" id="nombreRegistro" placeholder="Type your first name">
+            <input type="text" name="edad" id="edadRegistro" placeholder="Type your age">
+            <input type="text" name="email" id="emailRegistro" placeholder="Type your Email">
+            <input type="password" name="contrasena" id="contrasenaRegistro" placeholder="Type your password">
+            <button type="button" onclick="cerrarRegistro()">Registrar</button>
+            <p id="postResults"></p>
+        </div>
+    </form>
 
     <footer>
         <p>The Bit Guardians © 2025</p>
+    </footer>
     </footer>
 </body>
 

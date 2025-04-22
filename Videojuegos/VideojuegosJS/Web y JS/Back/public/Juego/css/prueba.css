@@ -1,152 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 /* VIDEO de fondo */
 #videoFondo {
-  position: fixed;
-  top: 0;
-  left: 0;
-  min-width: 100%;
-  min-height: 100%;
-  z-index: -1;
-  object-fit: cover;
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -1;
+    object-fit: cover;
 }
 
 /* Estilo general */
 body {
-  margin: 0;
-  padding: 0;
-  font-family: monospace;
-  color: white;
-  text-align: center;
+    margin: 0;
+    padding: 0;
+    font-family: monospace;
+    color: white;
+    text-align: center;
 }
 
 /* Contenedor centrado del logo */
 #contenedor-logo {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 /* Imagen del logo */
 #contenedor-logo img {
-  width: 300px;
-  height: auto;
+    width: 300px;
+    height: auto;
 }
 
 /* Footer fijo abajo a la derecha */
 footer {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  padding: 10px;
-  font-family: monospace;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 10px;
+    font-family: monospace;
 }
 
-/* Estilo del nav y botones */
-#menu {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
+/* Botones estilo retro */
+.botonInicio {
+    display: block;
+    margin: 20px auto;
+    padding: 16px 32px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    color: #f0f0f0;
+    background-color: #3a3a3a;
+    border: 4px solid #6e6e6e;
+    border-radius: 0;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+    transition: all 0.3s ease;
 }
 
-a {
-  background-color: rgba(0, 255, 0, 0.1);
-  color: #00fffb;
-  border: 2px solid #00fffb;
-  padding: 12px 30px;
-  font-size: 18px;
-  font-family: monospace;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
-  border-radius: 5px;
-  text-decoration: none;
-  display: inline-block;
-  width: 150px;
-}
-
-a:hover {
-  background-color: rgba(0, 255, 247, 0.3);
-  transform: scale(1.05);
+.botonInicio:hover {
+    background-color: #4a4a4a;
+    border-color: #00ffff;
+    color: #00ffff;
+    box-shadow: 0 0 12px rgba(0, 255, 255, 0.6);
+    transform: scale(1.03);
 }
 
 /* Popup Background */
 .popup {
-  display: none;
-  position: fixed;
-  z-index: 100;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(4px);
-}
-
-/* Popup Content Box */
-.popup-contenido {
-  background-color: rgba(0, 0, 0, 0.95);
-  border: 2px solid #00fffb;
-  color: #00fffb;
-  margin: 10% auto;
-  padding: 30px 20px;
-  border-radius: 10px;
-  width: 320px;
-  text-align: center;
-  font-family: monospace;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
-}
-
-/* Close Button */
-.cerrar {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 40px;
-  font-weight: bold;
-  cursor: pointer;
-  color: #00fffb;
-  transition: color 0.2s;
-}
-
-.cerrar:hover {
-  color: #0f0;
-}
-
-/* Inputs */
-.popup-contenido input {
-  width: 90%;
-  padding: 10px;
-  margin: 12px 0;
-  background-color: #000;
-  color: #00fffb;
-  border: 1px solid #00fffb;
-  border-radius: 5px;
-  font-family: monospace;
-  font-size: 14px;
-  outline: none;
-}
-
-.popup-contenido input:focus {
-  border-color: #0f0;
-  box-shadow: 0 0 5px #0f0;
-}
-
-/* Button */
-.popup-contenido button {
-  background-color: transparent;
-  color: #00fffb;
-  border: 2px solid #00fffb;
-  padding: 10px 25px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-family: monospace;
-  font-size: 16px;
-  margin-top: 15px;
-  transition: background-color 0.3s, transform 0.2s;
-}
-
-.popup-contenido button:hover {
-  background-color: rgba(0, 255, 247, 0.2);
-  transform: scale(1.05);
-}
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(4px);
+  }
+  
+  /* Popup Content Box */
+  .popup-contenido {
+    background-color: rgba(0, 0, 0, 0.95);
+    border: 2px solid #00fffb;
+    color: #00fffb;
+    margin: 10% auto;
+    padding: 30px 20px;
+    border-radius: 10px;
+    width: 320px;
+    text-align: center;
+    font-family: monospace;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+  }
+  
+  /* Close Button */
+  .cerrar {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #00fffb;
+    transition: color 0.2s;
+  }
+  
+  .cerrar:hover {
+    color: #0f0;
+  }
+  
+  /* Inputs */
+  .popup-contenido input {
+    width: 90%;
+    padding: 10px;
+    margin: 12px 0;
+    background-color: #000;
+    color: #00fffb;
+    border: 1px solid #00fffb;
+    border-radius: 5px;
+    font-family: monospace;
+    font-size: 14px;
+    outline: none;
+  }
+  
+  .popup-contenido input:focus {
+    border-color: #0f0;
+    box-shadow: 0 0 5px #0f0;
+  }
+  
+  /* Button */
+  .popup-contenido button {
+    background-color: transparent;
+    color: #00fffb;
+    border: 2px solid #00fffb;
+    padding: 10px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: monospace;
+    font-size: 16px;
+    margin-top: 15px;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .popup-contenido button:hover {
+    background-color: rgba(0, 255, 247, 0.2);
+    transform: scale(1.05);
+  }

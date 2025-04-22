@@ -9,7 +9,7 @@
 
 class PowerUp extends GameObject {
     constructor(color, width, height, x, y, type, effectN, rarity) {
-        super(color, 1, 1, x, y, type); // Width y height fijos para todos los powerups por el tamaño de los sprites
+        super(color, 1.8, 2, x, y, type); // Width y height fijos para todos los powerups por el tamaño de los sprites
         this.effectN = effectN; // Nombre del efecto que tendrá cada powerup.
         this.isCollected = false; // Variable para saber si el powerup fue recogido tras completar la sala.
         this.rarity = rarity; // Variable para saber la rareza de cada powerup.
@@ -79,12 +79,6 @@ class EMPBomb extends PowerUp {
         this.type = "empBomb";
         this.setSprite("../assets/sprites/powerUps/empBomb_asset.png", new Rect(0, 0, 26, 32)); 
     }
-    
-    effect() {
-        for (let enemy in game.enemies){
-            enemy.state = "stunned"; // Cambia el estado de todos los enemigos a aturdido.
-        }
-    }
 }
 
 class Weapon extends PowerUp {
@@ -108,7 +102,7 @@ class Weapon extends PowerUp {
     }
 }
 
-function getRandomInitWeapon(){ // Método para obtener un arma aleatoria de la lista de armas.
+function getRandomInitWeapon(){ // Método para obtener un arma aleatoria de la lista de armas al comenzar una partida.
     const weapons = [ 
         new Weapon("purple", 30, 30, 0, 0, "weapon", "sword", 20, "Epic", attackAnimations.sword),
         new Weapon("purple", 30, 30, 0, 0, "weapon", "gun", 10, "Epic", attackAnimations.gun),
@@ -119,7 +113,7 @@ function getRandomInitWeapon(){ // Método para obtener un arma aleatoria de la 
 }
 
 function getRandomPowerUp() { // Método para obtener un powerup aleatorio de la lista de powerups, incluidas armas.
-    const powerups = [
+    const all_powerups = [
         new Heal("red", 30, 30, 0, 0, "heal", "Uncommon"),
         new Shield("blue", 30, 30, 0, 0, "shield", "Uncommon"),
         new HealthIncrease("green", 30, 30, 0, 0, "healthIncrease", "Rare"),
@@ -128,6 +122,10 @@ function getRandomPowerUp() { // Método para obtener un powerup aleatorio de la
         new Weapon("purple", 30, 30, 0, 0, "weapon", "taser", 15, "Epic", attackAnimations.taser),
         new EMPBomb("yellow", 30, 30, 0, 0, "empBomb", "Legendary"),
     ];
+
+    let currentWeaponType = game.player.weapon.wtype; // Obtiene el tipo de arma actual del jugador.
+    const powerups = all_powerups.filter(powerup => !(powerup.type == "weapon" && powerup.wtype === currentWeaponType)); // Filtra los powerups para que no se repita el tipo de arma actual del jugador.
+
     let randPower = Math.floor(Math.random() * powerups.length); // Usado la longitud del arreglo en caso de que se añadan más tipos en el futuro.
     return powerups[randPower]; // Devuelve un powerup aleatorio
 }

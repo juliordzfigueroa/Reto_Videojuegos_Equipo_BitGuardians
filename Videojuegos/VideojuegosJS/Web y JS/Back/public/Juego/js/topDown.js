@@ -40,6 +40,7 @@ let pauseTime = 0; // Tiempo de pausa
 // Para invertir los controles de ataque y movimiento del jugador
 let invertControls = false; 
 
+
 let currentMenu = "main"; // Variable que guarda el menú actual
 
 // Para el menú principal
@@ -92,6 +93,7 @@ class Game {
         this.playerBullets = level.playerBullets;
         levelPuzzle = new Puzzle(canvasWidth, canvasHeight);
         this.cLevel = 0; // Variable que guarda los niveles completados de la partida
+
         this.segundosTotales = 0; // Variable que guarda los segundos totales de la partida
         this.minutos = 0; // Variable que guarda los minutos totales de la partida
         this.segundos = 0; // Variable que guarda los segundos totales de la partida
