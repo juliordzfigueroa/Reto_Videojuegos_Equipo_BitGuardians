@@ -31,12 +31,15 @@ const levelHeight = Math.floor(canvasHeight / scale);
 let puzzleActive = false;
 let levelPuzzle; // Puzzle no definido para el nivel
 
-// Para invertir los controles de ataque y movimiento del jugador
-let invertControls = false; 
-
 // Cronómetro 
 let startTime = null; // Tiempo de inicio
 let elapsedTime = 0; // Tiempo transcurrido
+let pauseFrame = null; // Tiempo en el que se pausa el juego
+let pauseTime = 0; // Tiempo de pausa
+
+// Para invertir los controles de ataque y movimiento del jugador
+let invertControls = false; 
+
 
 let currentMenu = "main"; // Variable que guarda el menú actual
 
@@ -52,11 +55,11 @@ const mainMenuButtons = [
 // Para el menú de pausa
 let pauseActive = false; // Booleano creado para pausar el juego
 const pauseOptions = [
-    new Button(10, 4.5, 2, 2.5, "Continuar"),
-    new Button(10, 6.25, 2, 2.5, "Reiniciar"),
-    new Button(10, 8, 2, 2.5, "Controles"),
-    new Button(9.8, 10, 2, 2.5, "Opciones"),
-    new Button(9.2, 12, 2, 2.5, "Salir")
+    new Button(8.7, 5, 8, 1.5, "Continuar"),
+    new Button(8.7, 6.75, 8, 1.5, "Reiniciar"),
+    new Button(8.7, 8.5, 8, 1.5, "Controles"),
+    new Button(8.7, 10.25, 8, 1.5, "Opciones"),
+    new Button(8.7, 12, 8, 1.5, "Salir")
 ]; // Arreglo de opciones del menú de pausa
 
 let optionsActive = false; // Booleano creado para pausar el juego
@@ -77,11 +80,7 @@ const gameOverButtons = [
     new Button(3.5, 15, 8, 2, "Pantlla de Inicio"),
 ];
 
-const gameMusic = { // Objeto que contiene la música de fondo del juego
-    backgrpound1: new Audio("../assets/sfx/music/UndertaleOST_051_AnotherMedium.mp3"),
-    backgrpound2: new Audio("../assets/sfx/music/UndertaleOST_065_CORE.mp3"),
-    bossRoom: new Audio("../assets/sfx/music/UndertaleOST_009_Enemy_Approaching.mp3"),
-}
+let currentMusic = null; // Variable que guarda la música actual
 
 class Game {
     constructor(state, level) {
@@ -94,6 +93,10 @@ class Game {
         this.playerBullets = level.playerBullets;
         levelPuzzle = new Puzzle(canvasWidth, canvasHeight);
         this.cLevel = 0; // Variable que guarda los niveles completados de la partida
+
+        this.segundosTotales = 0; // Variable que guarda los segundos totales de la partida
+        this.minutos = 0; // Variable que guarda los minutos totales de la partida
+        this.segundos = 0; // Variable que guarda los segundos totales de la partida
 
         this.gameEfects = {
             puzzleSuccess: new Audio("../assets/sfx/Sound_Effects/Puzzle_success.wav"),
@@ -243,6 +246,13 @@ class Game {
                 break;
             }
         }
+
+        this.segundosTotales = Math.floor(elapsedTime / 1000);
+        this.minutos = Math.floor(this.segundosTotales / 60);
+        this.segundos = this.segundosTotales % 60;
+
+        if (this.minutos < 10) this.minutos = "0" + this.minutos;
+        if (this.segundos < 10) this.segundos = "0" + this.segundos;
         
         // El método filter devuelve un nuevo arreglo con las balas que no han sido destruidas. Recuperado de: https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
         this.enemyBullets = this.enemyBullets.filter(bullet => !bullet.destroy); // Función filter para borrar las balas que han sido marcadas como destruidas
@@ -424,22 +434,24 @@ const levelChars = {
 
 function main() {
     window.onload = init;
+}
 
-    document.addEventListener("click", activarMusica, { once: true });
-
-    function activarMusica() {
-        if (currentBGMusic) return;
-        const tracks = [
-            "../assets/sfx/music/UndertaleOST_051_AnotherMedium.mp3",
-            "../assets/sfx/music/UndertaleOST_065_CORE.mp3"
-        ];
-        const randomIndex = Math.floor(Math.random() * tracks.length);
-        const audio = new Audio(tracks[randomIndex]);
-        audio.loop = true;
-        audio.volume = 0.2;
-        audio.play();
-        currentBGMusic = audio;
+function activarMusica() {
+    if (currentMusic){
+        currentMusic.pause(); // Pausa la música actual
+        currentMusic.currentTime = 0; // Reinicia el tiempo de la música
     }
+    const gameBGMusic = [// Objeto que contiene la música de fondo del juego
+        new Audio("../assets/sfx/music/UndertaleOST_051_AnotherMedium.mp3"),
+        new Audio("../assets/sfx/music/UndertaleOST_065_CORE.mp3"),
+        //new Audio("../assets/sfx/music/UndertaleOST_009_Enemy_Approaching.mp3")
+    ]
+
+    const randomIndex = Math.floor(Math.random() * gameBGMusic.length);
+    currentMusic = gameBGMusic[randomIndex];
+    currentMusic.loop = true;
+    currentMusic.volume = 0.2;
+    currentMusic.play();
 }
 
 function init() {
@@ -454,7 +466,7 @@ function init() {
 }
 
 function gameStart() {
-    levelbgMusic(); // Reproduce la música de fondo del nivel
+    activarMusica(); // Activa la música de fondo
     game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
     startTime = performance.now(); // Guarda el tiempo de inicio
     updateCanvas(document.timeline.currentTime);
@@ -466,6 +478,7 @@ function restartGame() {
     lastDoorChar = null;
     // Reiniciamos los cuartos de cada nivel
     resetRoomStats();
+    activarMusica(); // Reinicia la musica
     // Reiniciamos el juego creando un objeto nuevo de la clase GAME
     game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
     // Reiniciamos el tiempo
@@ -811,19 +824,11 @@ function drawHUD(ctx, player, scale) { // Función que dibuja el las armas y las
         ctx.drawImage(player.emp.spriteImage, currentWeaponX + 120, currentWeaponY, 100, 100);
     }
 
-    // Dibuja el cronómetro
-    const segundosTotales = Math.floor(elapsedTime / 1000);
-    let minutos = Math.floor(segundosTotales / 60);
-    let segundos = segundosTotales % 60;
-
-    if (minutos < 10) minutos = "0" + minutos;
-    if (segundos < 10) segundos = "0" + segundos;
-
     ctx.font = "30px monospace";
     ctx.fillStyle = "#00ff1B";
     ctx.textAlign = "center";
     ctx.fillText("Tiempo", canvasWidth / 2, 500); 
-    ctx.fillText(`${minutos}:${segundos}`, canvasWidth / 2, 540); // Muestra el tiempo transcurrido en el juego
+    ctx.fillText(`${game.minutos}:${game.segundos}`, canvasWidth / 2, 540); // Muestra el tiempo transcurrido en el juego
 }
 
 function drawPuzzleOverlay(ctx) { // Dibuja el overlay del puzzle cuando sea activado 
@@ -854,7 +859,7 @@ function drawPauseMenu(ctx) { // Dibuja el menú de pausa
         boton.bg = "rgba(0, 0, 0, 0.1)";
         boton.textLabel.font = "24px monospace";
         boton.textLabel.color = "cyan";
-        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.4)"); // Dibuja los botones del menú de pausa
+        boton.draw(ctx, scale, boton.textLabel.color, "#222", "right"); // Dibuja los botones del menú de pausa
     }
 }
 
@@ -878,7 +883,7 @@ function drawMainMenu(ctx) { // Dibuja el menú principal
         boton.bg = "#222";
         boton.textLabel.font = "bold 27px monospace";
         boton.textLabel.color = "white";
-        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.3)"); // Dibuja los botones del menú principal
+        boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú principal
     }
 }
 
@@ -895,7 +900,7 @@ function drawOptionsMenu(ctx) { // Dibuja el menú de opciones
         boton.bg = "rgba(0, 0, 0, 0.1)";
         boton.textLabel.font = "24px monospace";
         boton.textLabel.color = "cyan";
-        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.4)"); // Dibuja los botones del menú de opciones
+        boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de opciones
     }
 }
 
@@ -929,7 +934,7 @@ function drawControlsLayout(ctx) { // Dibuja el menú de controles
         boton.bg = "rgba(0, 0, 0, 0.1)";
         boton.textLabel.font = "24px monospace";
         boton.textLabel.color = "cyan";
-        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.4)"); // Dibuja los botones del menú de controles
+        boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de controles
     }
 }
 
@@ -946,7 +951,7 @@ function drawGameOver(ctx){
         boton.bg = "rgba(0, 0, 0, 0.1)";
         boton.textLabel.font = "24px monospace";
         boton.textLabel.color = "cyan";
-        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.4)"); // Dibuja los botones del menú de controles
+        boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de controles
     }
 }
 
@@ -965,7 +970,18 @@ function isPuzzleNear() { // Función que verifica si el puzzle está cerca del 
 
 // Function that will be called for the game loop
 function updateCanvas(frameTime) {
-    elapsedTime = frameTime - startTime; // Calcula el tiempo transcurrido desde el inicio del juego
+    
+    if (pauseActive) {
+        if (pauseFrame === null) {
+            pauseFrame = frameTime; // Tiempo en el que se inicia la pausa
+        }
+    } else {
+        if (pauseFrame !== null) {
+            pauseTime += frameTime - pauseFrame;
+            pauseFrame = null;
+        }
+    }
+    elapsedTime = frameTime - startTime - pauseTime; // Calcula el tiempo transcurrido desde el inicio del juego
     if (mainMenuActive) {
         drawMainMenu(ctx);
     }
@@ -997,7 +1013,7 @@ function updateCanvas(frameTime) {
             game.draw(ctx, scale);
             drawPuzzleOverlay(ctx);
         } 
-        else if (pauseActive){
+        else if (pauseActive) { // Si el juego está en pausa
             game.draw(ctx, scale);
             drawPauseMenu(ctx);
         }
