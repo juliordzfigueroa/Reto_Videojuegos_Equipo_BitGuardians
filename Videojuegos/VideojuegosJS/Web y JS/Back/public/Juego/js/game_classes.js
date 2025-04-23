@@ -106,7 +106,7 @@ class Button extends GameObject { // Clase para crear botones en el juego
         this.bg = null; // Color de fondo del botón
     }
   
-    draw(ctx, scale, overBg, colorFont) {
+    draw(ctx, scale, overBg, colorFont, aling) {
         let defaultBg = this.bg; // Color de fondo por defecto
         let defaultFColor = this.textLabel.color; // Color de texto por defecto
         if (this.isOver) {
@@ -120,7 +120,8 @@ class Button extends GameObject { // Clase para crear botones en el juego
         ctx.fillStyle = this.bg;
         ctx.fillRect(this.position.x * scale, this.position.y * scale, this.size.x * scale, this.size.y * scale);
         // Dibujar el texto en el botón
-        ctx.textAlign = "center";
+        if (aling == null) ctx.textAlign = "center"; // Si no se indica la alineación, se usa el valor por defecto
+        else ctx.textAlign = aling; // Si se indica la alineación, se usa el valor indicado}
         ctx.textBaseline = "middle";
         this.textLabel.x = (this.position.x + this.size.x / 2) * scale;
         this.textLabel.y = (this.position.y + this.size.y / 2) * scale;

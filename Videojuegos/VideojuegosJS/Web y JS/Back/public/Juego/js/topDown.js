@@ -98,7 +98,9 @@ class Game {
         this.minutos = 0; // Variable que guarda los minutos totales de la partida
         this.segundos = 0; // Variable que guarda los segundos totales de la partida
 
-        this.gameEfects = {
+        this.enteredBossRoom = false; // Variable que guarda si el jugador ha entrado a la sala del jefe
+
+        this.gameEffects = {
             puzzleSuccess: new Audio("../assets/sfx/Sound_Effects/Puzzle_success.wav"),
             puzzleFail: new Audio("../assets/sfx/Sound_Effects/Puzzle_fail.wav"),
             levelComplete: new Audio("../assets/sfx/Sound_Effects/level_cleared.wav"),
@@ -224,6 +226,13 @@ class Game {
                 this.player.takeDamage(bullet.damage); // Aplica daño al jugador
                 bullet.destroy = true; // Destruir la bala al impactar con el jugador
             }
+            if (this.player.weapon.wtype === "sword" && this.player.currentAttackHitbox){ // Para que la espada pueda romper las balas de los drones
+                if (overlapRectangles(bullet, this.player.currentAttackHitbox))
+                {
+                    bullet.destroy = true; // Destruir la bala al impactar con el ataque del jugador
+                }
+            }
+            
         }
 
         for (let bullet of this.playerBullets) {
@@ -287,13 +296,23 @@ class Game {
         }
 
         if (currentRoom == "BossRoom") {
+            if (!this.enteredBossRoom){
+                currentMusic.pause(); // Pausa la música actual
+                currentMusic = new Audio("../assets/sfx/music/UndertaleOST_009_Enemy_Approaching.mp3"); // Cambia la música al entrar a la sala del jefe
+                currentMusic.loop = true; // Repite la música
+                currentMusic.volume = 0.2; // Baja el volumen de la música
+                currentMusic.play(); // Reproduce la música
+                this.enteredBossRoom = true; // Cambia el estado de la sala del jefe a verdadero
+            }
             if (GAME_LEVELS[currentRoom].statusCompleted === true) {
                 game.player.jefesDerrotados++; // Se aumenta en uno la cuenta
                 this.moveToLevel("main");
                 this.cLevel++;
                 console.log("Niveles completados: " + this.cLevel);
                 resetRoomStats();
+                activarMusica(); // Reinicia la musica
                 this.level.setupDoors(); // Actualiza la puerta
+                this.enteredBossRoom = false; // Cambia el estado de la sala del jefe a falso
             }
         }
     }
@@ -444,7 +463,6 @@ function activarMusica() {
     const gameBGMusic = [// Objeto que contiene la música de fondo del juego
         new Audio("../assets/sfx/music/UndertaleOST_051_AnotherMedium.mp3"),
         new Audio("../assets/sfx/music/UndertaleOST_065_CORE.mp3"),
-        //new Audio("../assets/sfx/music/UndertaleOST_009_Enemy_Approaching.mp3")
     ]
 
     const randomIndex = Math.floor(Math.random() * gameBGMusic.length);
@@ -484,16 +502,6 @@ function restartGame() {
     // Reiniciamos el tiempo
     startTime = performance.now(); // Guarda el tiempo de inicio
     elapsedTime = 0; // Reinicia el tiempo transcurrido
-}
-
-function levelbgMusic(){
-    let currentBGMusic;
-    const bgTracks = [gameMusic.backgrpound1, gameMusic.backgrpound2];
-    let nextTrack = Math.floor(Math.random() * bgTracks.length);
-    currentBGMusic = bgTracks[nextTrack];
-    currentBGMusic.loop = true; // Reproduce la música en bucle
-    currentBGMusic.volume = 0.4; // Ajusta el volumen de la música
-    currentBGMusic.play(); // Reproduce la música
 }
 
 function setEventListeners() {
@@ -557,6 +565,8 @@ function setEventListeners() {
 
         if (event.key === 'e') {
             if (game.player.hasEMP) {
+                game.gameEffects.emp.currentTime = 0; // Reinicia el tiempo de la música}
+                game.gameEffects.emp.play(); // Reproduce el sonido
                 for (let enemy of game.enemies) {
                     enemy.stunTime = stunDuration;
                     enemy.state = "stunned"; // Cambia el estado del enemigo a aturdido

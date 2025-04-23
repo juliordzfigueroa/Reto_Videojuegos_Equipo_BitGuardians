@@ -27,6 +27,7 @@ class Puzzle {
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
     this.puzzleCompleated = false;
+    this.endSound = false;
 
 
     //Coordenadas en píxeles de cada casilla en el tablero de 3x3
@@ -166,12 +167,18 @@ class Puzzle {
       ctx.fillText("Felicidades! Puzzle resuelto, Use ESC para salir", this.canvasWidth / 2, puzzleY - 20);
       if (!this.puzzleCompleated) {
         this.puzzleCompleated = true; // Cambia el estado a completado
+        game.gameEffects.puzzleSuccess.currentTime = 0; // Reinicia el sonido si ya estaba sonando
+        game.gameEffects.puzzleSuccess.play(); // Sonido de Game Over
       }
     }
     else if (this.timeLimit <= 0) { // Si el tiempo se agota
       ctx.fillStyle = "#fff";
       ctx.font = "30px Arial";
       ctx.fillText("Puzzle fallido, Use 'r' para reintentar", this.canvasWidth / 2, puzzleY - 20);
+      if (!this.endSound) {
+        game.gameEffects.puzzleFail.play(); // Sonido para indicar que no se completo el puzzle.
+        this.endSound = true; // Cambia el estado a completado
+      }
     }
   }
 
