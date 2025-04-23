@@ -40,12 +40,11 @@ let pauseTime = 0; // Tiempo de pausa
 // Para invertir los controles de ataque y movimiento del jugador
 let invertControls = false; 
 
-
 let currentMenu = "main"; // Variable que guarda el menú actual
 
 // Para el menú principal
 let mainMenuActive = true;
-let gamelogo = new GameObject(); // Crea un objeto para el logo del juego
+let gameimg = new GameObject(); // Crea un objeto para las imagenes que se ocupen en los fondos de los menús
 const mainMenuButtons = [
     new Button(9.5, 12, 8, 2, "Nueva Partida"),
     new Button(4.5, 15, 8, 2, "Opciones"),
@@ -58,8 +57,8 @@ const pauseOptions = [
     new Button(8.7, 5, 8, 1.5, "Continuar"),
     new Button(8.7, 6.75, 8, 1.5, "Reiniciar"),
     new Button(8.7, 8.5, 8, 1.5, "Controles"),
-    new Button(8.7, 10.25, 8, 1.5, "Opciones"),
-    new Button(8.7, 12, 8, 1.5, "Salir")
+    new Button(8.7, 10.25, 8, 1.5, "Opciones "),
+    new Button(8.7, 12, 8, 1.5, "Salir    ")
 ]; // Arreglo de opciones del menú de pausa
 
 let optionsActive = false; // Booleano creado para pausar el juego
@@ -82,6 +81,10 @@ const gameOverButtons = [
 ];
 
 let currentMusic = null; // Variable que guarda la música actual
+
+// Variables usadas para el volúmen de la música y efectos de sonido
+let musicVolume = 0.5;
+let sfxVolume = 0.5;   
 
 class Game {
     constructor(state, level) {
@@ -201,6 +204,7 @@ class Game {
                         console.error("Error en la solicitud:", error);
                     });
                 // Enviar los stats al servidor
+                this.gameEffects.gameOver.play(); // Reproduce el sonido de Game Over
                 gameOverActive = true; // Activa el menú de Game Over
             }
             return;
@@ -313,6 +317,7 @@ class Game {
                 resetRoomStats();
                 activarMusica(); // Reinicia la musica
                 this.level.setupDoors(); // Actualiza la puerta
+                this.gameEffects.levelComplete.play(); // Reproduce el sonido de nivel completado
                 this.enteredBossRoom = false; // Cambia el estado de la sala del jefe a falso
             }
         }
@@ -701,12 +706,12 @@ function setEventListeners() {
                         controlsActive = true; // Activa el menú de controles
                         drawControlsLayout(ctx); // Dibuja el layout de controles
                     }
-                    if (boton.textString === "Opciones") {
+                    if (boton.textString === "Opciones ") {
                         pauseActive = false; // Desactiva el menú de pausa
                         optionsActive = true; // Activa el menú de opciones
                         drawOptionsMenu(ctx);
                     }
-                    if (boton.textString === "Salir") {
+                    if (boton.textString === "Salir    ") {
                         mainMenuActive = true; // Activa el menú principal
                         pauseActive = false; // Desactiva el menú de pausa
                         currentMenu = "main"; // Cambia el menú actual a "main"
@@ -734,42 +739,8 @@ function setEventListeners() {
                     break;
                 }
             }
-            if (mouseY >= 220 && mouseY <= 260) { 
-                musicVolume = (mouseX - 275) / 300;
-                if (musicVolume < 0) {
-                    musicVolume = 0;
-                }
-                if (musicVolume > 1) {
-                    musicVolume = 1;
-                }
-                if (currentMusic) {
-                    currentMusic.volume = musicVolume;
-                }
-                for (let track of bgTracks) {
-                    track.volume = musicVolume;
-                }
-            }
-        
-            if (mouseY >= 395 && mouseY <= 435) { 
-                sfxVolume = (mouseX - 275) / 300;
-                if (sfxVolume < 0) {
-                    sfxVolume = 0;
-                }    
-                if (sfxVolume > 1) {
-                    sfxVolume = 1;
-                }
-            }
-            for (let sound in game.player.sfx) {
-                game.player.sfx[sound].volume = sfxVolume;
-            }
-            for (let enemy of game.enemies) {
-                for (let sound in enemy.sfx) {
-                    enemy.sfx[sound].volume = sfxVolume;
-                }
-            }
-            for (let sound in game.gameEfects) {
-                game.gameEfects[sound].volume = sfxVolume;
-            }
+            musicVolumeC(mouseX, mouseY); // Llama a la función para cambiar el volumen de la música
+            sfxVolumeC(mouseX, mouseY); // Llama a la función para cambiar el volumen de los efectos de sonido
         }
 
         if (controlsActive) {
@@ -891,11 +862,11 @@ function drawPauseMenu(ctx) { // Dibuja el menú de pausa
     ctx.fillStyle = "rgba(0, 0, 0, 0.7)"; // Dibuja un overlay semitransparente 
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-    gamelogo.position = new Vec(6, 2.5);
-    gamelogo.size     = new Vec(15, 15);
-    gamelogo.setSprite('../images/computadorapausa.png');
+    gameimg.position = new Vec(6, 2.5);
+    gameimg.size     = new Vec(15, 15);
+    gameimg.setSprite('../images/computadorapausa.png');
     
-    gamelogo.draw(ctx, scale); // Dibuja el logo del juego
+    gameimg.draw(ctx, scale); 
 
     ctx.font = "32px monospace";
     ctx.fillStyle = "white";
@@ -906,7 +877,7 @@ function drawPauseMenu(ctx) { // Dibuja el menú de pausa
     for (let boton of pauseOptions) {
         boton.bg = "rgba(0, 0, 0, 0.1)";
         boton.textLabel.font = "24px monospace";
-        boton.textLabel.color = "cyan";
+        boton.textLabel.color = "#00ff1B";
         boton.draw(ctx, scale, boton.textLabel.color, "#222", "right"); // Dibuja los botones del menú de pausa
     }
 }
@@ -922,15 +893,15 @@ function drawMainMenu(ctx) { // Dibuja el menú principal
     ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     
-    gamelogo.position = new Vec(9.3, 2);
-    gamelogo.size     = new Vec(9, 9);
-    gamelogo.setSprite('../images/logopantallainicio.png');
+    gameimg.position = new Vec(9.3, 2);
+    gameimg.size     = new Vec(9, 9);
+    gameimg.setSprite('../images/logopantallainicio.png');
     
-    gamelogo.draw(ctx, scale); // Dibuja el logo del juego
+    gameimg.draw(ctx, scale); // Dibuja el logo del juego
     for (let boton of mainMenuButtons) {
         boton.bg = "#222";
         boton.textLabel.font = "bold 27px monospace";
-        boton.textLabel.color = "white";
+        boton.textLabel.color = "#00ff1B";
         boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú principal
     }
 }
@@ -945,15 +916,18 @@ function drawVolumeBar(ctx, x, y, width, value) {
     ctx.fillRect(cuadrito, y - 5, 10, 20);
 }
 
-let musicVolume = 0.5;
-let sfxVolume = 0.5;   
-
 function drawOptionsMenu(ctx) { // Dibuja el menú de opciones
-    ctx.fillStyle = "rgba(0,0,0,0.7)";
+    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
+    gameimg.position = new Vec(6, 3.1);
+    gameimg.size     = new Vec(16, 16);
+    gameimg.setSprite('../images/computadorapausa.png');
+    
+    gameimg.draw(ctx, scale); 
+
     ctx.font = "32px monospace";
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "lightgreen";
     ctx.textAlign = "center";
     ctx.fillText("Música", 425, 200); 
     ctx.fillText("Efectos de sonido", 425, 375); 
@@ -965,8 +939,46 @@ function drawOptionsMenu(ctx) { // Dibuja el menú de opciones
     for (let boton of optionsButtons) {
         boton.bg = "rgba(0, 0, 0, 0.1)";
         boton.textLabel.font = "24px monospace";
-        boton.textLabel.color = "cyan";
+        boton.textLabel.color = "#00ff1B";
         boton.draw(ctx, scale, "rgba(0, 0, 0, 0.4)"); // Dibuja los botones del menú de opciones
+    }
+}
+
+function musicVolumeC(mX, mY){ // Cambia el volumen de la música
+    if (mY >= 220 && mY <= 260) { 
+        musicVolume = (mX - 275) / 300; // Calcula el volumen de la música en función del tamaño completo del canvas
+        if (musicVolume < 0) {
+            musicVolume = 0;
+        }
+        if (musicVolume > 1) {
+            musicVolume = 1;
+        }
+        if (currentMusic) {
+            currentMusic.volume = musicVolume;
+        }
+    }
+}
+
+function sfxVolumeC(mX, mY){
+    if (mY >= 395 && mY <= 435) { 
+        sfxVolume = (mX - 275) / 300; // Calcula el volumen de los efectos de sonido en función del tamaño completo del canvas
+        if (sfxVolume < 0) {
+            sfxVolume = 0;
+        }    
+        if (sfxVolume > 1) {
+            sfxVolume = 1;
+        }
+    }
+    for (let sound in game.player.sfx) {
+        game.player.sfx[sound].volume = sfxVolume;
+    }
+    for (let enemy of game.enemies) {
+        for (let sound in enemy.sfx) {
+            enemy.sfx[sound].volume = sfxVolume;
+        }
+    }
+    for (let sound in game.gameEfects) {
+        game.gameEfects[sound].volume = sfxVolume;
     }
 }
 
@@ -1054,7 +1066,6 @@ function isPuzzleNear() { // Función que verifica si el puzzle está cerca del 
 
 // Function that will be called for the game loop
 function updateCanvas(frameTime) {
-    
     if (pauseActive) {
         if (pauseFrame === null) {
             pauseFrame = frameTime; // Tiempo en el que se inicia la pausa

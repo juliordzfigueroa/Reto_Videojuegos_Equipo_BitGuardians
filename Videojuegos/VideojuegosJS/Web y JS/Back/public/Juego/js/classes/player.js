@@ -45,14 +45,6 @@ class Player extends AnimatedObject {
             taser: new Audio("../assets/sfx/Sound_Effects/taser_gun.mp3"),
         };
 
-        // Configuración de los sonidos del jugador
-        this.sfx.damage.volume = 0.5; // Volumen del sonido de daño
-        this.sfx.powerup.volume = 0.5; // Volumen del sonido de powerup
-        this.sfx.shoot.volume = 0.5; // Volumen del sonido de disparo
-        this.sfx.defeated.volume = 0.5; // Volumen del sonido de derrota
-        this.sfx.blade.volume = 0.5; // Volumen del sonido de espada
-        this.sfx.taser.volume = 0.5; // Volumen del sonido de taser
-
         // Variable para guardar en las estadisticas
         this.danoTotalRecibido = 0; // Atributo de daño total recibido por el jugador\
         this.powerUpsUtilizados = 0;
