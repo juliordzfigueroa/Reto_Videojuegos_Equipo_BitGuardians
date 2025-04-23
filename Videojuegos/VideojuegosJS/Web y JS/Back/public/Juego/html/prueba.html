@@ -22,10 +22,12 @@
     <div id="contenedor-logo">
         <img src="/Juego/images/logopantallainicio.png" alt="Logo The Final Hack">
         <br>
-        <button id="btnAcerca" class="botonInicio">Acerca de</button>
-        <button id="btnJugar" class="botonInicio">Jugar</button>
-        <button id="btnCreditos" class="botonInicio">Creditos</button>
-        <button id="btnSesion" class="botonInicio" onclick="mostrarLogin()">Iniciar Sesion</button>
+        <button id="btnAcerca" class="botonInicio">ACERCA DE</button>
+        <button id="btnJugar" class="botonInicio">JUGAR</button>
+        <button id="btnCreditos" class="botonInicio">CREDITOS</button>
+        <button id="btnEstadisticas" class="botonInicio" style="display: none;"
+            onclick="window.location.href='/Juego/html/estadisticas.html';">ESTADÍSTICAS</button>
+        <button id="btnSesion" class="botonInicio">INICIAR SESIÓN</button>
     </div>
     <form id="popupLogin" class="popup" style="display: none;">
         <div class="popup-contenido">
@@ -44,6 +46,7 @@
         <div class="popup-contenido">
             <h2>Registro</h2>
             <input type="text" name="nombre" id="nombreRegistro" placeholder="Type your first name">
+            <input type="text" name="edad" id="edadRegistro" placeholder="Type your age">
             <input type="text" name="email" id="emailRegistro" placeholder="Type your Email">
             <input type="password" name="contrasena" id="contrasenaRegistro" placeholder="Type your password">
             <button type="button" onclick="cerrarRegistro()">Registrar</button>
