@@ -65,6 +65,7 @@ const pauseOptions = [
 let optionsActive = false; // Booleano creado para pausar el juego
 const optionsButtons = [
     new Button(0.3, 1.5, 8, 2, "<=="),
+    new Button(10, 1.5, 8, 2, "Opcines de Sonido"),
 ];
 
 let controlsLayout = new GameObject(); // Crea un objeto para el layout de controles
@@ -733,7 +734,44 @@ function setEventListeners() {
                     break;
                 }
             }
+            if (mouseY >= 220 && mouseY <= 260) { 
+                musicVolume = (mouseX - 275) / 300;
+                if (musicVolume < 0) {
+                    musicVolume = 0;
+                }
+                if (musicVolume > 1) {
+                    musicVolume = 1;
+                }
+                if (currentMusic) {
+                    currentMusic.volume = musicVolume;
+                }
+                for (let track of bgTracks) {
+                    track.volume = musicVolume;
+                }
+            }
+        
+            if (mouseY >= 395 && mouseY <= 435) { 
+                sfxVolume = (mouseX - 275) / 300;
+                if (sfxVolume < 0) {
+                    sfxVolume = 0;
+                }    
+                if (sfxVolume > 1) {
+                    sfxVolume = 1;
+                }
+            }
+            for (let sound in game.player.sfx) {
+                game.player.sfx[sound].volume = sfxVolume;
+            }
+            for (let enemy of game.enemies) {
+                for (let sound in enemy.sfx) {
+                    enemy.sfx[sound].volume = sfxVolume;
+                }
+            }
+            for (let sound in game.gameEfects) {
+                game.gameEfects[sound].volume = sfxVolume;
+            }
         }
+
         if (controlsActive) {
             for (let boton of controlsButtons) {
                 if (boton.click(mXScale, mYScale)) {
@@ -897,6 +935,19 @@ function drawMainMenu(ctx) { // Dibuja el menú principal
     }
 }
 
+function drawVolumeBar(ctx, x, y, width, value) {
+    ctx.fillStyle = "gray";
+    ctx.fillRect(x, y, width, 10);
+
+    let cuadrito = x + value * width - 5;
+
+    ctx.fillStyle = "white";
+    ctx.fillRect(cuadrito, y - 5, 10, 20);
+}
+
+let musicVolume = 0.5;
+let sfxVolume = 0.5;   
+
 function drawOptionsMenu(ctx) { // Dibuja el menú de opciones
     ctx.fillStyle = "rgba(0,0,0,0.7)";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
@@ -904,13 +955,18 @@ function drawOptionsMenu(ctx) { // Dibuja el menú de opciones
     ctx.font = "32px monospace";
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
+    ctx.fillText("Música", 425, 200); 
+    ctx.fillText("Efectos de sonido", 425, 375); 
+
+    drawVolumeBar(ctx, 275, 250, 300, musicVolume)
+    drawVolumeBar(ctx, 275, 425, 300, sfxVolume)
 
     ctx.font = "24px monospace";
     for (let boton of optionsButtons) {
         boton.bg = "rgba(0, 0, 0, 0.1)";
         boton.textLabel.font = "24px monospace";
         boton.textLabel.color = "cyan";
-        boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de opciones
+        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.4)"); // Dibuja los botones del menú de opciones
     }
 }
 
