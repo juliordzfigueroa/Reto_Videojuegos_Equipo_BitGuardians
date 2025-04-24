@@ -81,7 +81,7 @@ const gameOverButtons = [
 ];
 
 const gameClearButtons = [
-    new Button(9.5, 12, 8, 2, "Pantlla de Inicio"),
+    new Button(9.5, 12, 8, 2, "Pantlla de Inicio")
 ];
 
 let currentMusic = null; // Variable que guarda la música actual
@@ -119,6 +119,10 @@ class Game {
             emp: new Audio("../assets/sfx/Sound_Effects/Emp_bomb.wav"),
         };
     }
+
+    levelDifficulty() { // Método usado para el aumento de dificultad de los enemigos
+        return 1 + (this.cLevel * 0.1); 
+    }
     
     moveToLevel(newRoom) {
         // Guarda el nivel previo
@@ -126,6 +130,7 @@ class Game {
         currentRoom = newRoom;
         this.level = new Level(GAME_LEVELS[currentRoom].layout, this.player);
 
+        const setEnemiesDif = this.levelDifficulty()
         // Reutilizar el jugador existente
         this.level.player = this.player;
 
@@ -140,7 +145,7 @@ class Game {
                 this.level.levelPowerUps.push(GAME_LEVELS[currentRoom].roomPowerUp);
             }
         }
-
+        
         //Acomodar al enemigo dependiendo de la dirección de entrada
         if (lastRoom && lastDoorChar) { //De donde viene el jugador y la dirección de entrada
             for (let actor of this.level.actors) {
@@ -335,6 +340,7 @@ class Game {
         }
         for (let enemy of this.enemies) {
             enemy.draw(ctx, scale);
+            console.log(enemy.hp, enemy.damage); // Imprime la vida y el daño del enemigo
             if (debugHitBoxes) {
                 enemy.hitBox.drawHitBox(ctx,scale);
             }
@@ -1055,13 +1061,12 @@ function drawWinMenu(ctx) { // Dibuja el menú de victoria
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
     ctx.fillText("WINNER", canvasWidth / 2, 60);
-
-    // for (let boton of gameOverButtons) {
-    //     boton.bg = "rgba(0, 0, 0, 0.1)";
-    //     boton.textLabel.font = "24px monospace";
-    //     boton.textLabel.color = "cyan";
-    //     boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de controles
-    // }
+    for (let boton of gameClearButtons) {
+        boton.bg = "rgba(0, 0, 0, 0.1)";
+        boton.textLabel.font = "24px monospace";
+        boton.textLabel.color = "cyan";
+        boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de controles
+    }
 }
 
 
