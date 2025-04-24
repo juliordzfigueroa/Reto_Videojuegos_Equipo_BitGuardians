@@ -8,12 +8,12 @@
 const stunDuration = 2000; // Atributo de duración del aturdimiento del enemigo 2 segundos
 
 class Enemy extends AnimatedObject {
-    constructor(color, width, height, x, y, type, hp, damage, speed, stunTime) {
+    constructor(color, width, height, x, y, type, hp , damage, speed, stunTime) {
         super("green", width, height, x, y, type);
         this.position = new Vec(x, y); // Initialize position
         this.velocity = new Vec(0.0, 0.0);
-        this.hp = hp; // Atributo de vida del enemigo
-        this.damage = damage; // Atributo de daño del enemigo  
+        this.hp = hp * adjustDifficulty(); // Atributo de vida del enemigo
+        this.damage = damage * adjustDifficulty(); // Atributo de daño del enemigo  
         this.attackTimmer = 0; // Tiempo de ataque del enemigo
         this.nextAttack = 0; // Siguiente ataque del enemigo
         this.state = "idle"; // Estado del enemigo
@@ -68,4 +68,8 @@ class Enemy extends AnimatedObject {
             console.log("Enemigo derrotado. Total:", game.player.enemigosDerrotados);
         }
     }
+}
+    
+function adjustDifficulty() {
+    return factor = 1 + (game.cLevel / 10); // Factor de dificultad basado en el nivel del juego
 }

@@ -77,7 +77,11 @@ const controlsButtons = [
 let gameOverActive = false; // Booleano creado para pausar el juego
 const gameOverButtons = [
     new Button(9.5, 12, 8, 2, "Reiniciar"),
-    new Button(3.5, 15, 8, 2, "Pantlla de Inicio"),
+    new Button(9.5, 15, 8, 2, "Pantlla de Inicio"),
+];
+
+const gameClearButtons = [
+    new Button(9.5, 12, 8, 2, "Pantlla de Inicio")
 ];
 
 let currentMusic = null; // Variable que guarda la música actual
@@ -85,6 +89,9 @@ let currentMusic = null; // Variable que guarda la música actual
 // Variables usadas para el volúmen de la música y efectos de sonido
 let musicVolume = 0.5;
 let sfxVolume = 0.5;   
+
+// Para debugear las hitboxes de los objetos
+let debugHitBoxes = false; // Variable que indica si se deben dibujar las hitboxes de los objetos
 
 class Game {
     constructor(state, level) {
@@ -110,7 +117,11 @@ class Game {
             levelComplete: new Audio("../assets/sfx/Sound_Effects/level_cleared.wav"),
             gameOver: new Audio("../assets/sfx/Sound_Effects/game_over.wav"),
             emp: new Audio("../assets/sfx/Sound_Effects/Emp_bomb.wav"),
-        }
+        };
+    }
+
+    levelDifficulty() { // Método usado para el aumento de dificultad de los enemigos
+        return 1 + (this.cLevel * 0.1); 
     }
     
     moveToLevel(newRoom) {
@@ -119,6 +130,7 @@ class Game {
         currentRoom = newRoom;
         this.level = new Level(GAME_LEVELS[currentRoom].layout, this.player);
 
+        const setEnemiesDif = this.levelDifficulty()
         // Reutilizar el jugador existente
         this.level.player = this.player;
 
@@ -133,7 +145,7 @@ class Game {
                 this.level.levelPowerUps.push(GAME_LEVELS[currentRoom].roomPowerUp);
             }
         }
-
+        
         //Acomodar al enemigo dependiendo de la dirección de entrada
         if (lastRoom && lastDoorChar) { //De donde viene el jugador y la dirección de entrada
             for (let actor of this.level.actors) {
@@ -278,11 +290,11 @@ class Game {
                 currentMusic.pause(); // Pausa la música actual
                 currentMusic = new Audio("../assets/sfx/music/UndertaleOST_009_Enemy_Approaching.mp3"); // Cambia la música al entrar a la sala del jefe
                 currentMusic.loop = true; // Repite la música
-                currentMusic.volume = 0.2; // Baja el volumen de la música
                 currentMusic.play(); // Reproduce la música
                 this.enteredBossRoom = true; // Cambia el estado de la sala del jefe a verdadero
             }
             if (GAME_LEVELS[currentRoom].statusCompleted === true) {
+                this.gameEffects.levelComplete.play(); // Reproduce el sonido de nivel completado
                 game.player.jefesDerrotados++; // Se aumenta en uno la cuenta
                 this.moveToLevel("main");
                 this.cLevel++;
@@ -290,7 +302,6 @@ class Game {
                 resetRoomStats();
                 activarMusica(); // Reinicia la musica
                 this.level.setupDoors(); // Actualiza la puerta
-                this.gameEffects.levelComplete.play(); // Reproduce el sonido de nivel completado
                 this.enteredBossRoom = false; // Cambia el estado de la sala del jefe a falso
             }
         }
@@ -302,7 +313,10 @@ class Game {
         }
         for (let enemy of this.enemies) {
             enemy.draw(ctx, scale);
-            enemy.hitBox.drawHitBox(ctx,scale);
+            console.log(enemy.hp, enemy.damage); // Imprime la vida y el daño del enemigo
+            if (debugHitBoxes) {
+                enemy.hitBox.drawHitBox(ctx,scale);
+            }
         }
         for (let bullet of this.enemyBullets) {
             bullet.draw(ctx, scale);
@@ -314,7 +328,9 @@ class Game {
             powerUp.draw(ctx, scale);
         }
         this.player.draw(ctx, scale);
-        this.player.hitBox.drawHitBox(ctx, scale);
+        if (debugHitBoxes) {
+            this.player.hitBox.drawHitBox(ctx, scale); // Dibuja el hitbox del jugador
+        }
         drawHUD(ctx, this.player, scale); // Dibuja el HUD del jugador
     }
 }
@@ -542,6 +558,10 @@ function setEventListeners() {
             }
         }
 
+        if (event.key === 'h') { // Tecla que hace que se muestren las hitboxes de los objetos
+            debugHitBoxes = !debugHitBoxes; // Cambia el estado de la variable
+        }
+
         if (event.key === 'e') {
             if (game.player.hasEMP) {
                 game.gameEffects.emp.currentTime = 0; // Reinicia el tiempo de la música}
@@ -672,7 +692,7 @@ function setEventListeners() {
                     }
                     if (boton.textString === "Reiniciar") {
                         pauseActive = false; // Desactiva el menú de pausa
-                        restartGame(ctx); // Reinicia el juego
+                        restartGame(); // Reinicia el juego
                     }
                     if (boton.textString === "Controles") {
                         pauseActive = false; // Desactiva el menú de pausa
@@ -874,7 +894,7 @@ function drawMainMenu(ctx) { // Dibuja el menú principal
     for (let boton of mainMenuButtons) {
         boton.bg = "#222";
         boton.textLabel.font = "bold 27px monospace";
-        boton.textLabel.color = "#00ff1B";
+        boton.textLabel.color = "cyan";
         boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú principal
     }
 }
@@ -900,7 +920,7 @@ function drawOptionsMenu(ctx) { // Dibuja el menú de opciones
     gameimg.draw(ctx, scale); 
 
     ctx.font = "32px monospace";
-    ctx.fillStyle = "lightgreen";
+    ctx.fillStyle = "#00ff1B";
     ctx.textAlign = "center";
     ctx.fillText("Música", 425, 200); 
     ctx.fillText("Efectos de sonido", 425, 375); 
@@ -913,7 +933,7 @@ function drawOptionsMenu(ctx) { // Dibuja el menú de opciones
         boton.bg = "rgba(0, 0, 0, 0.1)";
         boton.textLabel.font = "24px monospace";
         boton.textLabel.color = "#00ff1B";
-        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.4)"); // Dibuja los botones del menú de opciones
+        boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de opciones
     }
 }
 
@@ -942,16 +962,16 @@ function sfxVolumeC(mX, mY){
             sfxVolume = 1;
         }
     }
-    for (let sound in game.player.sfx) {
-        game.player.sfx[sound].volume = sfxVolume;
+    for (let psound in game.player.sfx) {
+        game.player.sfx[psound].volume = sfxVolume;
+    }
+     for (let effect in game.gameEffects) {
+        game.gameEffects[effect].volume = sfxVolume;
     }
     for (let enemy of game.enemies) {
         for (let sound in enemy.sfx) {
             enemy.sfx[sound].volume = sfxVolume;
         }
-    }
-    for (let sound in game.gameEfects) {
-        game.gameEfects[sound].volume = sfxVolume;
     }
 }
 
@@ -1016,13 +1036,12 @@ function drawWinMenu(ctx) { // Dibuja el menú de victoria
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
     ctx.fillText("WINNER", canvasWidth / 2, 60);
-
-    // for (let boton of gameOverButtons) {
-    //     boton.bg = "rgba(0, 0, 0, 0.1)";
-    //     boton.textLabel.font = "24px monospace";
-    //     boton.textLabel.color = "cyan";
-    //     boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de controles
-    // }
+    for (let boton of gameClearButtons) {
+        boton.bg = "rgba(0, 0, 0, 0.1)";
+        boton.textLabel.font = "24px monospace";
+        boton.textLabel.color = "cyan";
+        boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de controles
+    }
 }
 
 
@@ -1068,6 +1087,7 @@ function updateCanvas(frameTime) {
         drawControlsLayout(ctx);
     }
     else if (gameOverActive) { // Si el jugador ha muerto
+        currentMusic.pause(); // Pausa la música actual
         drawGameOver(ctx); // Dibuja el menú de Game Over
     }
     else if (game.cLevel === 3){ //Cuando acabe el tercer nivel
@@ -1137,7 +1157,14 @@ function overLapEnemies(enemies, actors) {
                         enemyB.position.y -= separation;
                     }
                 }
+                if (enemyA.type === "dron") { // Si los enemigos tienen velocidad, se invierte la dirección
+                    enemyA.direction *= -1;
+                }
+                if (enemyB.type === "dron") { // Si los enemigos tienen velocidad, se invierte la dirección
+                    enemyB.direction *= -1;
+                }
             }
+            
         }
         for (let actor of actors) {
             if (actor.type !== 'floor' && overlapRectangles(enemyA, actor)) {
