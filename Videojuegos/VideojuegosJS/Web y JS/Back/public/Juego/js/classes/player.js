@@ -135,7 +135,7 @@ class Player extends AnimatedObject {
             }
         }
 
-        if (this.currentAttackHitbox) {
+        if (this.currentAttackHitbox && debugHitBoxes) {
             this.currentAttackHitbox.drawHitBox(ctx, scale);
         }
 
