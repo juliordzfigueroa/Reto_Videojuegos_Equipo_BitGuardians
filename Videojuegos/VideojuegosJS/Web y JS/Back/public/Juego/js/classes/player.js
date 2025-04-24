@@ -329,6 +329,7 @@ class Player extends AnimatedObject {
             this.isDefeated = true; // Cambia el estado del jugador a derrotado
             this.sfx.defeated.currentTime = 0; // reinicia si ya estaba sonando
             this.sfx.defeated.play(); // Sonido de derrota
+            this.partidasJugadas += 1; // Aumentar el contador de partidas jugadas
             this.setAnimation(stateAnimations.defeated.moveFrames[0], stateAnimations.defeated.moveFrames[1], false, stateAnimations.defeated.duration);
         }
     }

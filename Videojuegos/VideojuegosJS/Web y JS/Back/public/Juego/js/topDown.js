@@ -40,10 +40,6 @@ let pauseTime = 0; // Tiempo de pausa
 // Para invertir los controles de ataque y movimiento del jugador
 let invertControls = false; 
 
-//Para marcar partida ganada para enviar los stats al servidor
-let partidaGanada = false; // Variable que guarda si la partida ha sido ganada o no
-let statsEnviados = false; // Variable que guarda si los stats han sido enviados o no
-
 let currentMenu = "main"; // Variable que guarda el menú actual
 
 // Para el menú principal
@@ -176,17 +172,15 @@ class Game {
     update(deltaTime) {
         this.player.update(this.level, deltaTime);
 
-        if (game.player.isDefeated && !statsEnviados) { // Si el jugador ha sido derrotado
+        if (game.player.isDefeated) { // Si el jugador ha sido derrotado
             if (!this.player.repeat && this.player.frame === this.player.maxFrame) { // Se revisa si ya se terimnó la animación de muerte
-                game.player.partidasJugadas += 1; // Se aumenta en uno la cuenta de partidas jugadas
-                console.log("Game Over"); 
-                enviarStats(); // Envia los stats al servidor
-                statsEnviados = true; // Cambia el estado de los stats enviados a verdadero
+                console.log("Game Over");
+                enviarStats(); // Enviar estadísticas al servidor
+                // Enviar los stats al servidor
+                this.gameEffects.gameOver.play(); // Reproduce el sonido de Game Over
+                gameOverActive = true; // Activa el menú de Game Over
             }
-        } else if (partidaGanada && !statsEnviados) { // Si la partida ha sido ganada
-            game.player.partidasJugadas += 1; // Se aumenta en uno la cuenta de partidas jugadas
-            enviarStats(); // Envia los stats al servidor
-            statsEnviados = true; // Cambia el estado de los stats enviados a verdadero
+            return;
         }
 
         for (let enemy of this.enemies) {
@@ -298,11 +292,6 @@ class Game {
                 this.level.setupDoors(); // Actualiza la puerta
                 this.gameEffects.levelComplete.play(); // Reproduce el sonido de nivel completado
                 this.enteredBossRoom = false; // Cambia el estado de la sala del jefe a falso
-                if (this.cLevel ==1){
-                    partidaGanada = true; // Cambia el estado de la partida ganada a verdadero
-                    game.player.partidasGanadas += 1; // Se aumenta en uno la cuenta de partidas ganadas
-                    console.log("Partidas ganadas: " + game.player.partidasGanadas);
-                }
             }
         }
     }
@@ -477,8 +466,6 @@ function gameStart() {
     activarMusica(); // Activa la música de fondo
     game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
     startTime = performance.now(); // Guarda el tiempo de inicio
-    statsEnviados = false;
-    partidaGanada = false; // Cambia el estado de la partida ganada a falso
     updateCanvas(document.timeline.currentTime);
 }
 
@@ -486,8 +473,6 @@ function restartGame() {
     currentRoom = "main";
     lastRoom = null;
     lastDoorChar = null;
-    statsEnviados = false;
-    statsEnviados = false;
     // Reiniciamos los cuartos de cada nivel
     resetRoomStats();
     activarMusica(); // Reinicia la musica
@@ -1022,6 +1007,8 @@ function drawGameOver(ctx){
 }
 
 function drawWinMenu(ctx) { // Dibuja el menú de victoria
+    game.player.partidasJugadas += 1; // Aumenta el contador de partidas jugadas
+    game.player.partidasGanadas += 1; // Aumenta el contador de partidas ganadas
     ctx.fillStyle = "rgba(0, 0, 0, 0.7)"; // Dibuja un overlay semitransparente
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
@@ -1083,8 +1070,11 @@ function updateCanvas(frameTime) {
     else if (gameOverActive) { // Si el jugador ha muerto
         drawGameOver(ctx); // Dibuja el menú de Game Over
     }
-    else if (partidaGanada){ //Cuando acabe el tercer nivel
+    else if (game.cLevel === 3){ //Cuando acabe el tercer nivel
         drawWinMenu(ctx); // Dibuja el menú de victoria
+        enviarStats(); // Envía las estadísticas al servidor
+        gameOverActive = true; // Activa el menú de Game Over
+
     }
     else{
         if (frameStart === undefined) {
@@ -1252,7 +1242,6 @@ function resetRoomStats(){ // Función que reinicia los stats de las habitacione
     levelPuzzle = new Puzzle(canvasWidth, canvasHeight);; // Reinicia el puzzle
     levelPuzzle.puzzleCompleated == true;
 }
-
 function enviarStats() {
     const stats = {
         id_jugador: localStorage.getItem('jugador_id'),
@@ -1265,9 +1254,10 @@ function enviarStats() {
         partidas_jugadas: game.player.partidasJugadas,
         partidas_ganadas: game.player.partidasGanadas,
     };
-
+    console.log(stats);
     console.log("Enviando estadísticas:", stats);
 
+    // Enviar las estadísticas al servidor
     fetch('http://localhost:3000/api/jugador/stats/partida/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1283,9 +1273,6 @@ function enviarStats() {
         .catch(error => {
             console.error("Error en la solicitud:", error);
         });
-    return;
 }
-
-
 // Call the start function to initiate the game
 main();  
