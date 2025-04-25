@@ -29,7 +29,8 @@ class Player extends AnimatedObject {
 
         this.currentAttackHitbox = null; // Hitbox del ataque del jugador definida nulla para que no inicie el ataque al principio
         this.attackHitboxTimer = 0; // Timer de la hitbox de ataque del jugador
-        this.attackTimer = 0;
+        this.attackCooldownDuration = 700; // medio segundo
+        this.attackCooldownTimer = 0;
 
         this.cableDamageTimer = 0; // Timer del daño del cable
         this.touchedCable = false;
@@ -124,14 +125,16 @@ class Player extends AnimatedObject {
         }
         this.totalHP = this.hp + this.shield; // Actualizar la vida total del jugador
 
-        this.updateFrame(deltaTime);
-        
-        
-        // Actualiza el timer de la hitbox de ataque si está activa
+        if (this.attackCooldownTimer > 0) {
+            this.attackCooldownTimer -= deltaTime;
+            if (this.attackCooldownTimer < 0) this.attackCooldownTimer = 0;
+        }
+
         if (this.attackHitboxTimer > 0) {
             this.attackHitboxTimer -= deltaTime;
             if (this.attackHitboxTimer <= 0) {
-                this.currentAttackHitbox = null; // Se borra la hitbox de ataque al terminar el tiempo
+                this.stopAttack(this.currentDirection); // Detener el ataque del jugador
+                this.currentAttackHitbox = null;
             }
         }
 
@@ -139,6 +142,8 @@ class Player extends AnimatedObject {
             this.currentAttackHitbox.drawHitBox(ctx, scale);
         }
 
+        this.updateFrame(deltaTime);
+      
         this.cableDamageTimer += deltaTime; // Aumentar el timer del daño del cable
     }
 
@@ -237,6 +242,8 @@ class Player extends AnimatedObject {
         // Se define la hitbox temporal del ataque del jugador
         this.currentAttackHitbox = new HitBox(attackX, attackY, attackWidth, attackHeight);
 
+        this.attackTimer = 0;
+        this.nextAttack = 1000; // Reinicia el temporizador de ataque
         this.attackHitboxTimer = 300; // Duración de la hitbox de ataque
         
         for (let enemy of game.enemies) {
@@ -248,8 +255,6 @@ class Player extends AnimatedObject {
                 }
             }
         }
-
-        this.attackTimer = 1000;
     }
     
 
@@ -270,7 +275,6 @@ class Player extends AnimatedObject {
                 bdirection = new Vec(1, 0); // Dirección hacia la derecha
                 break;
         }
-        this.shootCooldown = 1800; // Reiniciar el tiempo de recarga del disparo
         this.sfx.shoot.currentTime = 0; // reinicia si ya estaba sonando
         this.sfx.shoot.play(); // Sonido de disparo
         let bullet = new Bullet(this.position.x + 0.6, this.position.y + 0.8, 0.7, 0.25, "blue", bdirection.x, bdirection.y, this.weapon.damage); // Crear la bala
@@ -278,18 +282,22 @@ class Player extends AnimatedObject {
     }
 
     startAttack(direction) {
-        if (this.isDefeated) return; // Si el jugador fue derrotado, no se puede atacar
-        const dirData = attackAnimations[this.weapon.wtype][direction + "attack"];
-        if (!dirData || dirData.status) return;
-        dirData.status = true;        
-        this.setAnimation(...dirData.moveFrames, true, dirData.duration); // Se cambia a la animación de ataque
-        // Ejecuta la acción de ataque según el tipo de arma
-        if (this.weapon.wtype === "sword" || this.weapon.wtype === "taser") {
-            this.meleeAttack(direction);
+        if (this.attackCooldownTimer > 0) return; // Si el jugador está en cooldown, no puede atacar
+        else{
+            if (this.isDefeated) return; // Si el jugador fue derrotado, no se puede atacar
+            const dirData = attackAnimations[this.weapon.wtype][direction + "attack"];
+            if (!dirData || dirData.status) return;
+            dirData.status = true;        
+            this.setAnimation(...dirData.moveFrames, true, dirData.duration); // Se cambia a la animación de ataque
+            // Ejecuta la acción de ataque según el tipo de arma
+            if (this.weapon.wtype === "sword" || this.weapon.wtype === "taser") {
+                this.meleeAttack(direction);
+            } 
+            else if (this.weapon.wtype === "gun") {
+                this.shoot(direction);
+            }
+            this.attackCooldownTimer = this.attackCooldownDuration; // Reinicia el temporizador de ataque
         } 
-        else if (this.weapon.wtype === "gun") {
-            this.shoot(direction);
-        }
     }
 
     stopAttack(direction) {
@@ -299,7 +307,6 @@ class Player extends AnimatedObject {
         dirData.status = false;
         const idleData = this.movement[direction];
         this.setAnimation(...idleData.idleFrames, true, idleData.duration);
-
     }
 
     // Método para que el jugador reciba daño
@@ -367,28 +374,28 @@ const attackAnimations = {
         upattack: { 
             status: false,
             repeat: false,
-            duration: 50, 
+            duration: 100, 
             moveFrames: [91, 94], 
             idleFrames: [90, 90]
         },
         downattack: { 
             status: false,
             repeat: false,
-            duration: 50,
+            duration: 100,
             moveFrames: [61, 63], 
             idleFrames: [60, 60] 
         },
         leftattack: { 
             status: false,
             repeat: false,
-            duration: 50,
+            duration: 100,
             moveFrames: [71, 74], 
             idleFrames: [70, 70] 
         },
         rightattack: { 
             status: false,
             repeat: false,
-            duration: 50,
+            duration: 100,
             moveFrames: [81, 84], 
             idleFrames: [80, 80]
         }
@@ -397,28 +404,28 @@ const attackAnimations = {
         upattack: { 
             status: false,
             repeat: false,
-            duration: 50,
+            duration: 100,
             moveFrames: [103, 105], 
             idleFrames: [103, 103]
         },
         downattack: { 
             status: false,
             repeat: false,
-            duration: 50,
+            duration: 100,
             moveFrames: [100, 102], 
             idleFrames: [100, 100] 
         },
         leftattack: { 
             status: false,
             repeat: false,
-            duration: 50,
+            duration: 100,
             moveFrames: [110, 113], 
             idleFrames: [110, 110]
         },
         rightattack: { 
             status: false,
             repeat: false,
-            duration: 50,  
+            duration: 100,  
             moveFrames: [120, 123], 
             idleFrames: [120, 120]
         }

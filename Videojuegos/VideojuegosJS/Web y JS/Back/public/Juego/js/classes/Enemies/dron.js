@@ -11,7 +11,7 @@ class Dron extends Enemy {
         this.hitBox = new HitBox(this.position.x, this.position.y, this.size.x*0.6, this.size.y*0.6); // Hitbox del enemigo robot
         this.direction = 1; // Dirección del enemigo, 1 = abajo. derecha; -1 = arriba, izquierda
         this.state = "movementpattern"; // Estado del enemigo, puede ser "movementpattern" o "shooting"
-        this.shootCooldown = 0; // Tiempo de recarga del disparo del enemigo
+        this.shootCooldown = 1300; // Tiempo de recarga del disparo del enemigo
         this.xOrY = Math.random()
         // Movimientos del enemigo
         this.movement = {
@@ -112,7 +112,7 @@ class Dron extends Enemy {
             this.shootCooldown = 1800; // Reiniciar el tiempo de recarga del disparo
             let bullet = new Bullet(this.position.x, this.position.y, 0.8, 0.5, "red", dir.x, dir.y, this.damage); // Crear la bala
             game.enemyBullets.push(bullet); // Añadir la bala al array de balas del enemigo
-            this.shootCooldown = 1800; // Reiniciar el tiempo de recarga del disparo
+            this.shootCooldown = 1300; // Reiniciar el tiempo de recarga del disparo
         }
     }
 }
