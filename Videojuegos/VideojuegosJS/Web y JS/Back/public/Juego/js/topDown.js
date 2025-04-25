@@ -187,7 +187,34 @@ class Game {
         if (game.player.isDefeated) { // Si el jugador ha sido derrotado
             if (!this.player.repeat && this.player.frame === this.player.maxFrame) { // Se revisa si ya se terimnó la animación de muerte
                 console.log("Game Over");
-                enviarStats(); // Enviar estadísticas al servidor
+                const stats = {
+                    id_jugador: localStorage.getItem('jugador_id'),
+                    enemigos_derrotados: game.player.enemigosDerrotados,
+                    dano_total_recibido: game.player.danoTotalRecibido,
+                    power_ups_utilizados: game.player.powerUpsUtilizados,
+                    salas_completadas: game.player.salasCompletadas,
+                    jefes_derrotados: game.player.jefesDerrotados,
+                    puzzles_resueltos: game.player.puzzlesResueltos,
+                };
+                console.log(stats);
+                console.log("Enviando estadísticas:", stats);
+
+                // Enviar las estadísticas al servidor
+                fetch('http://localhost:3000/api/jugador/stats/partida/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(stats),
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log("Estadísticas enviadas correctamente.");
+                        } else {
+                            console.error("Error al enviar estadísticas:", response.status);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error en la solicitud:", error);
+                    });
                 // Enviar los stats al servidor
                 this.gameEffects.gameOver.play(); // Reproduce el sonido de Game Over
                 gameOverActive = true; // Activa el menú de Game Over
@@ -1027,8 +1054,6 @@ function drawGameOver(ctx){
 }
 
 function drawWinMenu(ctx) { // Dibuja el menú de victoria
-    game.player.partidasJugadas += 1; // Aumenta el contador de partidas jugadas
-    game.player.partidasGanadas += 1; // Aumenta el contador de partidas ganadas
     ctx.fillStyle = "rgba(0, 0, 0, 0.7)"; // Dibuja un overlay semitransparente
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
@@ -1092,9 +1117,6 @@ function updateCanvas(frameTime) {
     }
     else if (game.cLevel === 3){ //Cuando acabe el tercer nivel
         drawWinMenu(ctx); // Dibuja el menú de victoria
-        enviarStats(); // Envía las estadísticas al servidor
-        gameOverActive = true; // Activa el menú de Game Over
-
     }
     else{
         if (frameStart === undefined) {
@@ -1269,37 +1291,6 @@ function resetRoomStats(){ // Función que reinicia los stats de las habitacione
     levelPuzzle = new Puzzle(canvasWidth, canvasHeight);; // Reinicia el puzzle
     levelPuzzle.puzzleCompleated == true;
 }
-function enviarStats() {
-    const stats = {
-        id_jugador: localStorage.getItem('jugador_id'),
-        enemigos_derrotados: game.player.enemigosDerrotados,
-        dano_total_recibido: game.player.danoTotalRecibido,
-        power_ups_utilizados: game.player.powerUpsUtilizados,
-        salas_completadas: game.player.salasCompletadas,
-        jefes_derrotados: game.player.jefesDerrotados,
-        puzzles_resueltos: game.player.puzzlesResueltos,
-        partidas_jugadas: game.player.partidasJugadas,
-        partidas_ganadas: game.player.partidasGanadas,
-    };
-    console.log(stats);
-    console.log("Enviando estadísticas:", stats);
 
-    // Enviar las estadísticas al servidor
-    fetch('http://localhost:3000/api/jugador/stats/partida/update', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(stats),
-    })
-        .then(response => {
-            if (response.ok) {
-                console.log("Estadísticas enviadas correctamente.");
-            } else {
-                console.error("Error al enviar estadísticas:", response.status);
-            }
-        })
-        .catch(error => {
-            console.error("Error en la solicitud:", error);
-        });
-}
 // Call the start function to initiate the game
 main();  
