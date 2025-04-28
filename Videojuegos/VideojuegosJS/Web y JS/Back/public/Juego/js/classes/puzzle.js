@@ -113,7 +113,7 @@ class Puzzle {
   }
 
   restart() {
-    this.timeLimit = 180; // 3 Minutos
+    this.timeLimit = 180 - (game.cLevel * 20); // 3 Minutos
     clearInterval(this.set_timer); // Detiene el temporizador actual
     this.startTimer(); // Inicia un nuevo temporizador
   }

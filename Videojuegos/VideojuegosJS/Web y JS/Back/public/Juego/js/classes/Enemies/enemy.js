@@ -71,5 +71,5 @@ class Enemy extends AnimatedObject {
 }
     
 function adjustDifficulty() {
-    return factor = 1 + (game.cLevel / 10); // Factor de dificultad basado en el nivel del juego
+    return factor = 1 + (game.cLevel / 20); // Factor de dificultad basado en el nivel del juego
 }
