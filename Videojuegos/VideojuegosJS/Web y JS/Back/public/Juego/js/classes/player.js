@@ -18,6 +18,7 @@ class Player extends AnimatedObject {
         this.shield = 0; // Atributo de escudo del jugador
         this.max_shield = this.max_hp * 0.1; // Atributo de escudo máximo del jugador, el cual podrá ser incrementado con powerups, el escudo será del 10% de la vida del jugador
         this.hitBox = new HitBox(this.position.x, this.position.y, this.size.x * 0.7, this.size.y * 0.9); // Hitbox del jugador
+        this.footHB = new HitBox(this.position.x, this.position.y, this.size.x * 0.4, this.size.y * 0.2); // Hitbox de los pies del jugador
         this.totalHP = this.hp + this.shield; // Atributo de vida total del jugador, el cual será la suma de la vida y el escudo del jugador
         this.hasEMP = false; // Atributo de si el jugador tiene un EMP o no
         this.emp = null; // Atributo del powerup EMP del jugador, el será solo usado para imagen del hub
@@ -29,7 +30,6 @@ class Player extends AnimatedObject {
 
         this.currentAttackHitbox = null; // Hitbox del ataque del jugador definida nulla para que no inicie el ataque al principio
         this.attackHitboxTimer = 0; // Timer de la hitbox de ataque del jugador
-        this.attackCooldownDuration = 700; // medio segundo
         this.attackCooldownTimer = 0;
 
         this.cableDamageTimer = 0; // Timer del daño del cable
@@ -45,6 +45,20 @@ class Player extends AnimatedObject {
             blade: new Audio("../assets/sfx/Sound_Effects/Blade.mp3"),
             taser: new Audio("../assets/sfx/Sound_Effects/taser_gun.mp3"),
         };
+
+        switch (this.weapon.wtype) { // Duración del cooldown de ataque del jugador depende del arma
+            case "sword":
+                this.attackCooldownDuration = 450; 
+                break
+            case "taser":
+                this.attackCooldownDuration = 400; 
+                break
+            case "gun":
+                this.attackCooldownDuration = 200; 
+                break
+        }
+
+        this.currentWeaponSFX = null; // Variable para guardar el sonido del arma actual
 
         // Variable para guardar en las estadisticas
         this.danoTotalRecibido = 0; // Atributo de daño total recibido por el jugador\
@@ -101,6 +115,7 @@ class Player extends AnimatedObject {
     update(level, deltaTime) {
         // Determinar donde termina el jugador después de que se mueve
         if (this.isDefeated) { // Si el jugador fue derrotado, no se mueve
+            if (this.currentWeaponSFX) this.currentWeaponSFX.pause(); // Detener el sonido del ataque
             this.velocity = new Vec(0, 0);
             this.updateFrame(deltaTime);
             return;
@@ -116,6 +131,10 @@ class Player extends AnimatedObject {
         this.hitBox.position.x = this.position.x + 0.3; // Actualizar la posición del hitbox del jugador en x
         this.hitBox.position.y = this.position.y + 0.1; // Actualizar la posición del hitbox del jugador en y
         this.hitBox.update(); // Actualizar el hitbox del jugador
+
+        this.footHB.position.x = this.position.x + 0.6; // Actualizar la posición del hitbox de los pies del jugador en x
+        this.footHB.position.y = this.position.y + 1.7; // Actualizar la posición del hitbox de los pies del jugador en y
+        this.footHB.update(); // Actualizar el hitbox de los pies del jugador
 
         if (this.hp > this.max_hp) { // Si la vida del jugador supera la vida máxima, se le asigna la vida máxima.
             this.hp = this.max_hp;
@@ -230,28 +249,33 @@ class Player extends AnimatedObject {
                 break;
         }
 
+        
         if (this.weapon.wtype === "sword") {
-            this.sfx.blade.currentTime = 0; // reinicia si ya estaba sonando
-            this.sfx.blade.play(); // Sonido de ataque con espada
+            this.currentWeaponSFX = this.sfx.blade; // Se asigna el sonido de la espada a la variable de sonido del arma actual
+            this.currentWeaponSFX.currentTime = 0; // reinicia si ya estaba sonando
+            this.currentWeaponSFX.play(); // Sonido de ataque con espada
         }
         else if (this.weapon.wtype === "taser") {
-            this.sfx.taser.currentTime = 0; // reinicia si ya estaba sonando
-            this.sfx.taser.play(); // Sonido de ataque con taser
+            this.currentWeaponSFX = this.sfx.taser; // Se asigna el sonido de la taser a la variable de sonido del arma actual
+            this.currentWeaponSFX.currentTime = 0; // reinicia si ya estaba sonando
+            this.currentWeaponSFX.play(); // Sonido de ataque con taser
         }
 
         // Se define la hitbox temporal del ataque del jugador
         this.currentAttackHitbox = new HitBox(attackX, attackY, attackWidth, attackHeight);
 
         this.attackTimer = 0;
-        this.nextAttack = 1000; // Reinicia el temporizador de ataque
         this.attackHitboxTimer = 300; // Duración de la hitbox de ataque
 
         for (let enemy of game.enemies) {
             if (overlapRectangles(this.currentAttackHitbox, enemy)) {
                 enemy.takeDamage(this.weapon.damage);
                 if (this.weapon.wtype === "taser") {
-                    enemy.stunTime = 1000;
-                    enemy.state = "stunned"; // Cambia el estado del enemigo a aturdido
+                    let stunchance = Math.random(); // Se genera un número aleatorio entre 0 y 1
+                    if (stunchance < 0.5) { // Si el número es menor a 0.5, se aturde al enemigo
+                        enemy.stunTime = 1000;
+                        enemy.state = "stunned"; // Cambia el estado del enemigo a aturdido
+                    }
                 }
             }
         }
@@ -275,6 +299,7 @@ class Player extends AnimatedObject {
                 bdirection = new Vec(1, 0); // Dirección hacia la derecha
                 break;
         }
+        this.sfx.shoot; // Se asigna el sonido de la pistola a la variable de sonido del arma actual
         this.sfx.shoot.currentTime = 0; // reinicia si ya estaba sonando
         this.sfx.shoot.play(); // Sonido de disparo
         let bullet = new Bullet(this.position.x + 0.6, this.position.y + 0.8, 0.7, 0.25, "blue", bdirection.x, bdirection.y, this.weapon.damage); // Crear la bala
@@ -317,11 +342,12 @@ class Player extends AnimatedObject {
 
     stopAttack(direction) {
         if (this.isDefeated) return; // Si el jugador fue derrotado, no se puede atacar
+        if (this.currentWeaponSFX) this.currentWeaponSFX.pause(); // Detener el sonido del ataque
         const dirData = attackAnimations[this.weapon.wtype][direction + "attack"];
         if (!dirData || !dirData.status) return;
         dirData.status = false;
         const idleData = this.movement[direction];
-        this.setAnimation(...idleData.idleFrames, true, idleData.duration);
+        this.setAnimation(...idleData.idleFrames, false, idleData.duration);
     }
 
     // Método para que el jugador reciba daño
@@ -351,8 +377,8 @@ class Player extends AnimatedObject {
             this.isDefeated = true; // Cambia el estado del jugador a derrotado
             this.sfx.defeated.currentTime = 0; // reinicia si ya estaba sonando
             this.sfx.defeated.play(); // Sonido de derrota
-            this.partidasJugadas += 1; // Aumentar el contador de partidas jugadas
             this.setAnimation(stateAnimations.defeated.moveFrames[0], stateAnimations.defeated.moveFrames[1], false, stateAnimations.defeated.duration);
+            this.partidasJugadas += 1; // Aumentar el contador de partidas jugadas
         }
     }
 
@@ -390,28 +416,28 @@ const attackAnimations = {
             status: false,
             repeat: false,
             duration: 100,
-            moveFrames: [91, 94],
+            moveFrames: [91, 95],
             idleFrames: [90, 90]
         },
         downattack: {
             status: false,
             repeat: false,
             duration: 100,
-            moveFrames: [61, 63],
+            moveFrames: [61, 64],
             idleFrames: [60, 60]
         },
         leftattack: {
             status: false,
             repeat: false,
             duration: 100,
-            moveFrames: [71, 74],
+            moveFrames: [71, 75],
             idleFrames: [70, 70]
         },
         rightattack: {
             status: false,
             repeat: false,
             duration: 100,
-            moveFrames: [81, 84],
+            moveFrames: [81, 85],
             idleFrames: [80, 80]
         }
     },
@@ -421,28 +447,28 @@ const attackAnimations = {
             repeat: false,
             duration: 100,
             moveFrames: [103, 105],
-            idleFrames: [103, 103]
+            idleFrames: [20, 20]
         },
         downattack: {
             status: false,
             repeat: false,
             duration: 100,
             moveFrames: [100, 102],
-            idleFrames: [100, 100]
+            idleFrames: [10, 10]
         },
         leftattack: {
             status: false,
             repeat: false,
             duration: 100,
             moveFrames: [110, 113],
-            idleFrames: [110, 110]
+            idleFrames: [40, 40]
         },
         rightattack: {
             status: false,
             repeat: false,
             duration: 100,
             moveFrames: [120, 123],
-            idleFrames: [120, 120]
+            idleFrames: [30, 30]
         }
     },
     gun: {

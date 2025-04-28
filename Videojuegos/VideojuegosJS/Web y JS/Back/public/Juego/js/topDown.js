@@ -356,7 +356,8 @@ class Game {
         }
         this.player.draw(ctx, scale);
         if (debugHitBoxes) {
-            this.player.hitBox.drawHitBox(ctx, scale); // Dibuja el hitbox del jugador
+            //this.player.hitBox.drawHitBox(ctx, scale); // Dibuja el hitbox del jugador
+            this.player.footHB.drawHitBox(ctx, scale); // Dibuja el hitbox de los pies del jugador
         }
         drawHUD(ctx, this.player, scale); // Dibuja el HUD del jugador
     }
@@ -478,7 +479,7 @@ function main() {
 }
 
 function activarMusica() {
-    if (currentMusic){
+    if (currentMusic) { // Si hay música actual o el menú es el principal
         currentMusic.pause(); // Pausa la música actual
         currentMusic.currentTime = 0; // Reinicia el tiempo de la música
     }
@@ -567,7 +568,7 @@ function setEventListeners() {
 
         if (puzzleActive) return;
                 
-        if (event.key === 'f') { // Si el jugador esta cerca del objeto que activa el puzzle.
+        if (event.key === 'f' || event.key === 'F') { // Si el jugador esta cerca del objeto que activa el puzzle.
             if (isPuzzleNear()) {
                 if (!puzzleActive){ // Si el puzzle no está activo
                     puzzleActive = true; // Activa el puzzle
@@ -576,7 +577,7 @@ function setEventListeners() {
             }
         }
     
-        if (event.key === 'r') { // Tecla de reinicio de puzzle o Partida
+        if (event.key === 'r' || event.key === 'R') { // Tecla de reinicio de puzzle o Partida
             if (puzzleActive && levelPuzzle.timeLimit <= 0) {
                 levelPuzzle.restart(); // Reinicia el puzzle
             }
@@ -585,11 +586,11 @@ function setEventListeners() {
             }
         }
 
-        if (event.key === 'h') { // Tecla que hace que se muestren las hitboxes de los objetos
+        if (event.key === 'h' || event.key === 'H') { // Tecla que hace que se muestren las hitboxes de los objetos
             debugHitBoxes = !debugHitBoxes; // Cambia el estado de la variable
         }
 
-        if (event.key === 'e') {
+        if (event.key === 'e' || event.key === 'E') {
             if (game.player.hasEMP) {
                 game.gameEffects.emp.currentTime = 0; // Reinicia el tiempo de la música}
                 game.gameEffects.emp.play(); // Reproduce el sonido
@@ -603,20 +604,20 @@ function setEventListeners() {
             }
         }
         if (invertControls) { // Si los controles están invertidos
-            if (event.key === 'w') game.player.startAttack("up");
-            if (event.key === 'a') game.player.startAttack("left");
-            if (event.key === 's') game.player.startAttack("down");
-            if (event.key === 'd') game.player.startAttack("right");
+            if (event.key === 'w' || event.key === 'W') game.player.startAttack("up");
+            if (event.key === 'a' || event.key === 'A') game.player.startAttack("left");
+            if (event.key === 's' || event.key === 'S') game.player.startAttack("down");
+            if (event.key === 'd' || event.key === 'D') game.player.startAttack("right");
             if (event.key === 'ArrowUp') game.player.startMovement("up");
             if (event.key === 'ArrowLeft') game.player.startMovement("left");
             if (event.key === 'ArrowDown') game.player.startMovement("down");
             if (event.key === 'ArrowRight') game.player.startMovement("right");
         }
         else{
-            if (event.key === 'w') game.player.startMovement("up");
-            if (event.key === 'a') game.player.startMovement("left");
-            if (event.key === 's') game.player.startMovement("down");
-            if (event.key === 'd') game.player.startMovement("right");
+            if (event.key === 'w' || event.key === 'W') game.player.startMovement("up");
+            if (event.key === 'a' || event.key === 'A') game.player.startMovement("left");
+            if (event.key === 's' || event.key === 'S') game.player.startMovement("down");
+            if (event.key === 'd' || event.key === 'D') game.player.startMovement("right");
             if (event.key === 'ArrowUp') game.player.startAttack("up");
             if (event.key === 'ArrowLeft') game.player.startAttack("left");
             if (event.key === 'ArrowDown') game.player.startAttack("down");
@@ -626,20 +627,20 @@ function setEventListeners() {
 
     window.addEventListener("keyup", event => {
         if (invertControls){ // Si los controles están invertidos
-            if (event.key == 'w') game.player.stopAttack("up");
-            if (event.key == 'a') game.player.stopAttack("left");
-            if (event.key == 's') game.player.stopAttack("down");
-            if (event.key == 'd') game.player.stopAttack("right");
+            if (event.key === 'w' || event.key === 'W') game.player.stopAttack("up");
+            if (event.key === 'a' || event.key === 'A') game.player.stopAttack("left");
+            if (event.key === 's' || event.key === 'S') game.player.stopAttack("down");
+            if (event.key === 'd' || event.key === 'D') game.player.stopAttack("right");
             if (event.key === 'ArrowUp') game.player.stopMovement("up");
             if (event.key === 'ArrowLeft') game.player.stopMovement("left");
             if (event.key === 'ArrowDown') game.player.stopMovement("down");
             if (event.key === 'ArrowRight') game.player.stopMovement("right");
         }
         else{
-            if (event.key == 'w') game.player.stopMovement("up");
-            if (event.key == 'a') game.player.stopMovement("left");
-            if (event.key == 's') game.player.stopMovement("down");
-            if (event.key == 'd') game.player.stopMovement("right");
+            if (event.key === 'w' || event.key === 'W') game.player.stopMovement("up");
+            if (event.key === 'a' || event.key === 'A') game.player.stopMovement("left");
+            if (event.key === 's' || event.key === 'S') game.player.stopMovement("down");
+            if (event.key === 'd' || event.key === 'D') game.player.stopMovement("right");
             if (event.key === 'ArrowUp') game.player.stopAttack("up");
             if (event.key === 'ArrowLeft') game.player.stopAttack("left");
             if (event.key === 'ArrowDown') game.player.stopAttack("down");
@@ -732,6 +733,7 @@ function setEventListeners() {
                         drawOptionsMenu(ctx);
                     }
                     if (boton.textString === "Salir    ") {
+                        currentMusic.pause(); // Pausa la música actual
                         mainMenuActive = true; // Activa el menú principal
                         pauseActive = false; // Desactiva el menú de pausa
                         currentMenu = "main"; // Cambia el menú actual a "main"
@@ -791,6 +793,7 @@ function setEventListeners() {
                         gameOverActive = false; // Desactiva el menú de Game Over
                     }
                     if (boton.textString === "Pantlla de Inicio") {
+                        currentMusic.pause(); // Pausa la música actual
                         gameOverActive = false; // Desactiva el menú de Game Over
                         mainMenuActive = true; // Activa el menú principal
                         currentMenu = "main"; // Cambia el menú actual a "main"
@@ -1043,7 +1046,7 @@ function drawGameOver(ctx){
     ctx.font = "32px monospace";
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
-    ctx.fillText("GAME OVER", canvasWidth / 2, 60);
+    ctx.fillText("GAME OVER", canvasWidth / 2, 220);
 
     for (let boton of gameOverButtons) {
         boton.bg = "rgba(0, 0, 0, 0.1)";
@@ -1249,18 +1252,16 @@ function overlapPlayer(player, actors) {
                     game.moveToLevel("main");
                 }
             }
-
-            if (actor.type === 'cable') {
-                isTouchingCable = true;
-
-                if (!player.touchedCable) {
-                    player.takeDamage(5); 
-                    player.cableDamageTimer = 0;
-                    player.touchedCable = true;
-                } else if (player.cableDamageTimer >= 3000) {
-                    player.takeDamage(5);
-                    player.cableDamageTimer = 0;
-                }
+        }
+        if (actor.type === 'cable' && overlapRectangles(game.player.footHB, actor)) { // Si el jugador toca el cable con los pies
+            isTouchingCable = true;
+            if (!player.touchedCable) {
+                player.takeDamage(5); 
+                player.cableDamageTimer = 0;
+                player.touchedCable = true;
+            } else if (player.cableDamageTimer >= 3000) {
+                player.takeDamage(5);
+                player.cableDamageTimer = 0;
             }
         }
     }

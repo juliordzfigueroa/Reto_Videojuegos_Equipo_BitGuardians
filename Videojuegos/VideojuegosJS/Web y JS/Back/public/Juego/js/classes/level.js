@@ -18,6 +18,7 @@ class Level {
         this.enemyBullets = []; // Arreglo de balas de los enemigos
         this.playerBullets = []; // Arreglo de balas del jugador
         this.levelPowerUps = []; // Arreglo de powerups del nivel
+        this.passLevel = null;
 
         // Fill the rows array with a label for the type of element in the cell
         this.rows = rows.map((row, y) => {
