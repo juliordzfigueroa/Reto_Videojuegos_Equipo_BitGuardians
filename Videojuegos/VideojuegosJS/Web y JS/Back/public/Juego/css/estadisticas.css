@@ -1,21 +1,13 @@
 body {
-  background-color: white;
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   box-sizing: border-box;
   margin: 0;
-  overflow: hidden;
-  display: grid;
-  grid-template-rows: 10vh 1fr;
-  grid-template-columns: 1fr;
-  grid-template-areas:
-    "header"
-    "main";
-  justify-content: center;
-  align-items: start;
-  justify-items: center;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
 }
-
 /* Imagen del título */
 #tituloCreditos {
   margin-top: 25px;
@@ -26,7 +18,7 @@ body {
 }
 
 #tituloCreditos img {
-  width: 500px;
+  width: 600px;
   height: auto;
   image-rendering: pixelated;
 }
@@ -97,7 +89,7 @@ body {
   display: flex;
   justify-content: center;
   gap: 50px;
-  margin-top: 150px; /* <- aquí puedes aumentar para bajarlos más */
+  margin-top: 20px; /* <- aquí puedes aumentar para bajarlos más */
   grid-area: main;
 }
 
@@ -132,4 +124,27 @@ body {
   color: white;
   font-size: 12px;
   padding: 10px;
+}
+
+#grafica {
+  width: 100%;
+  background-color: #2823bc; /* Fondo azul para toda la sección */
+  padding: 40px 0; /* Espaciado arriba y abajo */
+  display: flex;
+  justify-content: center; /* Centra el contenido horizontalmente */
+  margin-top: 70px;
+  margin-bottom: 0px;
+}
+
+#imagengraficas {
+  margin-top: 5px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#imagengraficas img {
+  width: 400px;   
+  height: auto;
+  image-rendering: pixelated;  
 }

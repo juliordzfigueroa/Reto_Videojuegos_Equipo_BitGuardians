@@ -1,19 +1,13 @@
 body {
   background-color: white;
   width: 100vw;
-  height: 100vh;
   box-sizing: border-box;
   margin: 0;
-  overflow: hidden;
-  display: grid;
-  grid-template-rows: 10vh 1fr;
-  grid-template-columns: 1fr;
-  grid-template-areas:
-    "header"
-    "main";
-  justify-content: center;
-  align-items: start;
-  justify-items: center;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column; 
+  align-items: center;   
 }
 
 /* Imagen del título */
@@ -36,6 +30,7 @@ body {
   position: absolute;
   top: 50px;
   right: 20px;
+  z-index: 100;
 }
 
 #menuButton {
@@ -47,9 +42,9 @@ body {
 }
 
 #menuButton img {
-  width: 60px; /* o 24px si querés más chico */
+  width: 60px;
   height: 60px;
-  image-rendering: pixelated; /* para mantener estilo retro */
+  image-rendering: pixelated;
   transition: transform 0.1s ease;
 }
 
@@ -68,7 +63,7 @@ body {
   z-index: 10;
   display: none;
   min-width: 150px;
-  border-radius: 10px; /* ← Esto redondea los bordes */
+  border-radius: 10px; 
 }
 #dropdownMenu a {
   display: block;
@@ -76,15 +71,13 @@ body {
   text-decoration: none;
   padding: 8px 12px;
   font-size: 12px;
-  border-bottom: 1px solid #888; /* línea divisoria estilo pixelado */
+  border-bottom: 1px solid #888; 
 }
 
 #dropdownMenu a:hover {
   background-color: black;
-  color: cyan; /* color llamativo al pasar el mouse */
+  color: cyan;
 }
-
-
 
 #hackercreditos {
   position: fixed;
@@ -93,4 +86,41 @@ body {
   width: 400px;
   image-rendering: pixelated;
   z-index: 50;
+  margin-bottom: 65px;
+}
+
+#hackersonido {
+  position: fixed; 
+  bottom: 100px; 
+  right: 10px; 
+  width: 325px; 
+  image-rendering: pixelated; 
+  z-index: 50; 
+}
+
+#creditosInfo {
+  background-color: black; 
+  color: white;
+  padding: 20px;
+  border: none;
+  border-radius: 15px;
+  font-family: 'Press Start 2P', cursive, monospace;
+  text-align: center;
+  width: 700px;
+  margin-top: 50px;
+  font-size: 10px;
+  margin-bottom: 200px;
+}
+
+#creditosInfo h2 {
+  color: cyan;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+#creditosInfo p {
+  color: white;
+  font-size: 10px;
+  margin: 5px 0;
+  letter-spacing: 1px;
 }
