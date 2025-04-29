@@ -424,7 +424,9 @@ class Player extends AnimatedObject {
             this.sfx.defeated.currentTime = 0; // reinicia si ya estaba sonando
             this.sfx.defeated.play(); // Sonido de derrota
             this.setAnimation(stateAnimations.defeated.moveFrames[0], stateAnimations.defeated.moveFrames[1], false, stateAnimations.defeated.duration);
+
             this.partidasJugadas += 1; // Aumentar el contador de partidas jugadas
+            console.log("Partidas jugadas: " + this.partidasJugadas);
         }
     }
 

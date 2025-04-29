@@ -25,6 +25,7 @@ CREATE TABLE Estadisticas(
     puzzles_resueltos INT DEFAULT 0,
     partidas_jugadas INT DEFAULT 0,
     partidas_ganadas INT DEFAULT 0,
+    mejor_tiempo_partida_ganada TIME DEFAULT '00:00:00',
     FOREIGN KEY (id_jugador) REFERENCES Jugador(id_jugador)
 );
 SET AUTOCOMMIT=1;
@@ -44,3 +45,41 @@ select * from jugador;
 select * from jugador where email = 'jugador1@correo.com' and contrasena = 'H';
 select * from Estadisticas where id_jugador = 2;
 select * from Estadisticas;
+
+Update estadisticas
+set mejor_tiempo_partida_ganada = '00:04:00'
+where id_jugador = 11;
+
+ALTER VIEW Top_5
+AS SELECT finalhack_api.jugador.nombre AS 'Nombre', finalhack_api.estadisticas.jefes_derrotados AS 'Jefes_Derrotados' 
+FROM finalhack_api.estadisticas INNER JOIN finalhack_api.jugador 
+USING(id_jugador) 
+ORDER BY finalhack_api.estadisticas.jefes_derrotados DESC
+LIMIT 5; 
+
+SELECT * FROM Top_5;
+
+ALTER VIEW edades 
+AS SELECT finalhack_api.jugador.edad AS 'Edad',
+        COUNT(*) AS 'Numero' 
+FROM finalhack_api.jugador
+GROUP BY finalhack_api.jugador.edad;
+
+SELECT * FROM edades;
+
+ALTER VIEW top_menortiempo 
+AS SELECT finalhack_api.jugador.nombre AS 'Nombre', finalhack_api.estadisticas.mejor_tiempo_partida_ganada AS 'Mejor Tiempo'
+FROM finalhack_api.estadisticas INNER JOIN finalhack_api.jugador 
+USING(id_jugador)
+WHERE finalhack_api.estadisticas.partidas_ganadas >= 1
+ORDER BY finalhack_api.estadisticas.mejor_tiempo_partida_ganada 
+LIMIT 1;
+
+SELECT * FROM top_menortiempo;
+
+
+
+
+
+
+
