@@ -203,4 +203,3 @@ async function mostrarStatsPartida() {
         partidasGanadas.innerHTML = `Partidas Ganadas: ${results[0].partidas_ganadas}`;
     }
 }
-

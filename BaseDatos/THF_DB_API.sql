@@ -44,3 +44,4 @@ select * from jugador;
 select * from jugador where email = 'jugador1@correo.com' and contrasena = 'H';
 select * from Estadisticas where id_jugador = 2;
 select * from Estadisticas;
+

@@ -179,6 +179,8 @@ class Game {
                     salas_completadas: game.player.salasCompletadas,
                     jefes_derrotados: game.player.jefesDerrotados,
                     puzzles_resueltos: game.player.puzzlesResueltos,
+                    partidas_jugadas: game.player.partidasJugadas,
+                    partidas_ganadas: game.player.partidasGanadas,
                 };
                 console.log(stats);
                 console.log("Enviando estadísticas:", stats);
@@ -306,7 +308,9 @@ class Game {
         }
         for (let enemy of this.enemies) {
             enemy.draw(ctx, scale);
-            enemy.hitBox.drawHitBox(ctx,scale);
+            if (debugHitBoxes) {
+                enemy.hitBox.drawHitBox(ctx, scale);
+            }
         }
         for (let bullet of this.enemyBullets) {
             bullet.draw(ctx, scale);
@@ -1040,12 +1044,7 @@ function drawWinMenu(ctx) { // Dibuja el menú de victoria
     ctx.textAlign = "center";
     ctx.fillText("WINNER", canvasWidth / 2, 60);
 
-    // for (let boton of gameOverButtons) {
-    //     boton.bg = "rgba(0, 0, 0, 0.1)";
-    //     boton.textLabel.font = "24px monospace";
-    //     boton.textLabel.color = "cyan";
-    //     boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de controles
-    // }
+    game.player.partidasGanadas += 1; // Aumenta el contador de partidas ganadas
 }
 
 
@@ -1095,6 +1094,7 @@ function updateCanvas(frameTime) {
         drawGameOver(ctx); // Dibuja el menú de Game Over
     }
     else if (game.cLevel === 3){ //Cuando acabe el tercer nivel
+        game.player.tiempoPartida = elapsedTime; // Guarda el tiempo de partida ganada.
         drawWinMenu(ctx); // Dibuja el menú de victoria
     }
     else{

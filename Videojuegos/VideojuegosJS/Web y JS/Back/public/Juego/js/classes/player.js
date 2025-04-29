@@ -69,6 +69,7 @@ class Player extends AnimatedObject {
         this.jefesDerrotados = 0; // Atributo de jefes derrotados por el jugador
         this.partidasJugadas = 0; // Atributo de partidas jugadas por el jugador
         this.partidasGanadas = 0; // Atributo de partidas ganadas por el jugador
+        this.tiempoPartida = 0; // Atributo de tiempo de partida del jugador
 
         // Movimientos del jugador
         this.movement = {
@@ -118,6 +119,7 @@ class Player extends AnimatedObject {
             if (this.currentWeaponSFX) this.currentWeaponSFX.pause(); // Detener el sonido del ataque
             this.velocity = new Vec(0, 0);
             this.updateFrame(deltaTime);
+            this.partidasJugadas += 1; // Aumentar el contador de partidas jugadas
             return;
         }
 
