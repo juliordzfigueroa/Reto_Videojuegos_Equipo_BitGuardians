@@ -15,10 +15,6 @@ class PowerUp extends GameObject {
         this.rarity = rarity; // Variable para saber la rareza de cada powerup.
     }
 
-    update() {
-        // Método incluido para poder actualizar el estado de cada powerup en las salas tras ser completadas.
-    }
-
     effect(player)
     {
         // Método usado como plantilla para aplicar el efecto de cada powerup al jugador.
@@ -99,6 +95,13 @@ class Weapon extends PowerUp {
                 this.setSprite("../assets/sprites/powerUps/taser_asset.png", new Rect(0, 0, 26, 32));
                 break;
         }
+    }
+}
+
+class LevelPass extends PowerUp {
+    constructor(color, width, height, x, y, type, effectN, rarity) {
+        super("orange", x, y, type, "levelPass", "  NONE"); // Tipo de powerup que será el pase de nivel.
+        this.type = "levelPass"; // Tipo de powerup que será el pase de nivel.
     }
 }
 

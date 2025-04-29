@@ -92,8 +92,8 @@ class Dron extends Enemy {
             this.attackTimmer += deltaTime;
         }
 
-        if (this.speed > this.max_speed) { // Si la velocidad del enemigo supera la velocidad máxima, se iguala a esta.
-            this.speed = this.max_speed;
+        if (this.speed > this.baseSpeed) { // Si la velocidad del enemigo supera la velocidad máxima, se iguala a esta.
+            this.speed = this.base;
         }
         
         this.hitBox.position.x = this.position.x + 0.47; // Actualizar la posición del hitbox del enemigo
