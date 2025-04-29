@@ -186,9 +186,7 @@ class AnimatedObject extends GameObject {
         this.totalTime = 0;
         this.frameDuration = duration;
 
-        this.spriteRect.x = this.frame % this.sheetCols; //Calcula la posición x del sprite en la hoja de sprites
-        this.spriteRect.y = Math.floor(this.frame / this.sheetCols); //Calcula la posición y del sprite en la hoja de sprites
-    }
+        }
 
     updateFrame(deltaTime) {
         this.totalTime += deltaTime;
