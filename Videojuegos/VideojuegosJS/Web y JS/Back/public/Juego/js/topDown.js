@@ -40,11 +40,12 @@ let pauseTime = 0; // Tiempo de pausa
 // Para invertir los controles de ataque y movimiento del jugador
 let invertControls = false; 
 
+
 let currentMenu = "main"; // Variable que guarda el menú actual
 
 // Para el menú principal
 let mainMenuActive = true;
-let gameimg = new GameObject(); // Crea un objeto para las imagenes que se ocupen en los fondos de los menús
+let gamelogo = new GameObject(); // Crea un objeto para el logo del juego
 const mainMenuButtons = [
     new Button(9.5, 12, 8, 2, "Nueva Partida"),
     new Button(4.5, 15, 8, 2, "Opciones"),
@@ -57,8 +58,8 @@ const pauseOptions = [
     new Button(8.7, 5, 8, 1.5, "Continuar"),
     new Button(8.7, 6.75, 8, 1.5, "Reiniciar"),
     new Button(8.7, 8.5, 8, 1.5, "Controles"),
-    new Button(8.7, 10.25, 8, 1.5, "Opciones "),
-    new Button(8.7, 12, 8, 1.5, "Salir    ")
+    new Button(8.7, 10.25, 8, 1.5, "Opciones"),
+    new Button(8.7, 12, 8, 1.5, "Salir")
 ]; // Arreglo de opciones del menú de pausa
 
 let optionsActive = false; // Booleano creado para pausar el juego
@@ -76,21 +77,11 @@ const controlsButtons = [
 let gameOverActive = false; // Booleano creado para pausar el juego
 const gameOverButtons = [
     new Button(9.5, 12, 8, 2, "Reiniciar"),
-    new Button(9.5, 15, 8, 2, "Pantlla de Inicio"),
-];
-
-const gameClearButtons = [
-    new Button(9.5, 12, 8, 2, "Pantlla de Inicio")
+    new Button(3.5, 15, 8, 2, "Pantlla de Inicio"),
 ];
 
 let currentMusic = null; // Variable que guarda la música actual
-
-// Variables usadas para el volúmen de la música y efectos de sonido
-let musicVolume = 0.5;
-let sfxVolume = 0.5;   
-
-// Para debugear las hitboxes de los objetos
-let debugHitBoxes = false; // Variable que indica si se deben dibujar las hitboxes de los objetos
+let debugHitBoxes = false; // Variable que guarda el estado de las hitboxes
 
 class Game {
     constructor(state, level) {
@@ -117,11 +108,7 @@ class Game {
             levelComplete: new Audio("../assets/sfx/Sound_Effects/level_cleared.wav"),
             gameOver: new Audio("../assets/sfx/Sound_Effects/game_over.wav"),
             emp: new Audio("../assets/sfx/Sound_Effects/Emp_bomb.wav"),
-        };
-    }
-
-    levelDifficulty() { // Método usado para el aumento de dificultad de los enemigos
-        return 1 + (this.cLevel * 0.1); 
+        }
     }
     
     moveToLevel(newRoom) {
@@ -130,7 +117,6 @@ class Game {
         currentRoom = newRoom;
         this.level = new Level(GAME_LEVELS[currentRoom].layout, this.player);
 
-        const setEnemiesDif = this.levelDifficulty()
         // Reutilizar el jugador existente
         this.level.player = this.player;
 
@@ -145,7 +131,7 @@ class Game {
                 this.level.levelPowerUps.push(GAME_LEVELS[currentRoom].roomPowerUp);
             }
         }
-        
+
         //Acomodar al enemigo dependiendo de la dirección de entrada
         if (lastRoom && lastDoorChar) { //De donde viene el jugador y la dirección de entrada
             for (let actor of this.level.actors) {
@@ -216,7 +202,6 @@ class Game {
                         console.error("Error en la solicitud:", error);
                     });
                 // Enviar los stats al servidor
-                this.gameEffects.gameOver.play(); // Reproduce el sonido de Game Over
                 gameOverActive = true; // Activa el menú de Game Over
             }
             return;
@@ -243,13 +228,6 @@ class Game {
                 this.player.takeDamage(bullet.damage); // Aplica daño al jugador
                 bullet.destroy = true; // Destruir la bala al impactar con el jugador
             }
-            if (this.player.weapon.wtype === "sword" && this.player.currentAttackHitbox){ // Para que la espada pueda romper las balas de los drones
-                if (overlapRectangles(bullet, this.player.currentAttackHitbox))
-                {
-                    bullet.destroy = true; // Destruir la bala al impactar con el ataque del jugador
-                }
-            }
-            
         }
 
         for (let bullet of this.playerBullets) {
@@ -313,13 +291,6 @@ class Game {
         }
 
         if (currentRoom == "BossRoom") {
-            if (!this.enteredBossRoom){
-                currentMusic.pause(); // Pausa la música actual
-                currentMusic = new Audio("../assets/sfx/music/UndertaleOST_009_Enemy_Approaching.mp3"); // Cambia la música al entrar a la sala del jefe
-                currentMusic.loop = true; // Repite la música
-                currentMusic.play(); // Reproduce la música
-                this.enteredBossRoom = true; // Cambia el estado de la sala del jefe a verdadero
-            }
             if (GAME_LEVELS[currentRoom].statusCompleted === true) {
                 currentMusic.pause(); // Pausa la música actual
                 if (!this.bossCleared){
@@ -342,10 +313,7 @@ class Game {
         }
         for (let enemy of this.enemies) {
             enemy.draw(ctx, scale);
-            console.log(enemy.hp, enemy.damage); // Imprime la vida y el daño del enemigo
-            if (debugHitBoxes) {
-                enemy.hitBox.drawHitBox(ctx,scale);
-            }
+            enemy.hitBox.drawHitBox(ctx,scale);
         }
         for (let bullet of this.enemyBullets) {
             bullet.draw(ctx, scale);
@@ -488,6 +456,7 @@ function activarMusica() {
     const gameBGMusic = [// Objeto que contiene la música de fondo del juego
         new Audio("../assets/sfx/music/UndertaleOST_051_AnotherMedium.mp3"),
         new Audio("../assets/sfx/music/UndertaleOST_065_CORE.mp3"),
+        //new Audio("../assets/sfx/music/UndertaleOST_009_Enemy_Approaching.mp3")
     ]
 
     const randomIndex = Math.floor(Math.random() * gameBGMusic.length);
@@ -531,6 +500,16 @@ function restartGame() {
     // Reiniciamos el tiempo
     startTime = performance.now(); // Guarda el tiempo de inicio
     elapsedTime = 0; // Reinicia el tiempo transcurrido
+}
+
+function levelbgMusic(){
+    let currentBGMusic;
+    const bgTracks = [gameMusic.backgrpound1, gameMusic.backgrpound2];
+    let nextTrack = Math.floor(Math.random() * bgTracks.length);
+    currentBGMusic = bgTracks[nextTrack];
+    currentBGMusic.loop = true; // Reproduce la música en bucle
+    currentBGMusic.volume = 0.4; // Ajusta el volumen de la música
+    currentBGMusic.play(); // Reproduce la música
 }
 
 function setEventListeners() {
@@ -598,8 +577,6 @@ function setEventListeners() {
 
         if (event.key === 'e' || event.key === 'E') {
             if (game.player.hasEMP) {
-                game.gameEffects.emp.currentTime = 0; // Reinicia el tiempo de la música}
-                game.gameEffects.emp.play(); // Reproduce el sonido
                 for (let enemy of game.enemies) {
                     enemy.stunTime = stunDuration;
                     enemy.state = "stunned"; // Cambia el estado del enemigo a aturdido
@@ -731,14 +708,14 @@ function setEventListeners() {
                     }
                     if (boton.textString === "Reiniciar") {
                         pauseActive = false; // Desactiva el menú de pausa
-                        restartGame(); // Reinicia el juego
+                        restartGame(ctx); // Reinicia el juego
                     }
                     if (boton.textString === "Controles") {
                         pauseActive = false; // Desactiva el menú de pausa
                         controlsActive = true; // Activa el menú de controles
                         drawControlsLayout(ctx); // Dibuja el layout de controles
                     }
-                    if (boton.textString === "Opciones ") {
+                    if (boton.textString === "Opciones") {
                         pauseActive = false; // Desactiva el menú de pausa
                         optionsActive = true; // Activa el menú de opciones
                         drawOptionsMenu(ctx);
@@ -772,8 +749,42 @@ function setEventListeners() {
                     break;
                 }
             }
-            musicVolumeC(mouseX, mouseY); // Llama a la función para cambiar el volumen de la música
-            sfxVolumeC(mouseX, mouseY); // Llama a la función para cambiar el volumen de los efectos de sonido
+            if (mouseY >= 220 && mouseY <= 260) { 
+                musicVolume = (mouseX - 275) / 300;
+                if (musicVolume < 0) {
+                    musicVolume = 0;
+                }
+                if (musicVolume > 1) {
+                    musicVolume = 1;
+                }
+                if (currentMusic) {
+                    currentMusic.volume = musicVolume;
+                }
+                for (let track of bgTracks) {
+                    track.volume = musicVolume;
+                }
+            }
+        
+            if (mouseY >= 395 && mouseY <= 435) { 
+                sfxVolume = (mouseX - 275) / 300;
+                if (sfxVolume < 0) {
+                    sfxVolume = 0;
+                }    
+                if (sfxVolume > 1) {
+                    sfxVolume = 1;
+                }
+            }
+            for (let sound in game.player.sfx) {
+                game.player.sfx[sound].volume = sfxVolume;
+            }
+            for (let enemy of game.enemies) {
+                for (let sound in enemy.sfx) {
+                    enemy.sfx[sound].volume = sfxVolume;
+                }
+            }
+            for (let sound in game.gameEfects) {
+                game.gameEfects[sound].volume = sfxVolume;
+            }
         }
 
         if (controlsActive) {
@@ -792,6 +803,16 @@ function setEventListeners() {
                     }
                     if (boton.textString === "Invertir controles") {
                         invertControls = !invertControls; // Cambia el estado de los controles invertidos
+                        const teclasmovimiento = parent.document.getElementById('teclasmovimiento');
+                        const teclasataque = parent.document.getElementById('teclasataque');
+                        if (invertControls) {
+                            teclasmovimiento.src = "../images/teclasmovimientoalternativo.png";
+                            teclasataque.src = "../images/teclasataquealternativo.png";
+                        } 
+                        else {
+                            teclasmovimiento.src = "../images/teclasmovimiento.png";
+                            teclasataque.src = "../images/teclasataque.png";
+                        }
                     }
                     break;
                 }
@@ -910,11 +931,11 @@ function drawPauseMenu(ctx) { // Dibuja el menú de pausa
     ctx.fillStyle = "rgba(0, 0, 0, 0.7)"; // Dibuja un overlay semitransparente 
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-    gameimg.position = new Vec(6, 2.5);
-    gameimg.size     = new Vec(15, 15);
-    gameimg.setSprite('../images/computadorapausa.png');
+    gamelogo.position = new Vec(6, 2.5);
+    gamelogo.size     = new Vec(15, 15);
+    gamelogo.setSprite('../images/computadorapausa.png');
     
-    gameimg.draw(ctx, scale); 
+    gamelogo.draw(ctx, scale); // Dibuja el logo del juego
 
     ctx.font = "32px monospace";
     ctx.fillStyle = "#00ff1B";
@@ -925,7 +946,7 @@ function drawPauseMenu(ctx) { // Dibuja el menú de pausa
     for (let boton of pauseOptions) {
         boton.bg = "rgba(0, 0, 0, 0.1)";
         boton.textLabel.font = "24px monospace";
-        boton.textLabel.color = "#00ff1B";
+        boton.textLabel.color = "cyan";
         boton.draw(ctx, scale, boton.textLabel.color, "#222", "right"); // Dibuja los botones del menú de pausa
     }
 }
@@ -942,15 +963,15 @@ function drawMainMenu(ctx) { // Dibuja el menú principal
     backgroundMenu.loop = true;
     backgroundMenu.play();
     
-    gameimg.position = new Vec(9.3, 2);
-    gameimg.size     = new Vec(9, 9);
-    gameimg.setSprite('../images/logopantallainicio.png');
+    gamelogo.position = new Vec(9.3, 2);
+    gamelogo.size     = new Vec(9, 9);
+    gamelogo.setSprite('../images/logopantallainicio.png');
     
-    gameimg.draw(ctx, scale); // Dibuja el logo del juego
+    gamelogo.draw(ctx, scale); // Dibuja el logo del juego
     for (let boton of mainMenuButtons) {
         boton.bg = "#222";
         boton.textLabel.font = "bold 27px monospace";
-        boton.textLabel.color = "cyan";
+        boton.textLabel.color = "white";
         boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú principal
     }
 }
@@ -965,15 +986,12 @@ function drawVolumeBar(ctx, x, y, width, value) {
     ctx.fillRect(cuadrito, y - 5, 10, 20);
 }
 
-function drawOptionsMenu(ctx) { // Dibuja el menú de opciones
-    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+let musicVolume = 0.5;
+let sfxVolume = 0.5;   
 
-    gameimg.position = new Vec(6, 3.1);
-    gameimg.size     = new Vec(16, 16);
-    gameimg.setSprite('../images/computadorapausa.png');
-    
-    gameimg.draw(ctx, scale); 
+function drawOptionsMenu(ctx) { // Dibuja el menú de opciones
+    ctx.fillStyle = "rgba(0,0,0,0.7)";
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
     ctx.font = "32px monospace";
     if (currentMenu === "main"){
@@ -1039,6 +1057,8 @@ function sfxVolumeC(mX, mY){
         for (let sound in enemy.sfx) {
             enemy.sfx[sound].volume = sfxVolume;
         }
+        boton.textLabel.color = "cyan";
+        boton.draw(ctx, scale, "rgba(0, 0, 0, 0.4)"); // Dibuja los botones del menú de opciones
     }
 }
 
@@ -1111,12 +1131,13 @@ function drawWinMenu(ctx) { // Dibuja el menú de victoria
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
     ctx.fillText("WINNER", canvasWidth / 2, 60);
-    for (let boton of gameClearButtons) {
-        boton.bg = "rgba(0, 0, 0, 0.1)";
-        boton.textLabel.font = "24px monospace";
-        boton.textLabel.color = "cyan";
-        boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de controles
-    }
+
+    // for (let boton of gameOverButtons) {
+    //     boton.bg = "rgba(0, 0, 0, 0.1)";
+    //     boton.textLabel.font = "24px monospace";
+    //     boton.textLabel.color = "cyan";
+    //     boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de controles
+    // }
 }
 
 
@@ -1135,6 +1156,7 @@ function isPuzzleNear() { // Función que verifica si el puzzle está cerca del 
 
 // Function that will be called for the game loop
 function updateCanvas(frameTime) {
+    
     if (pauseActive) {
         if (pauseFrame === null) {
             pauseFrame = frameTime; // Tiempo en el que se inicia la pausa
@@ -1162,7 +1184,6 @@ function updateCanvas(frameTime) {
         drawControlsLayout(ctx);
     }
     else if (gameOverActive) { // Si el jugador ha muerto
-        currentMusic.pause(); // Pausa la música actual
         drawGameOver(ctx); // Dibuja el menú de Game Over
     }
     else if (game.cLevel === 3){ //Cuando acabe el tercer nivel
@@ -1229,14 +1250,7 @@ function overLapEnemies(enemies, actors) {
                         enemyB.position.y -= separation;
                     }
                 }
-                if (enemyA.type === "dron") { // Si los enemigos tienen velocidad, se invierte la dirección
-                    enemyA.direction *= -1;
-                }
-                if (enemyB.type === "dron") { // Si los enemigos tienen velocidad, se invierte la dirección
-                    enemyB.direction *= -1;
-                }
             }
-            
         }
         for (let actor of actors) {
             if (actor.type !== 'floor' && overlapRectangles(enemyA, actor)) {
