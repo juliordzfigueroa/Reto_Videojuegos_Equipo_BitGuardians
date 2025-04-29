@@ -64,7 +64,6 @@ const pauseOptions = [
 let optionsActive = false; // Booleano creado para pausar el juego
 const optionsButtons = [
     new Button(0.3, 1.5, 8, 2, "<=="),
-    new Button(10, 1.5, 8, 2, "Opcines de Sonido"),
 ];
 
 let controlsLayout = new GameObject(); // Crea un objeto para el layout de controles
@@ -110,6 +109,7 @@ class Game {
         this.segundos = 0; // Variable que guarda los segundos totales de la partida
 
         this.enteredBossRoom = false; // Variable que guarda si el jugador ha entrado a la sala del jefe
+        this.bossCleared = false; // Variable que guarda si el jefe ha sido derrotado
 
         this.gameEffects = {
             puzzleSuccess: new Audio("../assets/sfx/Sound_Effects/Puzzle_success.wav"),
@@ -265,7 +265,7 @@ class Game {
         for (let i = this.level.levelPowerUps.length - 1; i >= 0; i--) {
             let powerup = this.level.levelPowerUps[i];
             if (overlapRectangles(powerup, this.player)) {
-                if (powerup.type !== "empBomb"){
+                if (powerup.type !== "empBomb" || powerup.type !== "levelPass") { // Si el powerup no es una bomba EMP o un pase de nivel
                     this.player.powerUpsUtilizados += 1; // Aumenta el contador de powerups usados
                 }
                 this.player.powerupEffect(powerup); // Aplica el efecto del powerup al jugador
@@ -321,15 +321,17 @@ class Game {
                 this.enteredBossRoom = true; // Cambia el estado de la sala del jefe a verdadero
             }
             if (GAME_LEVELS[currentRoom].statusCompleted === true) {
-                this.gameEffects.levelComplete.play(); // Reproduce el sonido de nivel completado
-                game.player.jefesDerrotados++; // Se aumenta en uno la cuenta
-                this.moveToLevel("main");
-                this.cLevel++;
-                console.log("Niveles completados: " + this.cLevel);
-                resetRoomStats();
-                activarMusica(); // Reinicia la musica
-                this.level.setupDoors(); // Actualiza la puerta
-                this.enteredBossRoom = false; // Cambia el estado de la sala del jefe a falso
+                currentMusic.pause(); // Pausa la música actual
+                if (!this.bossCleared){
+                    this.gameEffects.levelComplete.play(); // Reproduce el sonido de nivel completado
+                    game.player.jefesDerrotados++; // Se aumenta en uno la cuenta
+                    let passLevel = new LevelPass("orange", 30, 30, 0, 0, "levelPass", "NONE") // Crea un objeto para el nivel completado
+                    passLevel.position = new Vec(Math.floor(levelWidth / 2), Math.floor(levelHeight / 2))
+                    this.level.levelPowerUps.push(passLevel); // Agrega el objeto al nivel
+                    this.bossCleared = true; 
+                    GAME_LEVELS[currentRoom].powerupSpawned = true;
+                    GAME_LEVELS[currentRoom].roomPowerUp = passLevel; // Guarda el powerup en el nivel
+                }
             }
         }
     }
@@ -356,7 +358,7 @@ class Game {
         }
         this.player.draw(ctx, scale);
         if (debugHitBoxes) {
-            //this.player.hitBox.drawHitBox(ctx, scale); // Dibuja el hitbox del jugador
+            this.player.hitBox.drawHitBox(ctx, scale); // Dibuja el hitbox del jugador
             this.player.footHB.drawHitBox(ctx, scale); // Dibuja el hitbox de los pies del jugador
         }
         drawHUD(ctx, this.player, scale); // Dibuja el HUD del jugador
@@ -520,6 +522,10 @@ function restartGame() {
     // Reiniciamos los cuartos de cada nivel
     resetRoomStats();
     activarMusica(); // Reinicia la musica
+    if (game.gameEffects.levelPass){
+        game.gameEffects.levelPass.pause(); // Pausa la música actual
+        game.gameEffects.levelPass.currentTime = 0; // Reinicia el tiempo de la música
+    }
     // Reiniciamos el juego creando un objeto nuevo de la clase GAME
     game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
     // Reiniciamos el tiempo
@@ -680,6 +686,11 @@ function setEventListeners() {
                 boton.isOnButton(mx, my); // Verifica si el mouse está sobre el botón
             }
         }
+        if (game.cLevel === 3){
+            for (let boton of gameClearButtons) {
+                boton.isOnButton(mx, my); // Verifica si el mouse está sobre el botón
+            }
+        }
       });
     canvas.addEventListener("click", (event) => {
         // Obtener las coordenadas del clic en el canvas para el manejo de los menus y del overlay del puzzle
@@ -791,6 +802,7 @@ function setEventListeners() {
                 if (boton.click(mXScale, mYScale)) {
                     if (boton.textString === "Reiniciar") {
                         gameOverActive = false; // Desactiva el menú de Game Over
+                        restartGame(); // Reinicia el juego
                     }
                     if (boton.textString === "Pantlla de Inicio") {
                         currentMusic.pause(); // Pausa la música actual
@@ -804,6 +816,20 @@ function setEventListeners() {
                 }
             }
         }
+        if (game.cLevel === 3){
+            for (let boton of gameClearButtons) {
+                if (boton.click(mXScale, mYScale)) {
+                    if (boton.textString === "Pantlla de Inicio") {
+                        currentMusic.pause(); // Pausa la música actual
+                        gameOverActive = false; // Desactiva el menú de Game Over
+                        mainMenuActive = true; // Activa el menú principal
+                        currentMenu = "main"; // Cambia el menú actual a "main"
+                        drawMainMenu(ctx); // Dibuja el menú principal
+                    }
+                    break;
+                }
+            }
+        }
 
         if (puzzleActive == true && levelPuzzle != null) { // Si el puzzle está activo y existe
             levelPuzzle.mouseControl(event, canvas, mouseX, mouseY); // Llama a la función de control del mouse del puzzle
@@ -811,8 +837,7 @@ function setEventListeners() {
     });
 }
 
-function drawBar(stat, max_stat, color, barX, barY){ // Función para dibujar las barras de vida y escudo del jugador.
-    
+function drawBar(stat, max_stat, color, barX, barY){ // Función para dibujar las barras de vida y escudo del jugador.  
     const barWidth = 200;
     const barHeight = 20;
 
@@ -892,7 +917,7 @@ function drawPauseMenu(ctx) { // Dibuja el menú de pausa
     gameimg.draw(ctx, scale); 
 
     ctx.font = "32px monospace";
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "#00ff1B";
     ctx.textAlign = "center";
     ctx.fillText("PAUSA", canvasWidth / 2, 60);
 
@@ -907,14 +932,15 @@ function drawPauseMenu(ctx) { // Dibuja el menú de pausa
 
 let backgroundMenu = document.createElement("video");
 backgroundMenu.src = "../images/hackercode.mp4";
-backgroundMenu.muted = true;
-backgroundMenu.loop = true;
-backgroundMenu.play();
 
 function drawMainMenu(ctx) { // Dibuja el menú principal
     ctx.drawImage(backgroundMenu, 0, 0, canvasWidth, canvasHeight);
     ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+    backgroundMenu.muted = true;
+    backgroundMenu.loop = true;
+    backgroundMenu.play();
     
     gameimg.position = new Vec(9.3, 2);
     gameimg.size     = new Vec(9, 9);
@@ -950,10 +976,16 @@ function drawOptionsMenu(ctx) { // Dibuja el menú de opciones
     gameimg.draw(ctx, scale); 
 
     ctx.font = "32px monospace";
-    ctx.fillStyle = "#00ff1B";
+    if (currentMenu === "main"){
+        ctx.fillStyle = "cyan";
+    }
+    else if (currentMenu === "pause"){
+        ctx.fillStyle = "#00ff1B";
+    }
     ctx.textAlign = "center";
     ctx.fillText("Música", 425, 200); 
     ctx.fillText("Efectos de sonido", 425, 375); 
+    ctx.fillText("Opciones", canvasWidth / 2, 60); // Muestra el texto de opciones
 
     drawVolumeBar(ctx, 275, 250, 300, musicVolume)
     drawVolumeBar(ctx, 275, 425, 300, sfxVolume)
@@ -962,7 +994,12 @@ function drawOptionsMenu(ctx) { // Dibuja el menú de opciones
     for (let boton of optionsButtons) {
         boton.bg = "rgba(0, 0, 0, 0.1)";
         boton.textLabel.font = "24px monospace";
-        boton.textLabel.color = "#00ff1B";
+        if (currentMenu === "main"){
+            boton.textLabel.color = "cyan";
+        }
+        else if (currentMenu === "pause"){
+            boton.textLabel.color = "#00ff1B";
+        }
         boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de opciones
     }
 }
@@ -1015,7 +1052,12 @@ function drawControlsLayout(ctx) { // Dibuja el menú de controles
     controlsLayout.draw(ctx, scale); // Dibuja el layout de controles
 
     ctx.font = "32px monospace";
-    ctx.fillStyle = "white";
+    if (currentMenu === "main"){
+        ctx.fillStyle = "cyan";
+    }
+    else if (currentMenu === "pause"){
+        ctx.fillStyle = "#00ff1B";
+    }
     ctx.textAlign = "center";
     ctx.fillText("CONTROLES", canvasWidth / 2, 60);
 
@@ -1034,7 +1076,12 @@ function drawControlsLayout(ctx) { // Dibuja el menú de controles
     for (let boton of controlsButtons) {
         boton.bg = "rgba(0, 0, 0, 0.1)";
         boton.textLabel.font = "24px monospace";
-        boton.textLabel.color = "cyan";
+        if (currentMenu === "main"){
+            boton.textLabel.color = "cyan";
+        }
+        else if (currentMenu === "pause"){
+            boton.textLabel.color = "#00ff1B";
+        }
         boton.draw(ctx, scale, boton.textLabel.color, "#222"); // Dibuja los botones del menú de controles
     }
 }

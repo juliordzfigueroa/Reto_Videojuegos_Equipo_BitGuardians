@@ -23,6 +23,7 @@ class Player extends AnimatedObject {
         this.hasEMP = false; // Atributo de si el jugador tiene un EMP o no
         this.emp = null; // Atributo del powerup EMP del jugador, el será solo usado para imagen del hub
         this.isDefeated = false; // Atributo de si el jugador fue derrotado o no
+        this.currentDirection = "down"; // Atributo de la dirección actual del jugador, usado para ajustar la hitbox
         // Variables de la entrada de y salida al entrar a una puerta.
         this.exitPosition = undefined;
         this.enterPosition = undefined;
@@ -54,7 +55,7 @@ class Player extends AnimatedObject {
                 this.attackCooldownDuration = 400; 
                 break
             case "gun":
-                this.attackCooldownDuration = 200; 
+                this.attackCooldownDuration = 150; 
                 break
         }
 
@@ -128,8 +129,6 @@ class Player extends AnimatedObject {
             this.position = newPosition;
         }
 
-        this.hitBox.position.x = this.position.x + 0.3; // Actualizar la posición del hitbox del jugador en x
-        this.hitBox.position.y = this.position.y + 0.1; // Actualizar la posición del hitbox del jugador en y
         this.hitBox.update(); // Actualizar el hitbox del jugador
 
         this.footHB.position.x = this.position.x + 0.6; // Actualizar la posición del hitbox de los pies del jugador en x
@@ -161,7 +160,36 @@ class Player extends AnimatedObject {
             this.currentAttackHitbox.drawHitBox(ctx, scale);
         }
 
+        switch (this.currentDirection){
+            case "up":
+                this.hitBox.size.y = this.size.y * 0.9; // Cambia el tamaño del hitbox del jugador al moverse hacia arriba
+                this.hitBox.size.x = this.size.x * 0.7; // Cambia el tamaño del hitbox del jugador al moverse hacia arriba
+                this.hitBox.position.x = this.position.x + 0.3; // Actualizar la posición del hitbox del jugador en x
+                this.hitBox.position.y = this.position.y + 0.1; // Actualizar la posición del hitbox del jugador en y
+                break;
+            case "down":
+                this.hitBox.size.y = this.size.y * 0.9; // Cambia el tamaño del hitbox del jugador al moverse hacia arriba
+                this.hitBox.size.x = this.size.x * 0.7; // Cambia el tamaño del hitbox del jugador al moverse hacia arriba
+                this.hitBox.position.x = this.position.x + 0.3; // Actualizar la posición del hitbox del jugador en x
+                this.hitBox.position.y = this.position.y + 0.1; // Actualizar la posición del hitbox del jugador en y
+                break;
+            case "left":
+                this.hitBox.size.y = this.size.y * 0.9; // Cambia el tamaño del hitbox del jugador al moverse hacia arriba
+                this.hitBox.size.x = this.size.x * 0.4; // Cambia el tamaño del hitbox del jugador al moverse hacia arriba
+                this.hitBox.position.x = this.position.x + 0.6; // Cambia la posición del hitbox del jugador al moverse hacia arriba 
+                this.hitBox.position.y = this.position.y + 0.1; // Actualizar la posición del hitbox del jugador en y
+                break;
+            case "right":
+                this.hitBox.size.y = this.size.y * 0.9; // Cambia el tamaño del hitbox del jugador al moverse hacia arriba
+                this.hitBox.size.x = this.size.x * 0.4; // Cambia el tamaño del hitbox del jugador al moverse hacia arriba
+                this.hitBox.position.x = this.position.x + 0.5; // Cambia la posición del hitbox del jugador al moverse hacia arriba 
+                this.hitBox.position.y = this.position.y + 0.1; // Actualizar la posición del hitbox del jugador en y
+                break;
+        }
+
+        this.hitBox.update(); // Actualizar el hitbox del jugador
         this.updateFrame(deltaTime);
+        
 
         this.cableDamageTimer += deltaTime; // Aumentar el timer del daño del cable
     }
@@ -173,6 +201,20 @@ class Player extends AnimatedObject {
             dirData.status = true;
             this.velocity[dirData.axis] = dirData.sign * playerspeed;
             this.setAnimation(...dirData.moveFrames, dirData.repeat, dirData.duration);
+            switch (direction) {
+                case "up":
+                    this.currentDirection = "up"; // Cambia la dirección actual del jugador a arriba
+                    break;
+                case "down":
+                    this.currentDirection = "down"; // Cambia la dirección actual del jugador a abajo
+                    break;
+                case "left":
+                    this.currentDirection = "left"; // Cambia la dirección actual del jugador a izquierda
+                    break;
+                case "right":
+                    this.currentDirection = "right"; // Cambia la dirección actual del jugador a derecha
+                    break;
+            }
         }
     }
 
@@ -204,6 +246,7 @@ class Player extends AnimatedObject {
                     attackX = this.position.x;
                     attackY = this.position.y - attackHeight;
                 }
+                this.currentDirection = "up"; // Cambia la dirección actual del jugador a arriba
                 break;
             case "down":
                 if (this.weapon.wtype === "taser") {
@@ -218,6 +261,7 @@ class Player extends AnimatedObject {
                     attackX = this.position.x;
                     attackY = this.position.y + this.size.y;
                 }
+                this.currentDirection = "down"; // Cambia la dirección actual del jugador a abajo
                 break;
             case "left":
                 if (this.weapon.wtype === "taser") {
@@ -232,6 +276,7 @@ class Player extends AnimatedObject {
                     attackY = this.position.y;
                     attackX = this.position.x - attackWidth;
                 }
+                this.currentDirection = "left"; // Cambia la dirección actual del jugador a izquierda
                 break;
             case "right":
                 if (this.weapon.wtype === "taser") {
@@ -246,6 +291,7 @@ class Player extends AnimatedObject {
                     attackY = this.position.y;
                     attackX = this.position.x + this.size.x;
                 }
+                this.currentDirection = "right"; // Cambia la dirección actual del jugador a derecha
                 break;
         }
 
@@ -271,7 +317,7 @@ class Player extends AnimatedObject {
             if (overlapRectangles(this.currentAttackHitbox, enemy)) {
                 enemy.takeDamage(this.weapon.damage);
                 if (this.weapon.wtype === "taser") {
-                    let stunchance = Math.random(); // Se genera un número aleatorio entre 0 y 1
+                    let stunchance = Math.random(); 
                     if (stunchance < 0.5) { // Si el número es menor a 0.5, se aturde al enemigo
                         enemy.stunTime = 1000;
                         enemy.state = "stunned"; // Cambia el estado del enemigo a aturdido
@@ -400,6 +446,16 @@ class Player extends AnimatedObject {
             this.emp = powerup; // Se guarda para ser usado como imagen
             this.setAnimation(stateAnimations.powerup.moveFrames[0], stateAnimations.powerup.moveFrames[1], false, stateAnimations.powerup.duration);
             powerup.isCollected = true; // Marca el powerup como recogido
+        }
+        else if (powerup.type === "levelPass"){
+            game.moveToLevel("main");
+            game.cLevel++;
+            console.log("Niveles completados: " + game.cLevel);
+            resetRoomStats();
+            activarMusica(); // Reinicia la musica
+            game.level.setupDoors(); // Actualiza la puerta
+            game.enteredBossRoom = false; // Cambia el estado de la sala del jefe a falso
+            game.bossCleared = false; // Cambia el estado del jefe a 
         }
         else {
             this.setAnimation(stateAnimations.powerup.moveFrames[0], stateAnimations.powerup.moveFrames[1], false, stateAnimations.powerup.duration);

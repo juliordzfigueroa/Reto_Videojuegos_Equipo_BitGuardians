@@ -116,7 +116,9 @@ let GAME_LEVELS = {
 #.........................#
 /&&&&&&&&&&&123&&&&&&&&&&&$
 `,
-    statusCompleted: false
+    statusCompleted: false,
+    roomPowerUp: null,
+    powerupSpawned: false
   },
 };
 
