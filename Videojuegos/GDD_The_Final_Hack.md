@@ -69,10 +69,10 @@ Nuestro juego tiene como característica principal la vista desde arriba que se 
 Cuenta también con diferentes tipos de combate, ya sea cuerpo a cuerpo o con un arma a distancia, para que el jugador venza a los diferentes enemigos. 
 
 En cada nivel tenemos una sala con 3 subsalas y arriba la puerta del jefe. Para que se abra la puerta del jefe se necesita completar los desafíos de las demás
-salas. En cada subsala hay robots que te atacan y en caso de que logren golpearte te quitan la vida.
+salas. En cada subsala hay robots que te atacan y en caso de que logren golpearte te quitan la vida. Además de cables que si los pisas te hacen daño como obstaculos en cada sala.
 Asimismo, al completar el reto de cada subsala se le dará al jugador un power up para llegar con el jefe. Una vez llegado con el jefe si el jugador derrota al
 jefe podrá avanzar al siguiente nivel. 
-El juego acaba cuando te robas la información de The Core. 
+El juego acaba cuando te robas la información de The Core. Actualmente, el juego se completa al completar 3 niveles. 
 
 Los elementos aleatorios son las diferentes armas y power ups que van saliendo tras completar los retos. Los desafíos de cada subsala son aleatorios. Las salas se
 van a regenerar aleatoriamente y los enemigos también. 
@@ -99,30 +99,36 @@ medida que juega.
 ### **Screens**
 
 1. Pantalla de inicio: En la pantalla de inicio se tendrán las siguientes opciones para el jugador.
-    1. Opciones: En donde se encontrarán la opción de:
+    1.Controles: En donde se encontrarán la opción de:
     
         - Revisar controles
         - Alternar controles (Cambiar 'WASD' y las flechas del teclado para moverse con las flechas y atacar con 'WASD')
-        - Opciones de volúmen de la música (Quitar la música o bajar el volúmen)
-        - Opciones de volúmen de los efectos de sonido del juego (Quitar los efectos de sonido o bajar el volúmen de estos)
+        
        
     2. Iniciar juego: Donde al dar click en el botón meterá al jugador al primer nivel del juego.
-    3. Continuar Partida: Donde el jugador podrá retomar su partida si es que no ha muerto en alguno de los niveles.
+    3. Opciones: Donde se encuentran las opciones de:
+
+        - Opciones de volúmen de la música (Quitar la música o bajar el volúmen)
+        - Opciones de volúmen de los efectos de sonido del juego (Quitar los efectos de sonido o bajar el volúmen de estos)
 
 2. Juego:  Dentro de la partida el jugador podrá ver la pantalla de la primera sala, a sus lados están las 3 subsalas y la sala del jefe. Dentro de la partida, el jugador tendrá las siguientes subpantallas:
      Aqui una foto de el concepto de la primera pantalla del juego:
 ![Primer concepto de The Final Hack](/Videojuegos/images/GDD/The_Final_Hack_concepto.jpg)
+    Aqui una foto del prototipo de The Final Hack
 
 1. Pausa: La cual tendrá las siguientes opciones para el jugador:
-    1. Botón para salir de la partida y guardarla.
+    1. Botón para salir de la partida.
     2. Opciones: Como en la pantalla de inicio se tendrán las mismas opciones en el menú de opciones.
-       - Revisar controles
-       - Alternar controles (Cambiar 'WASD' y las flechas del teclado para moverse con las flechas y atacar con 'WASD')
-       - Opciones de volúmen de la música (Quitar la música o bajar el volúmen)
-       - Opciones de volúmen de los efectos de sonido del juego (Quitar los efectos de sonido o bajar el volúmen de estos)
-       
+        - Opciones de volúmen de la música (Quitar la música o bajar el volúmen)
+        - Opciones de volúmen de los efectos de sonido del juego (Quitar los efectos de sonido o bajar el volúmen de estos)
+    3. Controles:  Donde estarán las opciones de:
+        - Revisar controles
+        - Alternar controles (Cambiar 'WASD' y las flechas del teclado para moverse con las flechas y atacar con 'WASD')
+    4. Reiniciar: Botón que permite reiniciar una partida en curso
+    5. Continuar: Botón que permite seguir con la partida en curso 
+    
     4. Siguiente Nivel: Tras completar la sala del jefe, estará una terminal que permitirá pasar al siguiente nivel. 
-3. Tras completar el segundo nivel con una estructura similar al primero (Una sala principal, 3 subsalas adyacentes y la sala del jefe) se mostrarán los créditos.
+3. Tras completar el segundo y tercer nivel con una estructura similar al primero (Una sala principal, 3 subsalas adyacentes y la sala del jefe) se mostrarán los créditos.
 
 
 ### **Controls**
@@ -148,6 +154,10 @@ Además de esto, utilizaremos dos teclas más:
 `F` Abrir los puzzles para resolverlos.
 
 `E` Usar los Power Ups que ha recogido el jugador.
+
+`R` Reiniciar una partida sin abrir el menú
+
+`H`Usada para mostrar las hitboxes del personaje y enemigos de la pantalla
 
 
 ### **Mechanics**
@@ -188,8 +198,8 @@ NOTA: Estas estadisticas son una idea de como puede funcionar a la hora de la im
 
 Para poder pelear con los enemigos habrá 3 tipos de armas: 
 - Pistola láser: pistola que dispara proyectiles con velocidad definida. Esta pistola hará menos daño que el taser. 
-- Taser: Arma de corto alcance que aturde a los enemigos por un tiempo breve. El tazer estará en un nivel balanceado con respecto al daño de la pistola láser y la espada. 
-- Espada láser: Para golpes de cuerpo a cuerpo. La espada hará más daño que el taser. 
+- Taser: Arma de corto alcance que aturde a los enemigos por un tiempo breve. El tazer estará en un nivel balanceado con respecto al daño de la pistola láser y la espada. Además de que el aturdimiento funciona aleatroriamente por enemigo
+- Espada láser: Para golpes de cuerpo a cuerpo. La espada hará más daño que el taser y será capaz de bloquear los proyectiles de los enemigos.
 Aquí una Tabla con las estadísticas de daño de cada arma: 
 
 |Arma|Daño|Alcance|
@@ -249,17 +259,17 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
 
 ### **Themes**
 
-1. Nivel 1 y 2: Servidor 1: 
+1. Nivel 1, 2, 3: Servidor 1: 
     1. _Mood_
-        1. Lugar con poca iluminación, donde el jugador debe estar atento a los diferentes desafíos del nivel
+        1. Lugar con iluminación moderada, donde el jugador debe estar atento a los diferentes desafíos del nivel
     2. Objects
         1. _Ambient_
-            1. Cables salientes del piso y pared
+            1. Cables salientes del piso
         2. _Interactive_
             1. Robots
             2. Drones
             3. Terminal para el puzzle
-            4. Puerta para el cambio de nivel
+            4. Terminal para el cambio de nivel
             5. Jefe del nivel
 
 ### **Game Flow**
@@ -296,6 +306,7 @@ Los escenarios a los que el jugador se puede enfrentar en el juego son los sigui
     - Puntos de vida
     - Interacciones con las paredes y obstáculos
     - Interacción con los puzzles para su solución
+    - Interacción con los enemigos del nivel
     2. Físicas de los enemigos:
     - Movimiento hacia el jugador
     - Ataque
@@ -344,6 +355,7 @@ Nuestro juego al estar ambientado en la temática de ciberseguridad en una base 
     2. Azul neón
     3. Gris oscuro
     4. Gris claro
+    5. Verde Lima
 
 2. Peligro o daño
     1. Rojo
@@ -401,6 +413,9 @@ Primer diseño del protagonista Cipher:
 Logo con el nombre del juego para usarlo en la pantalla del titulo del juego:
 ![Logo_The_Final_Hack](/Videojuegos/images/GDD/the_final_hack_1_1.png)
 
+Aqui los diseños de los powerups que saldrán en el juego
+![Imagen_PowerUps](/Videojuegos/images/assets/powerUps/assets_powerUps.png)
+
 
 ## _Sounds/Music_
 
@@ -440,17 +455,15 @@ En cuanto a efectos de sonido que pensamos buscar para el juego, están los sigu
 - Sonido de la bomba EMP, inspirado en Rainbow 6 siege Thatcher.
 - Sonido de éxito al completar un puzzle
 - Sonido de fallo al terminarse el tiempo del puzzle.
+- Sonido al completar un jefe 
+- Sonido de GameOver
 
 
 
 ### **Music Needed**
 
 1. Música electrónica no acelerado pero no muy lenta para las 3 subsalas, por ejemplo: “Core” o “Another Medium” de Undertale
-2. Música energizante con tema electrónico para el menú principal
-3. Música electrónica acelerada para la batalla contra el jefe, por ejemplo: “Enemy Approaching” de Undertale
-4. Créditos finales del videojuego.
-5. Música triste de derrota. 
-
+2. Música electrónica acelerada para la batalla contra el jefe, por ejemplo: “Enemy Approaching” de Undertale
 
 ## _Schedule_
 
