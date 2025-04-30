@@ -180,6 +180,7 @@ async function mostrarStatsPartida() {
     const danoTotalRecibido = document.getElementById("danoTotalRecibido");
     const powerUpsUtilizados = document.getElementById("powerUpsUtilizados");
     const salasCompletadas = document.getElementById("salasCompletadas");
+    const jefesDerrotados = document.getElementById("jefesDerrotados");
     const puzzlesResueltos = document.getElementById("puzzlesResueltos");
     const partidasJugadas = document.getElementById("partidasJugadas");
     const partidasGanadas = document.getElementById("partidasGanadas");
@@ -199,10 +200,10 @@ async function mostrarStatsPartida() {
         danoTotalRecibido.innerHTML = `Daño Total Recibido: ${results[0].dano_total_recibido}`;
         powerUpsUtilizados.innerHTML = `Power Ups Utilizados: ${results[0].power_ups_utilizados}`;
         salasCompletadas.innerHTML = `Salas Completadas: ${results[0].salas_completadas}`;
+        jefesDerrotados.innerHTML = `Jefes Derrotados: ${results[0].jefes_derrotados}`;
         puzzlesResueltos.innerHTML = `Puzzles Resueltos: ${results[0].puzzles_resueltos}`;
         partidasJugadas.innerHTML = `Partidas Jugadas: ${results[0].partidas_jugadas}`;
         partidasGanadas.innerHTML = `Partidas Ganadas: ${results[0].partidas_ganadas}`;
         mejorTiempo.innerHTML = `Mejor Tiempo: ${results[0].mejor_tiempo_partida_ganada}`;
     }
 }
-

@@ -278,6 +278,84 @@ app.post('/api/jugador/stats/partida', async (request, response) => {
     }
 })
 
+//Graficar las vistas creadas en la base de datos
+app.get("/api/views/top5", async (request, response) => {
+    let connection = null;
+
+    try {
+        connection = await connectToDB();
+
+        const [results, fields] = await connection.query(
+            "SELECT * FROM Top_5"
+        );
+
+        console.log("Sending data correctly.");
+        response.status(200);
+        response.json(results);
+    } catch (error) {
+        response.status(500);
+        response.json(error);
+        console.log(error);
+    } finally {
+        if (connection !== null) {
+            connection.end();
+            console.log("Connection closed succesfully!");
+        }
+    }
+});
+
+app.get("/api/views/edades", async (request, response) => {
+    let connection = null;
+
+    try {
+        connection = await connectToDB();
+
+        const [results, fields] = await connection.query(
+            "SELECT * FROM edades"
+        );
+
+        console.log("Sending data correctly.");
+        response.status(200);
+        response.json(results);
+    } catch (error) {
+        response.status(500);
+        response.json(error);
+        console.log(error);
+    } finally {
+        if (connection !== null) {
+            connection.end();
+            console.log("Connection closed succesfully!");
+        }
+    }
+});
+
+app.get("/api/views/topMenorTiempo", async (request, response) => {
+    let connection = null;
+
+    try {
+        connection = await connectToDB();
+
+        const [results, fields] = await connection.query(
+            "SELECT * FROM top_menortiempo"
+        );
+
+        console.log("Sending data correctly.");
+        response.status(200);
+        response.json(results);
+    } catch (error) {
+        response.status(500);
+        response.json(error);
+        console.log(error);
+    } finally {
+        if (connection !== null) {
+            connection.end();
+            console.log("Connection closed succesfully!");
+        }
+    }
+});
+
+
+
 
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`)

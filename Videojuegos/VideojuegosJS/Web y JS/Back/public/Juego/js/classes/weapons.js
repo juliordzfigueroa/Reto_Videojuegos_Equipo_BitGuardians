@@ -108,7 +108,7 @@ class LevelPass extends PowerUp {
 function getRandomInitWeapon(){ // Método para obtener un arma aleatoria de la lista de armas al comenzar una partida.
     const weapons = [ 
         new Weapon("purple", 30, 30, 0, 0, "weapon", "sword", 20, "Epic", attackAnimations.sword),
-        new Weapon("purple", 30, 30, 0, 0, "weapon", "gun", 100, "Epic", attackAnimations.gun),
+        new Weapon("purple", 30, 30, 0, 0, "weapon", "gun", 10, "Epic", attackAnimations.gun),
         new Weapon("purple", 30, 30, 0, 0, "weapon", "taser", 15, "Epic", attackAnimations.taser),
     ];
     let randomIndex = Math.floor(Math.random() * weapons.length);
