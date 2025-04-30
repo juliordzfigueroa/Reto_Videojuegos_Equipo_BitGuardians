@@ -66,7 +66,6 @@ class HealthIncrease extends PowerUp {
         player.max_hp = player.max_hp + 20; // La vida máxima del jugador aumenta en 20 puntos.
         player.hp = player.max_hp; // La vida del jugador se iguala a su vida máxima y lo cura por completo.
         player.max_shield = player.max_hp * 0.1; // El escudo máximo del jugador aumenta en un 10% de su vida máxima.
-        permanentHPCount += 1; // Se aumenta el contador de vida máxima permanente del jugador.
     }
 }
 

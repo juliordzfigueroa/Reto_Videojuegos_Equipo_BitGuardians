@@ -29,16 +29,17 @@ CREATE TABLE Estadisticas(
 );
 SET AUTOCOMMIT=1;
 INSERT INTO Jugador VALUES
-(1, 'Jugador1', 31, 'jugador1@correo.com', 'H', 3.79, 100),
-(2, 'Jugador2', 27, 'jugador2@correo.com', 'H', 4.63, 67),
-(3, 'Jugador3', 30, 'jugador3@correo.com', 'H', 2.83, 60),
-(4, 'Jugador4', 30, 'jugador4@correo.com', 'H', 1.06, 59),
+(1, 'Jugador1', 20, 'jugador1@correo.com', 'H', 3.79, 100),
+(2, 'Jugador2', 20, 'jugador2@correo.com', 'H', 4.63, 67),
+(3, 'Jugador3', 22, 'jugador3@correo.com', 'H', 2.83, 60),
+(4, 'Jugador4', 20, 'jugador4@correo.com', 'H', 1.06, 59),
 (5, 'Jugador5', 23, 'jugador5@correo.com', 'H', 1.31, 75),
-(6, 'Jugador6', 20, 'jugador6@correo.com', 'H', 3.04, 67),
-(7, 'Jugador7', 27, 'jugador7@correo.com', 'H', 1.2, 72),
-(8, 'Jugador8', 35, 'jugador8@correo.com', 'H', 4.49, 91),
+(6, 'Jugador6', 19, 'jugador6@correo.com', 'H', 3.04, 67),
+(7, 'Jugador7', 21, 'jugador7@correo.com', 'H', 1.2, 72),
+(8, 'Jugador8', 21, 'jugador8@correo.com', 'H', 4.49, 91),
 (9, 'Jugador9', 38, 'jugador9@correo.com', 'H', 2.75, 84),
 (10, 'Jugador10', 24, 'jugador10@correo.com', 'H', 3.98, 81);
+
 
 select * from jugador;
 select * from jugador where email = 'jugador1@correo.com' and contrasena = 'H';
@@ -46,8 +47,8 @@ select * from Estadisticas where id_jugador = 2;
 select * from Estadisticas;
 
 Update estadisticas
-set mejor_tiempo_partida_ganada = '00:04:00'
-where id_jugador = 11;
+set mejor_tiempo_partida_ganada = '00:03:00'
+where id_jugador = 10;
 
 ALTER VIEW Top_5
 AS SELECT finalhack_api.jugador.nombre AS 'Nombre', finalhack_api.estadisticas.jefes_derrotados AS 'Jefes_Derrotados' 
@@ -72,11 +73,12 @@ FROM finalhack_api.estadisticas INNER JOIN finalhack_api.jugador
 USING(id_jugador)
 WHERE finalhack_api.estadisticas.partidas_ganadas >= 1
 ORDER BY finalhack_api.estadisticas.mejor_tiempo_partida_ganada 
-LIMIT 1;
+LIMIT 3;
 
 SELECT * FROM top_menortiempo;
 
 update estadisticas 
-set partidas_ganadas = 5,
-partidas_jugadas = 5
-where id_jugador =11;
+set partidas_jugadas = 4,
+partidas_ganadas = 2,
+jefes_derrotados= 4
+where id_jugador =10;

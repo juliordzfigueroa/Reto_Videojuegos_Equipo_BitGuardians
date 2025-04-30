@@ -157,6 +157,7 @@ async function mostarStatsJugador() {
     const Nombre = document.getElementById("nombreStats");
     const Email = document.getElementById("emailStats");
     const Edad = document.getElementById("edadStats");
+    const vidaMaxima = document.getElementById("vidaMaximaStats");
 
     let response = await fetch('http://localhost:3000/api/jugador/stats', {
         method: 'Post',
@@ -170,6 +171,8 @@ async function mostarStatsJugador() {
         Nombre.innerHTML = `Nombre: ${results[0].nombre}`;
         Email.innerHTML = `Email: ${results[0].email}`;
         Edad.innerHTML = `Edad: ${results[0].edad}`;
+        vidaMaxima.innerHTML = `Vida Máxima: ${results[0].vida_maxima}`;
+
     }
 }
 
