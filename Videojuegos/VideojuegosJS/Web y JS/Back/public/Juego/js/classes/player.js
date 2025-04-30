@@ -8,12 +8,13 @@
 "use strict";
 
 let playerspeed = 0.005; // Atributo de velocidad del jugador
+let permanentHPCount = 0; // Contador de powerups de vida permanente recogidos por el jugador
 
 class Player extends AnimatedObject {
     constructor(color, width, height, x, y, type, hp, weapon, max_hp, shield, max_shield) {
         super("green", width * 2, height * 2.4, x, y, "player");
         this.velocity = new Vec(0.0, 0.0);
-        this.max_hp = 100; // Atributo de vida máxima del jugador, la cual podrá ser incrementada con powerups.
+        this.max_hp = 100 + (permanentHPCount * 20); // Atributo de vida máxima del jugador, la cual podrá ser incrementada con powerups.
         this.hp = this.max_hp; // Atributo de vida del jugador
         this.shield = 0; // Atributo de escudo del jugador
         this.max_shield = this.max_hp * 0.1; // Atributo de escudo máximo del jugador, el cual podrá ser incrementado con powerups, el escudo será del 10% de la vida del jugador
