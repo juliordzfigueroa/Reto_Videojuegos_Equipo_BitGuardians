@@ -82,3 +82,8 @@ set partidas_jugadas = 4,
 partidas_ganadas = 2,
 jefes_derrotados= 4
 where id_jugador =10;
+
+alter table jugador 
+add column vida_maxima int default 100
+after vida;
+
