@@ -183,7 +183,7 @@ class AnimatedObject extends GameObject {
         this.maxFrame = maxFrame;
         this.frame = minFrame;
         this.repeat = repeat;
-        this.totalTime = 0;
+        this.totalTifme = 0;
         this.frameDuration = duration;
 
         }

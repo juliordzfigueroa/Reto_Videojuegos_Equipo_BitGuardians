@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.removeEventListener("click", activarMusica);
     };
     document.addEventListener("click", activarMusica);
-    
+
     const btnAcerca = document.getElementById("btnAcerca");
     if (btnAcerca) {
         btnAcerca.addEventListener("click", () => {
@@ -76,9 +76,9 @@ async function cerrarLogin(e) {
             //Guardar el ID para poder usarlo en los stats o otras partes del juego.
             localStorage.setItem('jugador_id', results[0].id_jugador);
             console.log("Usuario autenticado:");
-            console.log(`Id: ${results[0].id_jugador} \n` + 
-                        `Nombre: ${results[0].nombre} \n` + 
-                        `Email: ${results[0].email} \n`);
+            console.log(`Id: ${results[0].id_jugador} \n` +
+                `Nombre: ${results[0].nombre} \n` +
+                `Email: ${results[0].email} \n`);
         } else {
             alert("Credenciales incorrectas. Intente de nuevo.");
         }
