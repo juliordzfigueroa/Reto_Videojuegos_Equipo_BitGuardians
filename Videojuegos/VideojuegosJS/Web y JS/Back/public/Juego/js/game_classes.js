@@ -185,7 +185,6 @@ class AnimatedObject extends GameObject {
         this.repeat = repeat;
         this.totalTifme = 0;
         this.frameDuration = duration;
-
         }
 
     updateFrame(deltaTime) {
