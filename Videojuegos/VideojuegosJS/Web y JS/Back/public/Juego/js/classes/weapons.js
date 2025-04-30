@@ -65,7 +65,8 @@ class HealthIncrease extends PowerUp {
     effect(player) {
         player.max_hp = player.max_hp + 20; // La vida máxima del jugador aumenta en 20 puntos.
         player.hp = player.max_hp; // La vida del jugador se iguala a su vida máxima y lo cura por completo.
-        player.max_shield = player.max_hp* 0.1; // El escudo máximo del jugador aumenta en un 10% de su vida máxima.
+        player.max_shield = player.max_hp * 0.1; // El escudo máximo del jugador aumenta en un 10% de su vida máxima.
+        permanentHPCount += 1; // Se aumenta el contador de vida máxima permanente del jugador.
     }
 }
 
@@ -98,10 +99,11 @@ class Weapon extends PowerUp {
     }
 }
 
+
 class LevelPass extends PowerUp {
     constructor(color, width, height, x, y, type, effectN, rarity) {
-        super("orange", x, y, type, "levelPass", "  NONE"); // Tipo de powerup que será el pase de nivel.
-        this.type = "levelPass"; // Tipo de powerup que será el pase de nivel.
+        super("black", x, y, type, "levelPass", "  NONE"); // Tipo de powerup que será el pase de nivel.
+        this.type = "levelPass"; // Tipo de powerup que será el pase de nivel.
     }
 }
 
