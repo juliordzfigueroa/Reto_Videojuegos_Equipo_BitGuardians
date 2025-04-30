@@ -17,9 +17,9 @@ app.use(express.static('./public'))
 async function connectToDB() {
     return await mysql.createConnection({
         host: "localhost",
-        user: "testUser",
+        user: "card_user",
         password: "asdf1234",
-        database: "finalhack_api",
+        database: "FinalHack_Api",
     });
 }
 
@@ -65,7 +65,7 @@ app.post('/api/login', async (request, response) => {
         connection = await connectToDB()
         console.log(request.body);
 
-        const [results_user, _] = await connection.query('select * from jugador where email = ? and contrasena = ?', [request.body ['email'], request.body['contrasena']])
+        const [results_user, _] = await connection.query('select * from jugador where email = ? and contrasena = ?', [request.body['email'], request.body['contrasena']])
 
         console.log(`${results_user.length} rows returned`)
         response.json(results_user)
@@ -277,62 +277,6 @@ app.post('/api/jugador/stats/partida', async (request, response) => {
         }
     }
 })
-
-app.get('/api/jugador/:id/vida_maxima', async (request, response) => {
-    let connection = null;
-
-    try {
-        console.log(request.params['id']);
-        connection = await connectToDB();
-
-        const [results, fields] = await connection.query ('SELECT vida_maxima FROM Jugador WHERE id_jugador = ?',[request.params['id']]);
-
-        console.log(`${results.length} rows returned`);
-        console.log(results);
-
-        if (results.length > 0) {response.json({ vida_maxima: results[0].vida_maxima });}
-        else {response.status(404).json({ message: 'Jugador no encontrado' });}
-    }
-    catch (error) {
-        response.status(500);
-        response.json(error);
-        console.log(error);
-    }
-    finally {
-        if (connection !== null) {
-            connection.end();
-            console.log("Connection closed succesfully!");
-        }
-    }
-});
-
-app.post('/api/jugador/:id/vida_maxima', async (request, response) => {
-    let connection = null;
-
-    try {
-        console.log('Datos recibidos:', request.body);
-        const idJugador = request.params['id'];
-        const nuevaVidaMaxima = request.body['vida_maxima'];
-
-        connection = await connectToDB();
-
-        const [results, fields] = await connection.query ('UPDATE Jugador SET vida_maxima = ? WHERE id_jugador = ?',[nuevaVidaMaxima, idJugador]);
-
-        console.log(`${results.affectedRows} rows returned`);
-        response.json({ message: 'vida_maxima actualizada correctamente' });
-    }
-    catch (error) {
-        response.status(500);
-        response.json(error);
-        console.log(error);
-    }
-    finally {
-        if (connection !== null) {
-            connection.end();
-            console.log("Connection closed succesfully!");
-        }
-    }
-});
 
 
 app.listen(port, () => {
