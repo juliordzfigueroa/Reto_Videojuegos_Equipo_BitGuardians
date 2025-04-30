@@ -829,7 +829,20 @@ function setEventListeners() {
                         }
                     }
                     if (boton.textString === "Invertir controles") {
-                        invertControls = !invertControls; // Cambia el estado de los controles invertidos
+                        invertControls = !invertControls;
+
+                        const imgMovimiento = document.getElementById('teclasmovimiento');
+                        const imgAtaque = document.getElementById('teclasataque');
+
+                        if (imgMovimiento && imgAtaque) {
+                            if (invertControls) {
+                                imgMovimiento.src = '../images/teclasmovimientoalternativo.png';
+                                imgAtaque.src = '../images/teclasataquealternativo.png';
+                            } else {
+                                imgMovimiento.src = '../images/teclasmovimiento.png';
+                                imgAtaque.src = '../images/teclasataque.png';
+                            }
+                        }
                     }
                     break;
                 }
