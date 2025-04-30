@@ -17,7 +17,6 @@ CREATE TABLE Estadisticas(
     id_estadisticas INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id_jugador INT UNSIGNED,
     enemigos_derrotados INT DEFAULT 0,
-    muertes INT DEFAULT 0,
     dano_total_recibido INT DEFAULT 0,
     power_ups_utilizados INT DEFAULT 0,
     salas_completadas INT DEFAULT 0,
@@ -78,6 +77,6 @@ LIMIT 1;
 SELECT * FROM top_menortiempo;
 
 update estadisticas 
-set partidas_ganadas = 1,
-partidas_jugadas = 1
+set partidas_ganadas = 5,
+partidas_jugadas = 5
 where id_jugador =11;
