@@ -5,6 +5,11 @@
         <title>The Final Hack</title>
         <link rel="stylesheet" href="../css/estadisticas.css">
         <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.umd.js"
+            integrity="sha512-vCUbejtS+HcWYtDHRF2T5B0BKwVG/CLeuew5uT2AiX4SJ2Wff52+kfgONvtdATqkqQMC9Ye5K+Td0OTaz+P7cw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="../../js/charts.js"></script>
+        <link rel="stylesheet" href="../../css/charts.css">
     </head>
 
     <body>
@@ -43,6 +48,7 @@
                     <p id="danoTotalRecibido"></p>
                     <p id="powerUpsUtilizados"></p>
                     <p id="salasCompletadas"></p>
+                    <p id="jefesDerrotados"></p>
                     <p id="puzzlesResueltos"></p>
                     <p id="partidasJugadas"></p>
                     <p id="partidasGanadas"></p>
@@ -65,6 +71,13 @@
                 mostrarStatsPartida();
             });
         </script>
+
+        <div class="chartContainer">
+            <canvas id="apiChart1" width="600" height="600"></canvas>
+            <canvas id="apiChart2" width="600" height="600"></canvas>
+            <canvas id="apiChart3" width="600" height="600"></canvas>
+        </div>
+        
         <footer style="background-color: black; color: white; text-align: center; padding: 20px; font-family: 'Press Start 2P', monospace; font-size: 12px; margin-top: 0px; width: 100%;">
             <br>
             <br>

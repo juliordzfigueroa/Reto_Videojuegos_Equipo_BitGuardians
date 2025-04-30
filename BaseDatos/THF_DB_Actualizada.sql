@@ -40,8 +40,6 @@ CREATE TABLE Estadisticas(
     FOREIGN KEY (id_jugador) REFERENCES Jugador(id_jugador)
 );
 
-CREATE VIEW 
-
 -- Enemigos
 CREATE TABLE Enemigo(
     id_enemigo INT PRIMARY KEY,
