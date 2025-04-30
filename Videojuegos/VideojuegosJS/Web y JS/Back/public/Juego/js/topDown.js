@@ -122,17 +122,12 @@ class Game {
         };
     }
 
-    levelDifficulty() { // Método usado para el aumento de dificultad de los enemigos
-        return 1 + (this.cLevel * 0.1);
-    }
-
     moveToLevel(newRoom) {
         // Guarda el nivel previo
         lastRoom = currentRoom;
         currentRoom = newRoom;
         this.level = new Level(GAME_LEVELS[currentRoom].layout, this.player);
 
-        const setEnemiesDif = this.levelDifficulty()
         // Reutilizar el jugador existente
         this.level.player = this.player;
 
@@ -242,6 +237,14 @@ class Game {
                     this.player.powerUpsUtilizados += 1; // Aumenta el contador de powerups usados
                 }
                 this.player.powerupEffect(powerup); // Aplica el efecto del powerup al jugador
+                if (powerup.type === "hpIncrease") {
+                    const jugadorID = localStorage.getItem("jugador_id");
+                    fetch(`/api/jugador/${jugadorID}/vida_maxima`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ vida_maxima: this.player.max_hp })
+                    })
+                }
                 break;
             }
         }
@@ -315,7 +318,6 @@ class Game {
         }
         for (let enemy of this.enemies) {
             enemy.draw(ctx, scale);
-            //console.log(enemy.hp, enemy.damage); // Imprime la vida y el daño del enemigo
             if (debugHitBoxes) {
                 enemy.hitBox.drawHitBox(ctx, scale);
             }
@@ -483,28 +485,89 @@ function init() {
 
 function gameStart() {
     activarMusica(); // Activa la música de fondo
-    game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
-    startTime = performance.now(); // Guarda el tiempo de inicio
-    updateCanvas(document.timeline.currentTime);
+
+    const jugadorID = localStorage.getItem("jugador_id");
+
+    fetch(`/api/jugador/${jugadorID}/vida_maxima`)
+        .then(res => {
+            if (!res.ok) throw new Error("Error al obtener vida máxima");
+            return res.json();
+        })
+        .then(data => {
+            const vidaMaxima = data.vida_maxima;
+
+            game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
+
+            game.player.max_hp = vidaMaxima;
+            game.player.hp = vidaMaxima;
+            game.player.max_shield = vidaMaxima * 0.1;
+
+            startTime = performance.now();
+            updateCanvas(document.timeline.currentTime);
+        })
+        .catch(error => {
+            console.error("No se pudo obtener vida máxima:", error);
+            game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
+            game.player.max_hp = 100;
+            game.player.hp = 100;
+            game.player.max_shield = 10;
+            startTime = performance.now();
+            updateCanvas(document.timeline.currentTime);
+        });
 }
 
 function restartGame() {
     currentRoom = "main";
     lastRoom = null;
     lastDoorChar = null;
+
     // Reiniciamos los cuartos de cada nivel
     resetRoomStats();
-    activarMusica(); // Reinicia la musica
+    activarMusica(); // Reinicia la música
+
     if (game.gameEffects.levelPass) {
         game.gameEffects.levelPass.pause(); // Pausa la música actual
         game.gameEffects.levelPass.currentTime = 0; // Reinicia el tiempo de la música
     }
-    // Reiniciamos el juego creando un objeto nuevo de la clase GAME
-    game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
-    // Reiniciamos el tiempo
-    startTime = performance.now(); // Guarda el tiempo de inicio
-    elapsedTime = 0; // Reinicia el tiempo transcurrido
-    statsEnviadas = false; // Reinicia la variable de estadísticas enviadas
+
+    const jugadorID = localStorage.getItem("jugador_id");
+
+    // Obtener la vida máxima del servidor
+    fetch(`/api/jugador/${jugadorID}/vida_maxima`)
+        .then(res => {
+            if (!res.ok) throw new Error("Error al obtener vida máxima");
+            return res.json();
+        })
+        .then(data => {
+            const vidaMaxima = data.vida_maxima;
+
+            // Reiniciamos el juego creando un objeto nuevo de la clase GAME
+            game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
+
+            // Configurar las propiedades del jugador
+            game.player.max_hp = vidaMaxima;
+            game.player.hp = vidaMaxima;
+            game.player.max_shield = vidaMaxima * 0.1;
+
+            // Reiniciamos el tiempo
+            startTime = performance.now(); // Guarda el tiempo de inicio
+            elapsedTime = 0; // Reinicia el tiempo transcurrido
+            statsEnviadas = false; // Reinicia la variable de estadísticas enviadas
+        })
+        .catch(error => {
+            console.error("No se pudo obtener vida máxima:", error);
+
+            // En caso de error, usar valores predeterminados
+            game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
+            game.player.max_hp = 100;
+            game.player.hp = 100;
+            game.player.max_shield = 10;
+
+            // Reiniciamos el tiempo
+            startTime = performance.now(); // Guarda el tiempo de inicio
+            elapsedTime = 0; // Reinicia el tiempo transcurrido
+            statsEnviadas = false; // Reinicia la variable de estadísticas enviadas
+        });
 }
 
 function setEventListeners() {
