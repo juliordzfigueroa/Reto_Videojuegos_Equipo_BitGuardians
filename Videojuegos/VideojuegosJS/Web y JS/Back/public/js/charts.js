@@ -1,6 +1,6 @@
 //STATS DE JUEGO
 //GRAFICAS
-
+//Para todos los valores de las opciones en los graficos https://www.chartjs.org/docs/latest/charts/line.html
 /**
  * @param {number} alpha Indicated the transparency of the color
  * @returns {string} A string of the form 'rgba(240, 50, 123, 1.0)' that represents a color
