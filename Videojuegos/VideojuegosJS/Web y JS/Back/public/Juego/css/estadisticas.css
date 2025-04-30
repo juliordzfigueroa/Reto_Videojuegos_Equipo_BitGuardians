@@ -95,7 +95,7 @@ body {
 
 .cuadroEstadistica {
   width: 550px;
-  height: 450px;
+  height: 500px;
   border: 10px solid 	#2823bc;
   border-radius: 20px; /* ← esquinas redondeadas */
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* sombra suave */

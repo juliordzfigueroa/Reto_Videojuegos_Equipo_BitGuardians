@@ -183,6 +183,7 @@ async function mostrarStatsPartida() {
     const puzzlesResueltos = document.getElementById("puzzlesResueltos");
     const partidasJugadas = document.getElementById("partidasJugadas");
     const partidasGanadas = document.getElementById("partidasGanadas");
+    const mejorTiempo = document.getElementById("mejorTiempo");
 
 
     let response = await fetch('http://localhost:3000/api/jugador/stats/partida', {
@@ -201,6 +202,7 @@ async function mostrarStatsPartida() {
         puzzlesResueltos.innerHTML = `Puzzles Resueltos: ${results[0].puzzles_resueltos}`;
         partidasJugadas.innerHTML = `Partidas Jugadas: ${results[0].partidas_jugadas}`;
         partidasGanadas.innerHTML = `Partidas Ganadas: ${results[0].partidas_ganadas}`;
+        mejorTiempo.innerHTML = `Mejor Tiempo: ${results[0].mejor_tiempo_partida_ganada}`;
     }
 }
 

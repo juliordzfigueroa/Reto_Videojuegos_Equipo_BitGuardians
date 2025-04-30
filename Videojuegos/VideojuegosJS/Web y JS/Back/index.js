@@ -193,11 +193,19 @@ app.post('/api/jugador/stats/partida/update', async (request, response) => {
         console.log('Datos recibidos: ', request.body);
         connection = await connectToDB();
 
-        const [results, fields] = await connection.query('SELECT * FROM Estadisticas WHERE id_jugador = ?', [request.body['id_jugador']]);
+        const [results] = await connection.query('SELECT * FROM Estadisticas WHERE id_jugador = ?', [request.body['id_jugador']]);
 
         if (results.length > 0) {
-            // Actualizar si existe
-            const [updateResults] = await connection.query(
+            // Comparar y actualizar mejor tiempo si es menor
+            const mejorTiempoActual = results[0].mejor_tiempo_partida_ganada;
+            const nuevoMejorTiempo = request.body.mejor_tiempo_partida_ganada;
+
+            const mejorTiempo = (mejorTiempoActual === null || (nuevoMejorTiempo !== null && nuevoMejorTiempo < mejorTiempoActual))
+                ? nuevoMejorTiempo
+                : mejorTiempoActual;
+
+            // Actualizar estadísticas
+            await connection.query(
                 `UPDATE Estadisticas 
                 SET enemigos_derrotados = enemigos_derrotados + ?, 
                     dano_total_recibido = dano_total_recibido + ?, 
@@ -206,7 +214,8 @@ app.post('/api/jugador/stats/partida/update', async (request, response) => {
                     jefes_derrotados = jefes_derrotados + ?, 
                     puzzles_resueltos = puzzles_resueltos + ?, 
                     partidas_jugadas = partidas_jugadas + ?,
-                    partidas_ganadas = partidas_ganadas + ?
+                    partidas_ganadas = partidas_ganadas + ?,
+                    mejor_tiempo_partida_ganada = ?
                 WHERE id_jugador = ?`,
                 [
                     request.body.enemigos_derrotados,
@@ -217,15 +226,15 @@ app.post('/api/jugador/stats/partida/update', async (request, response) => {
                     request.body.puzzles_resueltos,
                     request.body.partidas_jugadas,
                     request.body.partidas_ganadas,
+                    mejorTiempo,
                     request.body.id_jugador
-
                 ]
             );
 
             response.json({ message: "Estadísticas actualizadas correctamente." });
         } else {
-            // Insertar si no existe
-            const [insertResults] = await connection.query(
+            // Insertar nuevas estadísticas
+            await connection.query(
                 'INSERT INTO Estadisticas SET ?',
                 request.body
             );
@@ -233,9 +242,8 @@ app.post('/api/jugador/stats/partida/update', async (request, response) => {
             response.json({ message: "Estadísticas insertadas correctamente." });
         }
     } catch (error) {
-        response.status(500)
-        response.json(error)
-        console.log(error)
+        response.status(500).json(error);
+        console.log(error);
     } finally {
         if (connection) {
             await connection.end();

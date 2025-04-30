@@ -77,9 +77,7 @@ LIMIT 1;
 
 SELECT * FROM top_menortiempo;
 
-
-
-
-
-
-
+update estadisticas 
+set partidas_ganadas = 1,
+partidas_jugadas = 1
+where id_jugador =11;
