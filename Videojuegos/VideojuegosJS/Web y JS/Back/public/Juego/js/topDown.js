@@ -332,7 +332,7 @@
             }
             this.player.draw(ctx, scale);
             if (debugHitBoxes) {
-                this.player.hitBox.drawHitBox(ctx, scale); // Dibuja el hitbox del jugador
+                //this.player.hitBox.drawHitBox(ctx, scale); // Dibuja el hitbox del jugador
                 this.player.footHB.drawHitBox(ctx, scale); // Dibuja el hitbox de los pies del jugador
             }
             drawHUD(ctx, this.player, scale); // Dibuja el HUD del jugador
