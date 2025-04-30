@@ -70,6 +70,7 @@ class Player extends AnimatedObject {
         this.jefesDerrotados = 0; // Atributo de jefes derrotados por el jugador
         this.partidasJugadas = 0; // Atributo de partidas jugadas por el jugador
         this.partidasGanadas = 0; // Atributo de partidas ganadas por el jugador
+        this.mejorTiempo = 0; // Atributo de mejor tiempo del jugador
 
         // Movimientos del jugador
         this.movement = {

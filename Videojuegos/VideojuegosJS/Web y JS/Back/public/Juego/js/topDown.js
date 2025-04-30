@@ -366,7 +366,7 @@
             }
             this.player.draw(ctx, scale);
             if (debugHitBoxes) {
-                this.player.hitBox.drawHitBox(ctx, scale); // Dibuja el hitbox del jugador
+                //this.player.hitBox.drawHitBox(ctx, scale); // Dibuja el hitbox del jugador
                 this.player.footHB.drawHitBox(ctx, scale); // Dibuja el hitbox de los pies del jugador
             }
             drawHUD(ctx, this.player, scale); // Dibuja el HUD del jugador
@@ -565,6 +565,7 @@
         // Reiniciamos el tiempo
         startTime = performance.now(); // Guarda el tiempo de inicio
         elapsedTime = 0; // Reinicia el tiempo transcurrido
+        statsEnviadas = false; // Reinicia la variable de estadísticas enviadas
     }
     
     function setEventListeners() {
@@ -720,6 +721,7 @@
                     boton.isOnButton(mx, my); // Verifica si el mouse está sobre el botón
                 }
             }
+
             if (game.cLevel === 3){
                 for (let boton of gameClearButtons) {
                     boton.isOnButton(mx, my); // Verifica si el mouse está sobre el botón
@@ -1201,6 +1203,13 @@
         }
         else if (game.cLevel === 3){ //Cuando acabe el tercer nivel
             drawWinMenu(ctx); // Dibuja el menú de victoria
+            if (!statsEnviadas) {
+                game.player.partidasGanadas += 1; // Se aumenta en uno la cuenta de partidas ganadas
+                game.player.partidasJugadas += 1; // Se aumenta en uno la cuenta de partidas jugadas
+                game.player.mejorTiempo = elapsedTime; // Se guarda el mejor tiempo
+                enviarStats(); // Enviar estadísticas al servidor
+                statsEnviadas = true; // Cambia el estado de las estadísticas enviadas a verdadero
+            }
         }
         else{
             if (frameStart === undefined) {
@@ -1373,6 +1382,58 @@
         levelPuzzle = new Puzzle(canvasWidth, canvasHeight);; // Reinicia el puzzle
         levelPuzzle.puzzleCompleated == true;
     }
-    
+function formatTime(milliseconds) {
+    // Convierte los milisegundos a horas, minutos y segundos
+    const totalSeconds = Math.floor(milliseconds / 1000); // Total de segundos
+    const hours = Math.floor(totalSeconds / 3600); // Total de horas
+    const minutes = Math.floor((totalSeconds % 3600) / 60); // Total de minutos
+    const seconds = totalSeconds % 60; // Total de segundos restantes
+
+    // Armamos el string "hh:mm:ss", asegurando que siempre tenga dos dígitos (ej. 01, 09, etc.)
+    // PadStart se asegura de que el número tenga al menos 2 dígitos, rellenando con ceros a la izquierda si es necesario.
+    const formattedTime =
+        hours.toString().padStart(2, '0') + ':' +
+        minutes.toString().padStart(2, '0') + ':' +
+        seconds.toString().padStart(2, '0');
+
+    return formattedTime;
+}
+
+function enviarStats() {
+    //Solamente se registra el tiempo si el jugador ha ganado partida
+    const mejorTiempo = game.player.partidasGanadas > 0 ? formatTime(elapsedTime) : null;
+
+    const stats = {
+        id_jugador: localStorage.getItem('jugador_id'),
+        enemigos_derrotados: game.player.enemigosDerrotados,
+        dano_total_recibido: game.player.danoTotalRecibido,
+        power_ups_utilizados: game.player.powerUpsUtilizados,
+        salas_completadas: game.player.salasCompletadas,
+        jefes_derrotados: game.player.jefesDerrotados,
+        puzzles_resueltos: game.player.puzzlesResueltos,
+        partidas_jugadas: game.player.partidasJugadas,
+        partidas_ganadas: game.player.partidasGanadas,
+        mejor_tiempo_partida_ganada: mejorTiempo // Enviar tiempo formateado
+    };
+
+    console.log("Enviando estadísticas:", stats);
+
+    fetch('http://localhost:3000/api/jugador/stats/partida/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(stats),
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log("Estadísticas enviadas correctamente.");
+            } else {
+                console.error("Error al enviar estadísticas:", response.status);
+            }
+        })
+        .catch(error => {
+            console.error("Error en la solicitud:", error);
+        });
+}
+
     // Call the start function to initiate the game
     main();  
