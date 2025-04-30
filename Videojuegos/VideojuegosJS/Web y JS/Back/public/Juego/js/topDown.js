@@ -91,8 +91,6 @@
     
     // Para debugear las hitboxes de los objetos
     let debugHitBoxes = false; // Variable que indica si se deben dibujar las hitboxes de los objetos
-
-    let statsEnviadas = false; // Variable que indica si se han enviado las estadísticas al servidor
     
     class Game {
         constructor(state, level) {
@@ -189,7 +187,35 @@
             if (game.player.isDefeated) { // Si el jugador ha sido derrotado
                 if (!this.player.repeat && this.player.frame === this.player.maxFrame) { // Se revisa si ya se terimnó la animación de muerte
                     console.log("Game Over");
-                    enviarStats(); // Enviar estadísticas al servidor
+                    const stats = {
+                        id_jugador: localStorage.getItem('jugador_id'),
+                        enemigos_derrotados: game.player.enemigosDerrotados,
+                        dano_total_recibido: game.player.danoTotalRecibido,
+                        power_ups_utilizados: game.player.powerUpsUtilizados,
+                        salas_completadas: game.player.salasCompletadas,
+                        jefes_derrotados: game.player.jefesDerrotados,
+                        puzzles_resueltos: game.player.puzzlesResueltos,
+                    };
+                    console.log(stats);
+                    console.log("Enviando estadísticas:", stats);
+    
+                    // Enviar las estadísticas al servidor
+                    fetch('http://localhost:3000/api/jugador/stats/partida/update', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(stats),
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                console.log("Estadísticas enviadas correctamente.");
+                            } else {
+                                console.error("Error al enviar estadísticas:", response.status);
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error en la solicitud:", error);
+                        });
+                    // Enviar los stats al servidor
                     this.gameEffects.gameOver.play(); // Reproduce el sonido de Game Over
                     gameOverActive = true; // Activa el menú de Game Over
                 }
@@ -243,6 +269,14 @@
                         this.player.powerUpsUtilizados += 1; // Aumenta el contador de powerups usados
                     }
                     this.player.powerupEffect(powerup); // Aplica el efecto del powerup al jugador
+                    if (powerup.type === "hpIncrease") {
+                        const jugadorID = localStorage.getItem("jugador_id");
+                        fetch(`/api/jugador/${jugadorID}/vida_maxima`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ vida_maxima: this.player.max_hp })
+                        })
+                    }
                     break;
                 }
             }
@@ -316,7 +350,7 @@
             }
             for (let enemy of this.enemies) {
                 enemy.draw(ctx, scale);
-                //console.log(enemy.hp, enemy.damage); // Imprime la vida y el daño del enemigo
+                console.log(enemy.hp, enemy.damage); // Imprime la vida y el daño del enemigo
                 if (debugHitBoxes) {
                     enemy.hitBox.drawHitBox(ctx,scale);
                 }
@@ -484,9 +518,35 @@
     
     function gameStart() {
         activarMusica(); // Activa la música de fondo
-        game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
-        startTime = performance.now(); // Guarda el tiempo de inicio
-        updateCanvas(document.timeline.currentTime);
+    
+        const jugadorID = localStorage.getItem("jugador_id");
+    
+        fetch(`/api/jugador/${jugadorID}/vida_maxima`)
+            .then(res => {
+                if (!res.ok) throw new Error("Error al obtener vida máxima");
+                return res.json();
+            })
+            .then(data => {
+                const vidaMaxima = data.vida_maxima;
+    
+                game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
+    
+                game.player.max_hp = vidaMaxima;
+                game.player.hp = vidaMaxima;
+                game.player.max_shield = vidaMaxima * 0.1;
+    
+                startTime = performance.now();
+                updateCanvas(document.timeline.currentTime);
+            })
+            .catch(error => {
+                console.error("No se pudo obtener vida máxima:", error);
+                game = new Game('playing', new Level(GAME_LEVELS[currentRoom].layout));
+                game.player.max_hp = 100;
+                game.player.hp = 100;
+                game.player.max_shield = 10;
+                startTime = performance.now();
+                updateCanvas(document.timeline.currentTime);
+            });
     }
     
     function restartGame() {
@@ -1080,7 +1140,6 @@
     }
     
     function drawWinMenu(ctx) { // Dibuja el menú de victoria
-        //enviarStats();
         ctx.fillStyle = "rgba(0, 0, 0, 0.7)"; // Dibuja un overlay semitransparente
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     
